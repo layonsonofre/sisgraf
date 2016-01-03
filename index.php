@@ -25,10 +25,7 @@ if(isset($_GET['logout'])) {
 			<div class="container">
 				<div class="row">
 					<div class="col s12">
-						<?php
-						if(isset($_GET['aP']) && $_GET['aP'] == 'ok')
-							echo "<div class='card-panel green lighten-2 white-text'>Pessoa atualizada com sucesso!<i class='material-icons'>close</i></div>";
-						?>
+						
 					</div>
 				</div>
 			</div>

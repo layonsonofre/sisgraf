@@ -21,7 +21,7 @@ $_SG['servidor'] = 'localhost';    // Servidor MySQL
 $_SG['usuario'] = 'sisgraf';          // Usuário MySQL
 $_SG['senha'] = 'sisgraf2015';                // Senha MySQL
 $_SG['banco'] = 'dbSisgraf';            // Banco de dados MySQL
-$_SG['paginaLogin'] = '../login.php'; // Página de login
+$_SG['paginaLogin'] = '../sisgraf/login.php'; // Página de login
 $_SG['tabela'] = 'Funcionario';       // Nome da tabela onde os usuários são salvos
 // ==============================
 // ======================================

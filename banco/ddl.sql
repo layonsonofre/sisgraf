@@ -555,3 +555,9 @@ FOREIGN KEY (idPessoa)
 REFERENCES Pessoa (idPessoa)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
+
+ALTER TABLE `Pessoa`
+ADD COLUMN `cidade` varchar(32) NOT NULL AFTER `estado`;
+
+ALTER TABLE `Pessoa`
+ADD COLUMN `orgaoExpedidor` varchar(9) NOT NULL AFTER `cidade`;

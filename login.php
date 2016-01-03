@@ -8,19 +8,19 @@
 		<link href="css/font.css" rel="stylesheet">
         <link href="css/materialdesignicons.min.css" type="text/css" rel="stylesheet" media="all" />
     </head>
-    <body>
+    <body style="background-color: #212121;">
         <div class="container">
-            <div class="row">
+            <div class="row valign-wrapper">
                 <div class="col l3" id="result">
                     &nbsp;
                 </div>
-                <form class="col l6" role="form" method="POST" action="control/valida.php">
+                <form class="col l6 valign" role="form" method="POST" action="control/valida.php">
                     <div class="card center-align">
                         <div class="card-content">
                             <span class="card-title">Efetuar Login</span>
                             <div class="row">
                                 <div class="input-field col l12">
-                                    <input id="usuario" name="usuario" type="text">
+                                    <input id="usuario" name="usuario" type="text" autofocus>
                                     <label for="usuario">Nome de Usuário</label>
                                 </div>
                                 <div class="input-field col l12">

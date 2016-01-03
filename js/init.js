@@ -11,5 +11,7 @@
 
     $('select').material_select();
 
+    $('input#usuario').setFocus();
+
   }); // end of document ready
 })(jQuery); // end of jQuery name space

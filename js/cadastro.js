@@ -4,6 +4,7 @@
         $('#pessoaFisica').show();
         $('#pessoaJuridica').hide();
         $('input[name="tipoPessoa"]').click(function () {
+            alert('alou');
             if ($(this).attr('id') === 'pFisica') {
                 $('#pessoaFisica').show();
                 $('#pessoaJuridica').hide();

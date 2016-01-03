@@ -27,17 +27,43 @@ protegePagina(); // Chama a função que protege a página
         </div>
         <main>
             <div class="container">
+                <div class="row">
+                    <div class="col s12">
+                        <?php
+                        if(isset($_GET['at']) && $_GET['at'] == 'ok')
+                            echo "<div class='card-panel green lighten-2 white-text'>Pessoa atualizada com sucesso!<i class='material-icons right'>close</i></div>";
+                        if(isset($_GET['at']) && $_GET['at'] == 'no')
+                            echo "<div class='card-panel red lighten-2 white-text'>Dados não atualizados no sistema, tente novamente.<i class='material-icons right'>close</i></div>";
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
                 <div class="row valign-wrapper">
                     <div class="col s12 l10">
                         <?php
                         $idPessoa = isset($_GET['idPessoa']) ? $_GET['idPessoa'] : '';
                         if($idPessoa != '') {
-                            echo "<h4>Atualizar Pessoa</h4>";
+                            if($_GET['tipo'] == 'cliente') {
+                                echo "<h4>Atualizar Cliente</h4>";
+                            } else if($_GET['tipo'] == 'fornecedor') {
+                                echo "<h4>Atualizar Fornecedor</h4>";
+                            } else if($_GET['tipo'] == 'funcionario') {
+                                echo "<h4>Atualizar Funcionário</h4>";
+                            }
                             $sql = "select * from Funcionario, Pessoa where Funcionario.idPessoa=" . $idPessoa . " and Funcionario.idPessoa = Pessoa.idPessoa;";
                             $query = mysql_query($sql);
                             $resultado = mysql_fetch_assoc($query);
                         }
-                        else echo "<h4>Cadastrar Pessoa</h4>";
+                        else {
+                            if($_GET['tipo'] == 'cliente') {
+                                echo "<h4>Cadastrar Cliente</h4>";
+                            } else if($_GET['tipo'] == 'fornecedor') {
+                                echo "<h4>Cadastrar Fornecedor</h4>";
+                            } else if($_GET['tipo'] == 'funcionario') {
+                                echo "<h4>Cadastrar Funcionário</h4>";
+                            }
+                        }
                         ?>
                     </div>
                     <div class="col s12 l2 valign">
@@ -49,7 +75,7 @@ protegePagina(); // Chama a função que protege a página
                 <div class="row">
                     <form class="col s12" role="form" method="POST" action="control/pessoa.php">
                         <?php
-                        if(isset($_GET['tP']) && $_GET['tP'] != 'funcionario') {
+                        if(isset($_GET['tipo']) && $_GET['tipo'] != 'funcionario') {
                         ?>
                             <div class="row">
                                 <div class="col s12">
@@ -65,49 +91,59 @@ protegePagina(); // Chama a função que protege a página
                         }
                         ?>
                         <div class="row" id="pessoaFisica">
-                            <div class="input-field col s6">
+                            <div class="input-field col s5">
                                 <input name="nome" id="nome" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['nome']."'"; ?>>
                                 <label for="nome">Nome</label>
                             </div>
                             <div class="input-field col s3">
-                                <input name="cpf" id="cpf" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['cpf']."'"; ?>>
+                                <input name="cpf" id="cpf" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['cpf']."'"; ?>>
                                 <label for="cpf">CPF</label>
                             </div>
                             <div class="input-field col s3">
-                                <input name="rg" id="rg" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['rg']."'"; ?>>
+                                <input name="rg" id="rg" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['rg']."'"; ?>>
                                 <label for="rg">RG</label>
                             </div>
-                        </div>
-                        <div id="pessoaJuridica">
-                            <div class="row">
-                                <div class="input-field col s5">
-                                    <input name="nomeFantasia" id="nomeFantasia" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['nomeFantasia']."'"; ?>>
-                                    <label for="nomeFantasia">Nome Fantasia</label>
-                                </div>
-                                <div class="input-field col s4">
-                                    <input name="razaoSocial" id="razaoSocial" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['razaoSocial']."'"; ?>>
-                                    <label for="razaoSocial">Razão Social</label>
-                                </div>
-                                <div class="input-field col s3">
-                                    <input name="contato" id="contato" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['nome']."'"; ?>>
-                                    <label for="contato">Contato</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s4">
-                                    <input name="cnpj" id="cnpj" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cnpj']."'"; ?>>
-                                    <label for="cnpj">CNPJ</label>
-                                </div>
-                                <div class="input-field col s4">
-                                    <input name="inscricaoEstadual" id="inscricaoEstadual" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['inscricaoEstadual']."'"; ?>>
-                                    <label for="inscricaoEstadual">Inscrição Estadual</label>
-                                </div>
-                                <div class="input-field col s4">
-                                    <input name="inscricaoMunicipal" id="inscricaoMunicipal" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['inscricaoMunicipal']."'"; ?>>
-                                    <label for="inscricaoMunicipal">Inscrição Municipal</label>
-                                </div>
+                            <div class="input-field col s1">
+                                <input name="orgaoExpedidor" id="orgaoExpedidor" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['orgaoExpedidor']."'"; ?>>
+                                <label for="orgaoExpedidor">Órgão Expedidor</label>
                             </div>
                         </div>
+                        <?php
+                        if($_GET['tipo'] != 'funcionario') {
+                        ?>
+                            <div id="pessoaJuridica">
+                                <div class="row">
+                                    <div class="input-field col s5">
+                                        <input name="nomeFantasia" id="nomeFantasia" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['nomeFantasia']."'"; ?>>
+                                        <label for="nomeFantasia">Nome Fantasia</label>
+                                    </div>
+                                    <div class="input-field col s4">
+                                        <input name="razaoSocial" id="razaoSocial" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['razaoSocial']."'"; ?>>
+                                        <label for="razaoSocial">Razão Social</label>
+                                    </div>
+                                    <div class="input-field col s3">
+                                        <input name="contato" id="contato" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['nome']."'"; ?>>
+                                        <label for="contato">Contato</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s4">
+                                        <input name="cnpj" id="cnpj" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cnpj']."'"; ?>>
+                                        <label for="cnpj">CNPJ</label>
+                                    </div>
+                                    <div class="input-field col s4">
+                                        <input name="inscricaoEstadual" id="inscricaoEstadual" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['inscricaoEstadual']."'"; ?>>
+                                        <label for="inscricaoEstadual">Inscrição Estadual</label>
+                                    </div>
+                                    <div class="input-field col s4">
+                                        <input name="inscricaoMunicipal" id="inscricaoMunicipal" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['inscricaoMunicipal']."'"; ?>>
+                                        <label for="inscricaoMunicipal">Inscrição Municipal</label>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php
+                        }
+                        ?>
                         <div class="row">
                             <div id="incluirTelefone">
                                 <?php
@@ -116,7 +152,7 @@ protegePagina(); // Chama a função que protege a página
                                     $query = mysql_query($sql);
                                     while($telefones = mysql_fetch_array($query, MYSQL_ASSOC)) {
                                         echo "<div class=\"input-field col s5\">" .
-                                                "<input name=\"telefone[]\" id=\"telefone\" type=\"text\" class=\"validate\" value=\"".$telefones['telefone']."\" >".
+                                                "<input name=\"telefone[]\" id=\"telefone\" type=\"text\" class=\"validate\" value=\"".$telefones['numero']."\" >".
                                                 "<label for=\"telefone\">Telefone</label>".
                                             "</div>".
                                             "<div class=\"col s1\">".
@@ -159,7 +195,7 @@ protegePagina(); // Chama a função que protege a página
                             </div>
                         </div>
                         <?php
-                        if(isset($_GET['tP']) && $_GET['tP'] == 'funcionario') {
+                        if(isset($_GET['tipo']) && $_GET['tipo'] == 'funcionario') {
                         ?>
                         <div id="usuario">
                             <div class="row">
@@ -190,7 +226,7 @@ protegePagina(); // Chama a função que protege a página
                                     <label for="nomeRua">Logradouro</label>
                                 </div>
                                 <div class="input-field col s3">
-                                    <input name="numero" id="numero" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['numero']."'"; ?>>
+                                    <input name="numero" id="numero" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['numero']."'"; ?>>
                                     <label for="numero">Número</label>
                                 </div>
                                 <div class="input-field col s4">
@@ -200,7 +236,7 @@ protegePagina(); // Chama a função que protege a página
                             </div>
                             <div class="row">
                                 <div class="input-field col s2">
-                                    <input name="cep" id="cep" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cep']."'"; ?>>
+                                    <input name="cep" id="cep" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cep']."'"; ?>>
                                     <label for="cep">CEP</label>
                                 </div>
                                 <div class="input-field col s4">
@@ -248,7 +284,7 @@ protegePagina(); // Chama a função que protege a página
                         </div>
 
                         <?php
-                        if(isset($_GET['tP']) && $_GET['tP'] == 'fornecedor') {
+                        if(isset($_GET['tipo']) && $_GET['tipo'] == 'fornecedor') {
                         ?>
                         <br />
                         <div id="categorias">
@@ -291,14 +327,14 @@ protegePagina(); // Chama a função que protege a página
                         <button class="btn waves-effect waves-light green accent-4" type="submit" name="salvar">Salvar<i class="material-icons right">send</i></button>
 
                         <input type="hidden" name="isPessoaFisica" value="true" /> 
-                        <input type="hidden" name="tP" value="<?php echo $_GET['tP']; ?>"/>
-                        <input type="hidden" name="status" value="<?php echo $_GET['tP'].'Ativo'; ?>"/>
+                        <input type="hidden" name="tipo" value="<?php echo $_GET['tipo']; ?>"/>
+                        <input type="hidden" name="status" value="<?php echo $_GET['tipo'].'Ativo'; ?>"/>
                         <input type="hidden" name="acao" value="inserir" />
                     </form>
                     <form role="form" method="POST" name="excluir" action="control/pessoa.php">
                         <input type="hidden" name="acao" value="excluir" />
                         <input type="hidden" name="idPessoa" value="<?php echo $idPessoa; ?>" />
-                        <input type="hidden" name="tP" value="<?php echo $_GET['tP']; ?>" />
+                        <input type="hidden" name="tipo" value="<?php echo $_GET['tipo']; ?>" />
                     </form>
                 </div>
             </div>

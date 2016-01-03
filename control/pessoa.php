@@ -23,6 +23,7 @@ $cep = isset($_POST['cep']) ? $_POST['cep'] : '';
 $bairro = isset($_POST['bairro']) ? $_POST['bairro'] : '';
 $estado = isset($_POST['estado']) ? $_POST['estado'] : '';
 $cidade = isset($_POST['cidade']) ? $_POST['cidade'] : '';
+$orgaoExpedidor = isset($_POST['orgaoExpedidor']) ? $_POST['orgaoExpedidor'] : '';
 
 $senha = isset($_POST['senha']) ? $_POST['senha'] : '';
 $senha = md5($senha);
@@ -34,24 +35,24 @@ $email = isset($_POST['email']) ? $_POST['email'] : '';
 
 $categoria = isset($_POST['categoria']) ? $_POST['categoria'] : '';
 
-$tP = $_POST['tP'];
+$tipo = $_POST['tipo'];
 
 if($acao == '') {
-	header('Location: ../index.php');
+	header('Location: ../incluirPessoa.php?aP=no&tipo='.$tipo);
 } else if($acao == 'inserir') {
 	$sql = "INSERT INTO `Pessoa` " .
 	"(`idPessoa`,`nome`,`status`,`isPessoaFisica`,`cpf`,`rg`,`cnpj`,".
 	"`inscricaoEstadual`,`inscricaoMunicipal`,`razaoSocial`,`nomeFantasia`,".
-	"`nomeRua`,`numero`,`complemento`,`cep`,`bairro`,`estado`,`cidade`)".
+	"`nomeRua`,`numero`,`complemento`,`cep`,`bairro`,`estado`,`cidade`,`orgaoExpedidor`)".
 	"VALUES (NULL,\"".$nome."\",\"".$status."\",\"".$isPessoaFisica."\",\"".$cpf."\",\"".$rg."\",\"".$cnpj."\",".
 		"\"".$inscricaoEstadual."\",\"".$inscricaoMunicipal."\",\"".$razaoSocial."\",\"".$nomeFantasia."\",".
-		"\"".$nomeRua."\",\"".$numero."\",\"".$complemento."\",\"".$cep."\",\"".$bairro."\",\"".$estado."\",\"".$cidade."\")";
+		"\"".$nomeRua."\",\"".$numero."\",\"".$complemento."\",\"".$cep."\",\"".$bairro."\",\"".$estado."\",\"".$cidade."\",\"".$orgaoExpedidor."\")";
 	$query = mysql_query($sql);
 	$idPessoaInserida = mysql_insert_id();
-	if($tP == "funcionario") {
+	if($tipo == "funcionario") {
 		$sql = "INSERT INTO `Funcionario` (`idPessoa`,`usuario`,`senha`,`tipoFuncionario`) VALUES (\"".$idPessoaInserida."\",\"".$usuario."\",\"".$senha."\",\"".$tipoFuncionario."\")";
 		$query = mysql_query($sql);
-	} else if($tP == "fornecedor") {
+	} else if($tipo == "fornecedor") {
 		if($categoria != NULL) {
 			foreach($categoria as $c) {
 				$sql = "INSERT INTO `Fornecedor_Categoria` (`idPessoa`,`idCategoria`) VALUES (\"".$idPessoaInserida."\",\"".$c."\")";
@@ -67,6 +68,15 @@ if($acao == '') {
 		$sql = "INSERT INTO `Email` (`idEmail`,`idPessoa`,`endereco`) VALUES (NULL,\"".$idPessoaInserida."\",\"".$e."\");";
 		$query = mysql_query($sql);
 	}
-	header('Location: ../index.php?aP=ok');
+	header('Location: ../incluirPessoa.php?aP=ok&tipo='.$tipo);
+} else if($acao == 'excluir') {
+	if($idPessoa == null) {
+		header('Location: ../listarPessoa.php?aP=no&tipo='.$tipo);
+	}
+	$sql = "delete * from Fornecedor_Categoria where idPessoa=".$idPessoa.";" .
+	"delete * from Telefone where idPessoa=".$idPessoa.";" .
+	"delete * from Email where idPessoa=".$idPessoa.";" .
+	"delete * from Pessoa where idPessoa=".$idPessoa.";";
+	$query = mysql_query($sql);
 }
 ?>
