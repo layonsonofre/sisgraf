@@ -18,6 +18,7 @@ protegePagina(); // Chama a função que protege a página
             include 'modal/unidadeDeMedida.php';
             include 'modal/cor.php';
             include 'modal/gramatura.php';
+            include 'modal/categorias.php';
     	?>
         <div id="help" class="modal">
             <div class="modal-content">
@@ -162,6 +163,34 @@ protegePagina(); // Chama a função que protege a página
                             </div>
                             <div class="col s1">
                                 <a id="incluirCor" href="#modalCor" class="waves-effect modal-trigger waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
+                            </div>
+                        </div>
+                        <div id="categorias">
+                            <div class="row">
+                                <div class="input-field col s11">
+                                    <select id="categoria" name="categoria[]" multiple>
+                                        <option value="" disabled>Selecione as categorias de materiais fornecidos</option>
+                                    <?php
+                                    $sql = "select * from Categoria;";
+                                    $query = mysql_query($sql);
+                                    while($categorias = mysql_fetch_array($query, MYSQL_ASSOC)) {
+                                        echo "<option value='".$categorias['idCategoria']."' ";
+                                        if(isset($_GET['idPessoa'])) {
+                                            $sql2 = "select * from Categoria_Material where idCategoria=".$categorias['idCategoria']." and idMaterial=".$idMaterial.";";
+                                            $query2 = mysql_query($sql2);
+                                            if( mysql_num_rows($query2) == 1) {
+                                                echo "selected";
+                                            }
+                                        }
+                                        echo ">".$categorias['nome']." (" .$categorias['descricao'].")</option>";
+                                    }
+                                    ?>
+                                    </select>
+                                    <label>Materiais Fornecidos</label>
+                                </div>
+                                <div class="col s1">
+                                    <a id="incluirCategoria" href="#modalCategoria" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
+                                </div>
                             </div>
                         </div>
                         <?php

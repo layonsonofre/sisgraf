@@ -38,7 +38,7 @@ $categoria = isset($_POST['categoria']) ? $_POST['categoria'] : '';
 $tipo = $_POST['tipo'];
 
 if($acao == '') {
-	header('Location: ../incluirPessoa.php?aP=no&tipo='.$tipo);
+	header('Location: ../incluirPessoa.php?at=no&tipo='.$tipo);
 } else if($acao == 'inserir') {
 	$sql = "INSERT INTO `Pessoa` " .
 	"(`idPessoa`,`nome`,`status`,`isPessoaFisica`,`cpf`,`rg`,`cnpj`,".
@@ -68,15 +68,19 @@ if($acao == '') {
 		$sql = "INSERT INTO `Email` (`idEmail`,`idPessoa`,`endereco`) VALUES (NULL,\"".$idPessoaInserida."\",\"".$e."\");";
 		$query = mysql_query($sql);
 	}
-	header('Location: ../incluirPessoa.php?aP=ok&tipo='.$tipo);
+	header('Location: ../incluirPessoa.php?at=ok&tipo='.$tipo);
 } else if($acao == 'excluir') {
 	if($idPessoa == null) {
-		header('Location: ../listarPessoa.php?aP=no&tipo='.$tipo);
+		header('Location: ../listarPessoa.php?at=no&tipo='.$tipo);
 	}
-	$sql = "delete * from Fornecedor_Categoria where idPessoa=".$idPessoa.";" .
-	"delete * from Telefone where idPessoa=".$idPessoa.";" .
-	"delete * from Email where idPessoa=".$idPessoa.";" .
-	"delete * from Pessoa where idPessoa=".$idPessoa.";";
+	$sql = "update `Pessoa` set `status`=".$_GET['tipo']."Inativo where `idPessoa`=".$idPessoa.";";
 	$query = mysql_query($sql);
+	// $sql = "delete from `Fornecedor_Categoria` where `idPessoa=`".$idPessoa.";" .
+	// "delete from `Telefone` where `idPessoa`=".$idPessoa.";" .
+	// "delete from `Email` where `idPessoa`=".$idPessoa.";" .
+	// "delete from `Funcionario` where `idPessoa`=".$idPessoa.";" .
+	// "delete from `Pessoa` where `idPessoa`=".$idPessoa.";";
+	// $query = mysql_query($sql);
+	//header('Location: ../listarPessoa.php?at=no&tipo='.$tipo);
 }
 ?>

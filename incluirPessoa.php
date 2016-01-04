@@ -15,6 +15,7 @@ protegePagina(); // Chama a função que protege a página
     <body>
     	<?php
     		include 'header.php';
+            include 'modal/categorias.php';
     	?>
         <div id="help" class="modal">
             <div class="modal-content">
@@ -44,14 +45,15 @@ protegePagina(); // Chama a função que protege a página
                         <?php
                         $idPessoa = isset($_GET['idPessoa']) ? $_GET['idPessoa'] : '';
                         if($idPessoa != '') {
+                            $sql = "select * from Pessoa where idPessoa=" . $idPessoa . ";";
                             if($_GET['tipo'] == 'cliente') {
                                 echo "<h4>Atualizar Cliente</h4>";
                             } else if($_GET['tipo'] == 'fornecedor') {
                                 echo "<h4>Atualizar Fornecedor</h4>";
                             } else if($_GET['tipo'] == 'funcionario') {
+                                $sql = "select * from Funcionario, Pessoa where Funcionario.idPessoa=" . $idPessoa . " and Funcionario.idPessoa = Pessoa.idPessoa;";
                                 echo "<h4>Atualizar Funcionário</h4>";
                             }
-                            $sql = "select * from Funcionario, Pessoa where Funcionario.idPessoa=" . $idPessoa . " and Funcionario.idPessoa = Pessoa.idPessoa;";
                             $query = mysql_query($sql);
                             $resultado = mysql_fetch_assoc($query);
                         }
@@ -91,19 +93,19 @@ protegePagina(); // Chama a função que protege a página
                         }
                         ?>
                         <div class="row" id="pessoaFisica">
-                            <div class="input-field col s5">
+                            <div class="input-field col s4">
                                 <input name="nome" id="nome" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['nome']."'"; ?>>
                                 <label for="nome">Nome</label>
                             </div>
                             <div class="input-field col s3">
-                                <input name="cpf" id="cpf" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['cpf']."'"; ?>>
+                                <input name="cpf" id="cpf" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['cpf']."'"; ?>>
                                 <label for="cpf">CPF</label>
                             </div>
                             <div class="input-field col s3">
-                                <input name="rg" id="rg" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['rg']."'"; ?>>
+                                <input name="rg" id="rg" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['rg']."'"; ?>>
                                 <label for="rg">RG</label>
                             </div>
-                            <div class="input-field col s1">
+                            <div class="input-field col s2">
                                 <input name="orgaoExpedidor" id="orgaoExpedidor" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['orgaoExpedidor']."'"; ?>>
                                 <label for="orgaoExpedidor">Órgão Expedidor</label>
                             </div>
@@ -221,11 +223,15 @@ protegePagina(); // Chama a função que protege a página
                         ?>
                         <div id="endereco">
                             <div class="row">
+                                <div class="input-field col s2">
+                                    <input name="cep" id="cep" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cep']."'"; ?>>
+                                    <label for="cep">CEP</label>
+                                </div>
                                 <div class="input-field col s5">
                                     <input name="nomeRua" id="nomeRua" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['nomeRua']."'"; ?>>
                                     <label for="nomeRua">Logradouro</label>
                                 </div>
-                                <div class="input-field col s3">
+                                <div class="input-field col s1">
                                     <input name="numero" id="numero" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['numero']."'"; ?>>
                                     <label for="numero">Número</label>
                                 </div>
@@ -235,15 +241,11 @@ protegePagina(); // Chama a função que protege a página
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="input-field col s2">
-                                    <input name="cep" id="cep" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cep']."'"; ?>>
-                                    <label for="cep">CEP</label>
-                                </div>
-                                <div class="input-field col s4">
+                                <div class="input-field col s5">
                                     <input name="cidade" id="cidade" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cidade']."'"; ?>>
                                     <label for="cidade">Cidade</label>
                                 </div>
-                                <div class="input-field col s3">
+                                <div class="input-field col s4">
                                     <input name="bairro" id="bairro" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['bairro']."'"; ?>>
                                     <label for="bairro">Bairro</label>
                                 </div>
@@ -304,14 +306,14 @@ protegePagina(); // Chama a função que protege a página
                                                 echo "selected";
                                             }
                                         }
-                                        echo ">".$categorias['nome']." " .$categorias['descricao']."</option>";
+                                        echo ">".$categorias['nome']." (" .$categorias['descricao'].")</option>";
                                     }
                                     ?>
                                     </select>
                                     <label>Materiais Fornecidos</label>
                                 </div>
                                 <div class="col s1">
-                                    <a id="incluirCategoria" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
+                                    <a id="incluirCategoria" href="#modalCategoria" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
                                 </div>
                             </div>
                         </div>

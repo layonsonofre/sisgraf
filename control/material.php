@@ -15,6 +15,7 @@ $rg = isset($_POST['altura']) ? $_POST['altura'] : '';
 $gramatura = isset($_POST['gramatura']) ? $_POST['gramatura'] : '';
 $cor = isset($_POST['cor']) ? $_POST['cor'] : '';
 $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
+$nome = isset($_POST['nome']) ? $_POST['nome'] : '';
 
 if($acao == '') {
 	header('Location: ../incluirMaterial.php?at=no&tipo='.$tipo);
@@ -63,6 +64,13 @@ if($acao == '') {
 		header('Location: ../incluirMaterial.php');
 	}
 	$sql = "INSERT INTO `MaterialUnidade` (`idMaterialUnidade`,`descricao`) VALUES (NULL,\"".$descricao."\");";
+	$query = mysql_query($sql);
+	header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
+} else if($acao == 'inserirCategoria') {
+	if($descricao == null || $nome == null) {
+		header('Location: ../incluirMaterial.php');
+	}
+	$sql = "INSERT INTO `Categoria` (`idCategoria`,`nome`,`descricao`) VALUES (NULL,\"".$nome."\",\"".$descricao."\");";
 	$query = mysql_query($sql);
 	header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
 }

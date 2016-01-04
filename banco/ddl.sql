@@ -561,3 +561,6 @@ ADD COLUMN `cidade` varchar(32) NOT NULL AFTER `estado`;
 
 ALTER TABLE `Pessoa`
 ADD COLUMN `orgaoExpedidor` varchar(9) NOT NULL AFTER `cidade`;
+
+ALTER TABLE `Categoria`
+CHANGE `Column_3` `descricao` varchar(60) NOT NULL;
