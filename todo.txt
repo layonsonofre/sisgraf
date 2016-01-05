@@ -1,0 +1,17 @@
+- Centralizar card do login.php
+-+ Na Atualização, deixar todos campos como se já fossem clickados
+- Cadastro de pessoas -> deixar radio já selecionado
+- Atualização não altera telefone e email, e redireciona pro lugar errado
+- Permitir Atualizar Senha na atualização do funcionário
+- Alterar JQuery namespace -> Fazer funcionar o cadastro.js
+	- Botao +Tel e +Email não funcionam
+	- Radios PJ e PF não funcionam
+- Alterar CSS do Select
++ Expulsar visitante
+- Fechar alert de resposta no cadastro
+- Pesquisar pessoa
+- Centralizar Campos Modal
+- No mesmo modal (cor, gramatura, unidade de medida) permitir alteração/exclusão
+- Cadastro no Modal com AJAX, para não perder o que foi inserido
+- JavaScript para alterar o valor do campo 'tipo' dentro do modal
+- Buscar por CEP

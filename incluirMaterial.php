@@ -78,21 +78,21 @@ protegePagina(); // Chama a função que protege a página
                         <div class="row">
                             <div class="input-field col s8">
                                 <input name="descricao" id="descricao" type="text" class="validate" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['descricao']."'"; if($_GET['tipo'] == 'papel') echo "value='Papel' disabled" ?>>
-                                <label for="descricao">Descrição</label>
+                                <label for="descricao" class="active">Descrição</label>
                             </div>
                             <div class="input-field col s4">
                                 <input name="valorUnitario" id="valorUnitario" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['valorUnitario']."'"; ?>>
-                                <label for="valorUnitario">Valor Unitário (R$)</label>
+                                <label for="valorUnitario" class="active">Valor Unitário (R$)</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s4">
                                 <input name="quantidade" id="quantidade" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['quantidade']."'"; ?>>
-                                <label for="quantidade">Quantidade</label>
+                                <label for="quantidade" class="active">Quantidade</label>
                             </div>
                             <div class="input-field col s4">
                                 <input name="quantidadeMinima" id="quantidadeMinima" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['quantidadeMinima']."'"; ?>>
-                                <label for="quantidadeMinima">Quantidade Mínima</label>
+                                <label for="quantidadeMinima" class="active">Quantidade Mínima</label>
                             </div>
                             <div class="input-field col s3">
                                 <select id="unidade" name="unidade">
@@ -117,15 +117,15 @@ protegePagina(); // Chama a função que protege a página
                             <div class="row">
                                 <div class="input-field col s5">
                                     <input name="tipoPapel" id="tipoPapel" type="text" class="validate" <?php if(isset($_GET['idMaterial']))echo "value='".$resultado['tipo']."'"; ?>>
-                                    <label for="tipoPapel">Descricao do Papel</label>
+                                    <label for="tipoPapel" class="active">Descricao do Papel</label>
                                 </div>
                                 <div class="input-field col s2">
                                     <input name="base" id="base" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial']))echo "value='".$resultado['base']."'"; ?>>
-                                    <label for="base">Base (mm)</label>
+                                    <label for="base" class="active">Base (mm)</label>
                                 </div>
                                 <div class="input-field col s2">
                                     <input name="altura" id="altura" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial']))echo "value='".$resultado['altura']."'"; ?>>
-                                    <label for="altura">Altura (mm)</label>
+                                    <label for="altura" class="active">Altura (mm)</label>
                                 </div>
                                 <div class="input-field col s2">
                                 <select id="gramatura" name="gramatura">

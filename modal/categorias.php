@@ -1,4 +1,4 @@
-<div id="modalCategoria" class="modal">
+<div id="modalCategoria" class="modal center-text">
     <form class="col s12" role="form" method="POST" action="control/material.php">
         <div class="modal-content">
             <h4>Atualizar Categoria</h4>

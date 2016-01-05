@@ -10,18 +10,21 @@
     </head>
     <body style="background-color: #212121;">
         <div class="container">
-            <div class="row valign-wrapper">
-                <div class="col l3" id="result">
+            <div class="row">
+                <div id="result">
                     &nbsp;
                 </div>
-                <form class="col l6 valign" role="form" method="POST" action="control/valida.php">
+            </div>
+            <div class="row">
+                <div class="col l3">&nbsp;</div>
+                <form class="col l6" role="form" method="POST" action="control/valida.php">
                     <div class="card center-align">
                         <div class="card-content">
                             <span class="card-title">Efetuar Login</span>
                             <div class="row">
                                 <div class="input-field col l12">
                                     <input id="usuario" name="usuario" type="text" autofocus>
-                                    <label for="usuario">Nome de Usuário</label>
+                                    <label for="usuario" class="active">Nome de Usuário</label>
                                 </div>
                                 <div class="input-field col l12">
                                     <input id="senha" name="senha" type="password">
@@ -30,13 +33,10 @@
                             </div>
                         </div>
                         <div class="card-action">
-                            <button class="btn waves-effect waves-light" type="submit">Login</button>
+                            <button class="btn waves-effect waves-light green" type="submit">Login</button>
                         </div>
                     </div>
                 </form>
-                <div class="col l3">
-                    &nbsp;
-                </div>
             </div>
             <div class="row">
                 <div class="col l3"></div>

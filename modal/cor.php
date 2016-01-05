@@ -1,5 +1,5 @@
 <div id="modalCor" class="modal">
-    <form class="col s12" role="form" method="POST" action="control/material.php">
+    <form class="col s6" role="form" method="POST" action="control/material.php">
         <div class="modal-content">
             <h4>Atualizar Cor</h4>
             <div class="row">

@@ -19,7 +19,7 @@
 				<div class="search-results"></div>
 			</div>
 		</li> -->
-		<li class="bold"><a href="#" class="waves-effect waves-red accent-4"><b>Gráfica do Paulinho</b></a></li>
+		<li class="bold"><a href="index.php" class="waves-effect waves-red accent-4"><b>Gráfica do Paulinho</b></a></li>
 		<li class="no-padding">
 			<ul class="collapsible collapsible-accordion">
 				<li>
@@ -27,7 +27,7 @@
 					<div class="collapsible-body">
 						<ul>
 							<li><?php echo "<a href='incluirPessoa.php?idPessoa=" . $_SESSION['usuarioID'] . "&tipo=funcionario'" ?>>Perfil</a></li>
-							<li><a href="index.php?logout=true">Sair</a></li>
+							<li><a href="incluirPessoa.php?logout=true">Sair</a></li>
 						</ul>
 					</div>
 				</li>

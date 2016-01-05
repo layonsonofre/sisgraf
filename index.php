@@ -1,10 +1,6 @@
 <?php
 include("control/seguranca.php"); // Inclui o arquivo com o sistema de segurança
 protegePagina(); // Chama a função que protege a página
-if(isset($_GET['logout'])) {
-	unset($_SESSION['usuarioID'], $_SESSION['usuarioNome'], $_SESSION['usuarioLogin'], $_SESSION['usuarioSenha']);
-	header("Location: login.php");
-}
 ?>
 <!DOCTYPE php>
 <html lang="en">
