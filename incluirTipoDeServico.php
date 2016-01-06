@@ -1,13 +1,17 @@
 <?php
 include("control/seguranca.php"); // Inclui o arquivo com o sistema de segurança
 protegePagina(); // Chama a função que protege a página
+if(isset($_GET['logout'])) {
+    unset($_SESSION['usuarioID'], $_SESSION['usuarioNome'], $_SESSION['usuarioLogin'], $_SESSION['usuarioSenha']);
+    header("Location: login.php");
+}
 ?>
 <!DOCTYPE php>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-        <title>SISGRAF - Incluir Tipo de Serviço</title>
+        <title>SISGRAF - Atualizar Tipo de Serviço</title>
         <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 		<link href="css/font.css" rel="stylesheet">
         <link href="css/materialdesignicons.min.css" type="text/css" rel="stylesheet" media="all" />
@@ -15,9 +19,6 @@ protegePagina(); // Chama a função que protege a página
     <body>
     	<?php
     		include 'header.php';
-            include 'modal/unidadeDeMedida.php';
-            include 'modal/cor.php';
-            include 'modal/gramatura.php';
             include 'modal/categorias.php';
     	?>
         <div id="help" class="modal">
@@ -29,16 +30,15 @@ protegePagina(); // Chama a função que protege a página
                 <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Entendi</a>
             </div>
         </div>
-        
         <main>
             <div class="container">
                 <div class="row">
                     <div class="col s12">
                         <?php
                         if(isset($_GET['at']) && $_GET['at'] == 'ok')
-                            echo "<div class='card-panel green lighten-2 white-text'>Dados atualizados com sucesso!<i class='material-icons right'>close</i></div>";
+                            echo "<div id='msg' class='card-panel green lighten-2 white-text'>Pessoa atualizada com sucesso!<i class='material-icons right' id='close'>close</i></div>";
                         if(isset($_GET['at']) && $_GET['at'] == 'no')
-                            echo "<div class='card-panel red lighten-2 white-text'>Dados não atualizados no sistema, tente novamente.<i class='material-icons right'>close</i></div>";
+                            echo "<div id='msg' class='card-panel red lighten-2 white-text'>Dados não atualizados no sistema, tente novamente.<i class='material-icons right' id='close'>close</i></div>";
                         ?>
                     </div>
                 </div>
@@ -93,36 +93,29 @@ protegePagina(); // Chama a função que protege a página
                         if($_GET['tipo'] == 'carimbo') {
                         ?>
                             <div class="row">
-                                <div class="input-field col s4">
-                                    <input name="quantidade" id="quantidade" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['quantidade']."'"; ?> onclick="return soNumeros(quantidade)">
-                                    <label for="quantidade" class="active">Quantidade</label>
+                                <h5>Dados do Carimbo</h5>
+                                <div class="input-field col s2">
+                                    <input name="isAutomatico" id="isAutomatico" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['isAutomatico']."'"; ?>>
+                                    <label for="isAutomatico" class="active">Auto./Mad.</label>
                                 </div>
                                 <div class="input-field col s4">
-                                    <input name="quantidadeMinima" id="quantidadeMinima" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['quantidadeMinima']."'"; ?>>
-                                    <label for="quantidadeMinima" class="active">Quantidade Mínima</label>
+                                    <input name="nomeCarimbo" id="nomeCarimbo" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['nomeCarimbo']."'"; ?>>
+                                    <label for="nomeCarimbo" class="active">Nome</label>
                                 </div>
-                                <div class="input-field col s3">
-                                    <select id="unidade" name="unidade">
-                                        <option value="" disabled>Selecione</option>
-                                        <?php
-                                        $sql = "select * from MaterialUnidade;";
-                                        $query = mysql_query($sql);
-                                        while($materialUnidade = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                            echo "<option value='" . $materialUnidade['idMaterialUnidade'] . "'>" . $materialUnidade['descricao'] . "</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                    <label>Unidade de Medida</label>
+                                <div class="input-field col s2">
+                                    <input name="base" id="base" type="text" class="validate right-align" data-mask="9?99"<?php if(isset($_GET['idMaterial']))echo "value='".$resultado['base']."'"; ?>>
+                                    <label for="base" class="active">Base (mm)</label>
                                 </div>
-                                <div class="col s1">
-                                    <a href="#modalUnidadeDeMedida" id="addUnidade" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
+                                <div class="input-field col s2">
+                                    <input name="altura" id="altura" type="text" class="validate right-align" data-mask="9?99" <?php if(isset($_GET['idMaterial']))echo "value='".$resultado['altura']."'"; ?>>
+                                    <label for="altura" class="active">Altura (mm)</label>
                                 </div>
                             </div>
                         <?php
                         }
                         ?>
                         <?php
-                        if($_GET['tipo'] == 'papel') {
+                        if($_GET['tipo'] == 'nota') {
                         ?>
                             <div class="row">
                                 <div class="input-field col s5">
@@ -221,10 +214,11 @@ protegePagina(); // Chama a função que protege a página
                 </div>
             </div>
         </main>
-        <script src="js/jquery.js" type="text/javascript"></script>
-        <script src="js/materialize.js" type="text/javascript"></script>
-        <script src="js/init.js" type="text/javascript"></script>
-        <script src="js/cadastro.js" type="text/javascript"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/materialize.js"></script>
+        <script src="js/init.js"></script>
+        <script src="js/cadastro.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
+        <script src="control/cep/js/cep.js"></script>
     </body>
 </html>

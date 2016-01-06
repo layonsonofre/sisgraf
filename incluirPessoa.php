@@ -102,16 +102,16 @@ if(isset($_GET['logout'])) {
                                 <label for="nome" class="active">Nome</label>
                             </div>
                             <div class="input-field col s3">
-                                <input name="cpf" id="cpf" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['cpf']."'"; ?>>
+                                <input name="cpf" id="cpf" type="text" class="validate" data-mask="999.999.999-99" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['cpf']."'"; ?>>
                                 <label for="cpf" class="active">CPF</label>
                             </div>
                             <div class="input-field col s3">
                                 <input name="rg" id="rg" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['rg']."'"; ?>>
-                                <label for="rg" class="active">RG</label>
+                                <label for="rg" class="active">RG ou RNE</label>
                             </div>
                             <div class="input-field col s2">
-                                <input name="orgaoExpedidor" id="orgaoExpedidor" type="text" class="validate" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['orgaoExpedidor']."'"; ?>>
-                                <label for="orgaoExpedidor" class="active">Órgão Expedidor</label>
+                                <input name="orgaoExpedidor" id="orgaoExpedidor" type="text" class="validate" data-mask="www/ww" <?php if(isset($_GET['idPessoa'])) echo "value='".$resultado['orgaoExpedidor']."'"; ?>>
+                                <label for="orgaoExpedidor" class="active">Órgão Expedidor/UF</label>
                             </div>
                         </div>
                         <?php
@@ -134,15 +134,15 @@ if(isset($_GET['logout'])) {
                                 </div>
                                 <div class="row">
                                     <div class="input-field col s4">
-                                        <input name="cnpj" id="cnpj" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cnpj']."'"; ?>>
+                                        <input name="cnpj" id="cnpj" type="text" class="validate" data-mask="99.999.999/9999-99" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cnpj']."'"; ?>>
                                         <label for="cnpj" class="active">CNPJ</label>
                                     </div>
                                     <div class="input-field col s4">
-                                        <input name="inscricaoEstadual" id="inscricaoEstadual" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['inscricaoEstadual']."'"; ?>>
+                                        <input name="inscricaoEstadual" id="inscricaoEstadual" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['inscricaoEstadual']."'"; ?>>
                                         <label for="inscricaoEstadual" class="active">Inscrição Estadual</label>
                                     </div>
                                     <div class="input-field col s4">
-                                        <input name="inscricaoMunicipal" id="inscricaoMunicipal" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['inscricaoMunicipal']."'"; ?>>
+                                        <input name="inscricaoMunicipal" id="inscricaoMunicipal" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['inscricaoMunicipal']."'"; ?>>
                                         <label for="inscricaoMunicipal" class="active">Inscrição Municipal</label>
                                     </div>
                                 </div>
@@ -158,7 +158,7 @@ if(isset($_GET['logout'])) {
                                     $query = mysql_query($sql);
                                     while($telefones = mysql_fetch_array($query, MYSQL_ASSOC)) {
                                         echo "<div class=\"input-field col s5\">" .
-                                                "<input name=\"telefone[]\" id=\"telefone\" type=\"text\" class=\"validate\" value=\"".$telefones['numero']."\" >".
+                                                "<input name=\"telefone[]\" id=\"telefone\" type=\"text\" class=\"validate\"  data-mask=\"(99) 9999-9999?9\" value=\"".$telefones['numero']."\" >".
                                                 "<label for=\"telefone\" class=\"active\">Telefone</label>".
                                             "</div>".
                                             "<div class=\"col s1\">".
@@ -168,7 +168,7 @@ if(isset($_GET['logout'])) {
                                 }
                                 ?>
                                 <div class="input-field col s5">
-                                    <input name="telefone[]" id="telefone" type="text" class="validate">
+                                    <input name="telefone[]" id="telefone" type="text" class="validate" data-mask="(99) 9999-9999?9">
                                     <label for="telefone">Telefone</label>
                                 </div>
                                 <div class="col s1">
@@ -228,7 +228,7 @@ if(isset($_GET['logout'])) {
                         <div id="endereco">
                             <div class="row">
                                 <div class="input-field col s2">
-                                    <input name="cep" id="cep" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cep']."'"; ?>>
+                                    <input name="cep" id="cep" type="text" class="validate" data-mask="99.999-999" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cep']."'"; ?>>
                                     <label for="cep" class="active">CEP</label>
                                 </div>
                                 <div class="input-field col s5">
@@ -236,7 +236,7 @@ if(isset($_GET['logout'])) {
                                     <label for="nomeRua" class="active">Logradouro</label>
                                 </div>
                                 <div class="input-field col s1">
-                                    <input name="numero" id="numero" type="text" class="validate right-align" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['numero']."'"; ?>>
+                                    <input name="numero" id="numero" type="text" class="validate right-align" data-mask="9?99999999" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['numero']."'"; ?>>
                                     <label for="numero" class="active">Número</label>
                                 </div>
                                 <div class="input-field col s4">
@@ -349,5 +349,7 @@ if(isset($_GET['logout'])) {
         <script src="js/materialize.js"></script>
         <script src="js/init.js"></script>
         <script src="js/cadastro.js"></script>
+        <script src="js/jasny-bootstrap.min.js"></script>
+        <script src="control/cep/js/cep.js"></script>
     </body>
 </html>

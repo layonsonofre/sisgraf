@@ -1,4 +1,4 @@
-// $(document).ready(function($){
+$(document).ready(function($){
     $('.button-collapse').sideNav('show');
 	$(".dropdown-button").dropdown();
     $('.parallax').parallax();
@@ -6,4 +6,4 @@
     $('.modal-trigger').leanModal();
     $('select').material_select();
     //$('input#usuario').setFocus();
-// })(jQuery); // end of jQuery name space
+}); // end of jQuery name space

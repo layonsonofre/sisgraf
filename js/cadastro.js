@@ -1,4 +1,4 @@
-// $(document).ready(function(){
+$(function(){
     $('input[name=isPessoaFisica]').value('true');
     alert("debug");
     $('#pessoaFisica').show();
@@ -47,7 +47,7 @@
     });
 
     var wrapperEmail = $('#incluirEmail');
-    var add_buttonEmail = $("#addEmail")
+    var add_buttonEmail = $("#addEmail");
     var xEmail = 1;
     $(add_buttonEmail).click(function (e) {
         e.preventDefault();
@@ -92,7 +92,7 @@
 
     setTimeout(function() {
         if($("#msg").length>0) {
-            $("#msg").remove()
+            $("#msg").remove();
         }
     }, 5000);
 
@@ -100,4 +100,11 @@
         e.preventDefault();
         $(this).parent('div').remove();
     });
-// }); // end of document ready
+
+    function soNumero(x) {
+        var z = document.getElementById(x).value;
+        if(/\D/.test(z)) {
+            alert("Insira somente números (0-9) no campo " + x);
+        }
+    }
+}); // end of document ready

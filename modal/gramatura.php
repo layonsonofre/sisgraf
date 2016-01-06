@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="input-field col s6">
                     <input name="gramatura" id="gramatura" type="text" class="validate right-align">
-                    <label for="gramatura">Gramatura (g/cm^3)</label>
+                    <label for="gramatura">Gramatura <i>(g/m<sup>2</sup>)</i></label>
                 </div>
             </div>
         </div>
