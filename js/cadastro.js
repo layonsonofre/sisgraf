@@ -1,6 +1,5 @@
 $(function(){
-    $('input[name=isPessoaFisica]').value('true');
-    alert("debug");
+    $('input[name=isPessoaFisica]').val('true');
     $('#pessoaFisica').show();
     $('#pessoaJuridica').hide();
     $('input[name="tipoPessoa"]').click(function () {
@@ -17,30 +16,23 @@ $(function(){
         }
     });
 
-    var max_fields=9;
-
-    // var wrapperTel=$('#incluirTelefone');
-    // var add_buttonTel=$("#addTelefone")
-    var wrapperTel=document.getElementById("incluirTelefone");
-    var add_buttonTel=document.getElementById("addTelefone");
+    var wrapperTel=$("#incluirTelefone");
+    var add_buttonTel=$("#addTelefone");
     var xTel=1;
     $(add_buttonTel).click(function (e) {
-        alert(location.hostname);
         e.preventDefault();
-        if (xTel<=max_fields) {
-            xTel++;
-            $(wrapperTel).append('<div>'+
-                    '<div class=\"input-field col s5\">'+
-            		'<input id=\"telefone\" type=\"text\" class=\"validate\">'+
-                    '<label for=\"telefone\">Telefone #' + xTel + '</label>'+
-                    '</div>'+
-                    '<div class=\"col s1\">'+
-            		'<a id=\"remTelefone\" class=\"waves-effect waves-light red accent-4 btn-floating\"><i class=\"material-icons left\">phone</i></a>'+
-                    '</div></div>');
-        }
+        xTel++;
+        $(wrapperTel).append('<div>'+
+            '<div class=\"input-field col s5\">'+
+            '<input id=\"telefone\" type=\"text\" class=\"validate\">'+
+            '<label for=\"telefone\">Telefone #' + xTel + '</label>'+
+            '</div>'+
+            '<div class=\"col s1\">'+
+            '<a id=\"remTelefone\" class=\"waves-effect waves-light red accent-4 btn-floating\"><i class=\"material-icons left\">phone</i></a>'+
+            '</div></div>');
     });
 
-    $(wrapperTel).on("click", document.getElementById("remTelefone"), function (e) {
+    $(wrapperTel).on("click", "#remTelefone", function (e) {
         e.preventDefault();
         $(this).parent('div').parent('div').remove();
         xTel--;
@@ -51,17 +43,15 @@ $(function(){
     var xEmail = 1;
     $(add_buttonEmail).click(function (e) {
         e.preventDefault();
-        if (xEmail <= max_fields) {
-            xEmail++;
-            $(wrapperEmail).append('<div>' +
-                    '<div class=\"input-field col s5\">' +
-            		'<input id=\"email\" type=\"text\" class=\"validate\">' +
-                    '<label for=\"email\">Email #' + xEmail + '</label>' +
-                    '</div>' +
-                    '<div class=\"col s1\">' +
-            		'<a id=\"remEmail\" class=\"waves-effect waves-light red accent-4 btn-floating\"><i class=\"material-icons left\">mail</i></a>' +
-                    '</div></div>');
-        }
+        xEmail++;
+        $(wrapperEmail).append('<div>' +
+            '<div class=\"input-field col s5\">' +
+            '<input id=\"email\" type=\"text\" class=\"validate\">' +
+            '<label for=\"email\">Email #' + xEmail + '</label>' +
+            '</div>' +
+            '<div class=\"col s1\">' +
+            '<a id=\"remEmail\" class=\"waves-effect waves-light red accent-4 btn-floating\"><i class=\"material-icons left\">mail</i></a>' +
+            '</div></div>');
     });
 
     $(wrapperEmail).on("click", "#remEmail", function (e) {

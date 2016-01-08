@@ -43,7 +43,7 @@ if(isset($_GET['logout'])) {
                     </div>
                 </div>
             </div>
-            <div class="container">
+            <div class="container" >
                 <div class="row valign-wrapper">
                     <div class="col s12 l10">
                         <?php
@@ -86,9 +86,9 @@ if(isset($_GET['logout'])) {
                             <div class="row">
                                 <div class="col s12">
                                     <p>
-                                        <input name="tipoPessoa" type="radio" id="pFisica" checked>
+                                        <input name="tipoPessoa" type="radio" id="pFisica" value="pFisica">
                                         <label for="pFisica">Pessoa Física&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                        <input name="tipoPessoa" type="radio" id="pJuridica">
+                                        <input name="tipoPessoa" type="radio" id="pJuridica" value="pJuridica">
                                         <label for="pJuridica">Pessoa Juridica</label>
                                     </p>
                                 </div>
@@ -117,7 +117,7 @@ if(isset($_GET['logout'])) {
                         <?php
                         if($_GET['tipo'] != 'funcionario') {
                         ?>
-                            <div id="pessoaJuridica">
+                            <div id="pessoaJuridica" >
                                 <div class="row">
                                     <div class="input-field col s5">
                                         <input name="nomeFantasia" id="nomeFantasia" type="text" class="validate" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['nomeFantasia']."'"; ?>>
@@ -150,53 +150,55 @@ if(isset($_GET['logout'])) {
                         <?php
                         }
                         ?>
-                        <div class="row">
-                            <div id="incluirTelefone">
-                                <?php
-                                if(isset($_GET['idPessoa'])) {
-                                    $sql = "select * from Telefone where idPessoa=" . $idPessoa . ";";
-                                    $query = mysql_query($sql);
-                                    while($telefones = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                        echo "<div class=\"input-field col s5\">" .
-                                                "<input name=\"telefone[]\" id=\"telefone\" type=\"text\" class=\"validate\"  data-mask=\"(99) 9999-9999?9\" value=\"".$telefones['numero']."\" >".
-                                                "<label for=\"telefone\" class=\"active\">Telefone</label>".
-                                            "</div>".
-                                            "<div class=\"col s1\">".
-                                                "<a id=\"remTelefone\" class=\"waves-effect waves-light blue accent-4 btn-floating\"><i class=\"material-icons left\">phone</i></a>".
-                                            "</div>";
+                        <div>
+                            <div class="row">
+                                <div id="incluirTelefone">
+                                    <?php
+                                    if(isset($_GET['idPessoa'])) {
+                                        $sql = "select * from Telefone where idPessoa=" . $idPessoa . ";";
+                                        $query = mysql_query($sql);
+                                        while($telefones = mysql_fetch_array($query, MYSQL_ASSOC)) {
+                                            echo "<div class=\"input-field col s5\">" .
+                                                    "<input name=\"telefone[]\" id=\"telefone\" type=\"text\" class=\"validate\"  data-mask=\"(99) 9999-9999?9\" value=\"".$telefones['numero']."\" >".
+                                                    "<label for=\"telefone\" class=\"active\">Telefone</label>".
+                                                "</div>".
+                                                "<div class=\"col s1\">".
+                                                    "<a id=\"remTelefone\" class=\"waves-effect waves-light blue accent-4 btn-floating\"><i class=\"material-icons left\">phone</i></a>".
+                                                "</div>";
+                                        }
                                     }
-                                }
-                                ?>
-                                <div class="input-field col s5">
-                                    <input name="telefone[]" id="telefone" type="text" class="validate" data-mask="(99) 9999-9999?9">
-                                    <label for="telefone">Telefone</label>
+                                    ?>
+                                    <div class="input-field col s5">
+                                        <input name="telefone[]" id="telefone" type="text" class="validate" data-mask="(99) 9999-9999?9">
+                                        <label for="telefone">Telefone</label>
+                                    </div>
+                                    <div class="col s1">
+                                        <a id="addTelefone" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">phone</i></a>
+                                    </div>
                                 </div>
-                                <div class="col s1">
-                                    <a id="addTelefone" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">phone</i></a>
-                                </div>
-                            </div>
-                            <div id="incluirEmail">
-                                <?php
-                                if(isset($_GET['idPessoa'])) {
-                                    $sql = "select * from Email where idPessoa=" . $idPessoa . ";";
-                                    $query = mysql_query($sql);
-                                    while($emails = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                        echo "<div class=\"input-field col s5\">" .
-                                                "<input name=\"email[]\" id=\"email\" type=\"email\" class=\"validate\" value=\"".$emails['endereco']."\" >".
-                                                "<label for=\"email\" class=\"active\">Email</label>".
-                                            "</div>".
-                                            "<div class=\"col s1\">".
-                                                "<a id=\"remEmail\" class=\"waves-effect waves-light blue accent-4 btn-floating\"><i class=\"material-icons left\">mail</i></a>".
-                                            "</div>";
+                                <div id="incluirEmail">
+                                    <?php
+                                    if(isset($_GET['idPessoa'])) {
+                                        $sql = "select * from Email where idPessoa=" . $idPessoa . ";";
+                                        $query = mysql_query($sql);
+                                        while($emails = mysql_fetch_array($query, MYSQL_ASSOC)) {
+                                            echo "<div class=\"input-field col s5\">" .
+                                                    "<input name=\"email[]\" id=\"email\" type=\"email\" class=\"validate\" value=\"".$emails['endereco']."\" >".
+                                                    "<label for=\"email\" class=\"active\">Email</label>".
+                                                "</div>".
+                                                "<div class=\"col s1\">".
+                                                    "<a id=\"remEmail\" class=\"waves-effect waves-light blue accent-4 btn-floating\"><i class=\"material-icons left\">mail</i></a>".
+                                                "</div>";
+                                        }
                                     }
-                                }
-                                ?>
-                                <div class="input-field col s5">
-                                    <input name="email[]" id="email" type="email" class="validate">
-                                    <label for="email">Email</label>
-                                </div>
-                                <div class="col s1">
-                                    <a id="addEmail" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">mail</i></a>
+                                    ?>
+                                    <div class="input-field col s5">
+                                        <input name="email[]" id="email" type="email" class="validate">
+                                        <label for="email">Email</label>
+                                    </div>
+                                    <div class="col s1">
+                                        <a id="addEmail" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">mail</i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
