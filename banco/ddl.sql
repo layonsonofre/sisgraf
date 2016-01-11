@@ -209,7 +209,8 @@ CREATE TABLE Material (
 CREATE TABLE Material_Vias (
                 idVias INT NOT NULL,
                 idMaterial INT NOT NULL,
-                PRIMARY KEY (idVias, idMaterial)
+                idAcabamento INT NOT NULL,
+                PRIMARY KEY (idVias, idMaterial, idAcabamento)
 );
 
 
@@ -241,7 +242,7 @@ CREATE TABLE Cor_Material (
 CREATE TABLE Categoria (
                 idCategoria INT AUTO_INCREMENT NOT NULL,
                 nome VARCHAR(24) NOT NULL,
-                Column_3 VARCHAR(60) NOT NULL,
+                descricao VARCHAR(60) NOT NULL,
                 PRIMARY KEY (idCategoria)
 );
 
@@ -271,6 +272,8 @@ CREATE TABLE Pessoa (
                 cep VARCHAR(10) NOT NULL,
                 bairro VARCHAR(24) NOT NULL,
                 estado CHAR(2) NOT NULL,
+                cidade VARCHAR(32) NOT NULL,
+                orgaoExpedidor VARCHAR(9) NOT NULL,
                 PRIMARY KEY (idPessoa)
 );
 
@@ -347,6 +350,12 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE TipoServico_Acabamento ADD CONSTRAINT acabamento_tiposervico_acabamento_fk
+FOREIGN KEY (idAcabamento)
+REFERENCES Acabamento (idAcabamento)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE Material_Vias ADD CONSTRAINT acabamento_material_vias_fk
 FOREIGN KEY (idAcabamento)
 REFERENCES Acabamento (idAcabamento)
 ON DELETE NO ACTION
@@ -555,12 +564,3 @@ FOREIGN KEY (idPessoa)
 REFERENCES Pessoa (idPessoa)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
-
-ALTER TABLE `Pessoa`
-ADD COLUMN `cidade` varchar(32) NOT NULL AFTER `estado`;
-
-ALTER TABLE `Pessoa`
-ADD COLUMN `orgaoExpedidor` varchar(9) NOT NULL AFTER `cidade`;
-
-ALTER TABLE `Categoria`
-CHANGE `Column_3` `descricao` varchar(60) NOT NULL;

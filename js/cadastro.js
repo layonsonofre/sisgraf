@@ -36,6 +36,21 @@ $(function(){
         e.preventDefault();
         $(this).parent('div').parent('div').remove();
         xTel--;
+        var idTelefone = $(this).attr('idtelefone');
+        var idPessoa = $(this).attr('idpessoa');
+        var tipo = $(this).attr('tipo');
+        $.ajax({
+            type: 'POST',
+            url: 'control/pessoa.php',
+            data: 'idTelefone='+idTelefone+"&idPessoa="+idPessoa+"&acao=excluirTelefone&tipo="+tipo,
+            success: function(data) {
+                if(data) {
+                    console.log('Falha removendo o telefone');
+                } else {
+                    console.log(idTelefone + " " + idPessoa + " " + tipo);
+                }
+            }
+        });
     });
 
     var wrapperEmail = $('#incluirEmail');
@@ -58,6 +73,21 @@ $(function(){
         e.preventDefault();
         $(this).parent('div').parent('div').remove();
         xEmail--;
+        var idEmail = $(this).attr('idemail');
+        var idPessoa = $(this).attr('idpessoa');
+        var tipo = $(this).attr('tipo');
+        $.ajax({
+            type: 'POST',
+            url: 'control/pessoa.php',
+            data: 'idEmail='+idEmail+"&idPessoa="+idPessoa+"&acao=excluirEmail&tipo="+tipo,
+            success: function(data) {
+                if(data) {
+                    console.log('Falha removendo o telefone');
+                } else {
+                    console.log(idEmail + " " + idPessoa + " " + tipo);
+                }
+            }
+        });
     });
 
     $('#confirmacaosenha').on("focusin", function() {
@@ -84,7 +114,7 @@ $(function(){
         if($("#msg").length>0) {
             $("#msg").remove();
         }
-    }, 5000);
+    }, 3000);
 
     $("#msg").on("click", "#close", function (e) {
         e.preventDefault();

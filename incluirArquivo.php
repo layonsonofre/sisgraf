@@ -72,9 +72,9 @@ protegePagina(); // Chama a função que protege a página
                                 <input name="data" id="data" type="text" class="validate right-align" <?php if(isset($_GET['idArquivo'])) echo "value='".$resultado['data']."'"; ?>>
                                 <label for="data" class="active">Data</label>
                             </div>
-                        
-						
-						<div class="input-field col s11">
+                        </div>
+                        <div class="row">
+    						<div class="input-field col s11">
                                 <select id="OS" name="OS">
                                     <option value="" disabled>Selecione</option>
                                     <?php
@@ -87,34 +87,49 @@ protegePagina(); // Chama a função que protege a página
                                 </select>
                                 <label>Ordem de Serviço</label>
                             </div>
-						
-                            
-							
-                            <div id="ArquivoMatriz">
+                        </div>
+                        <div id="arquivoModelo">
+                            <div class="row">
+                                <div class="col s12">
+                                    <h4>Modelo</h4>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="input-field col s11">
-                                    <select id="ArquivoMatriz" name="ArquivoMatriz[]" multiple>
-                                        <option value="" disabled>Selecione</option>
-                                    <?php
-                                    $sql = "select * from ArquivoMatriz;";
-                                    $query = mysql_query($sql);
-                                    while($ArquivoMatriz = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                        echo "<option value='".$categorias['idArquivoMatriz']."' ";
-                                        if(isset($_GET['idPessoa'])) {
-                                            $sql2 = "select * from Arquivo_ArquivoMatriz where idArquivoMatriz=".$ArquivoMatriz['idArquivoMatriz']." and idArquivo=".$idArquivo.";";
-                                            $query2 = mysql_query($sql2);
-                                            if( mysql_num_rows($query2) == 1) {
-                                                echo "selected";
-                                            }
-                                        }
-                                        echo ">".$ArquivoMatriz['url']."</option>";
-                                    }
-                                    ?>
-                                    </select>
-                                    <label>Arquivos Matriz</label>
+                                    <input name="urlModelo" id="url" type="text" class="validate" <?php if(isset($_GET['idArquivoModelo'])) echo "value='".$resultado['urlModelo']."'"; ?>>
+                                    <label for="urlModelo" class="active">Insira o local em que o arquivo está armazenado</label>
+                                </div>
+                                <div class="col s1">
+                                    <a id="addModelo" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
                                 </div>
                             </div>
                         </div>
-				</div>
+                        <div id="ArquivoMatriz">
+                            <div class="row">
+                                <div class="col s12">
+                                    <h4>Matriz</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s11">
+                                    <input name="urlMatriz" id="urlMatriz" type="text" class="validate" <?php if(isset($_GET['idArquivoMatriz'])) echo "value='".$resultado['urlMatriz']."'"; ?>>
+                                    <label for="urlMatriz" class="active">URL</label>
+                                </div>
+                                <div class="col s1">
+                                    <a id="addMatriz" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input name="utilizacoes" id="utilizacoes" type="text" class="validate right-align" <?php if(isset($_GET['idArquivoMatriz'])) echo "value='".$resultado['utilizacoes']."'"; ?>>
+                                    <label for="utilizacoes" class="active">Utilizações</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input name="idChapa" id="idChapa" type="text" class="validate right-align" <?php if(isset($_GET['idArquivoMatriz'])) echo "value='".$resultado['idChapa']."'"; ?>>
+                                    <label for="idChapa" class="active">ID da Chapa</label>
+                                </div>
+                            </div>
+                        </div>
                        
                         <?php
                         if(isset($_GET['idArquivo']))
@@ -123,7 +138,7 @@ protegePagina(); // Chama a função que protege a página
                             echo "<input type=\"hidden\" name=\"idMaterial\" value=\"" . $idArquivo . "\" />";
                         ?>
                         <button class="btn waves-effect waves-light green accent-4" type="submit" name="salvar">Salvar<i class="material-icons right"></i></button>
-                        <input type="hidden" name="acao" value="inserir" />
+                        <input type="hidden" name="acao" value="<?php echo isset($_GET['idArquivo']) ? 'atualizar' : 'inserir';  ?>" />
                         <input type="hidden" name="tipo" value="<?php echo $_GET['tipo']; ?>" />
                     </form>
                     <form role="form" method="POST" name="excluir" action="control/arquivo.php">

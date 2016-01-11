@@ -203,7 +203,7 @@ if(isset($_GET['logout'])) {
                             echo "<input type=\"hidden\" name=\"idMaterial\" value=\"" . $idMaterial . "\" />";
                         ?>
                         <button class="btn waves-effect waves-light green accent-4" type="submit" name="salvar">Salvar<i class="material-icons right">send</i></button>
-                        <input type="hidden" name="acao" value="inserir" />
+                        <input type="hidden" name="acao" value="<?php echo isset($_GET['idTS']) ? 'atualizar' : 'inserir';  ?>" />
                         <input type="hidden" name="tipo" value="<?php echo $_GET['tipo']; ?>" />
                     </form>
                     <form role="form" method="POST" name="excluir" action="control/material.php">

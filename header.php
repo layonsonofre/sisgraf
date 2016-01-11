@@ -37,6 +37,66 @@
 		<li class="no-padding">
 			<ul class="collapsible collapsible-accordion">
 				<li>
+					<a class="collapsible-header waves-effect waves-red accent-4">Ordem de Serviço<i class="mdi-navigation-arrow-drop-down right"></i></a>
+					<div class="collapsible-body">
+						<ul>
+							<li><a href='incluirOrdemDeServico.php'>Cadastrar</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</li>
+		<li class="no-padding">
+			<ul class="collapsible collapsible-accordion">
+				<li>
+					<a class="collapsible-header waves-effect waves-red accent-4">Arquivo<i class="mdi-navigation-arrow-drop-down right"></i></a>
+					<div class="collapsible-body">
+						<ul>
+							<li><a href='incluirArquivo.php'>Cadastrar</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</li>
+		<li class="no-padding">
+			<ul class="collapsible collapsible-accordion">
+				<li>
+					<a class="collapsible-header waves-effect waves-red accent-4">Tipo de Serviço<i class="mdi-navigation-arrow-drop-down right"></i></a>
+					<div class="collapsible-body">
+						<ul>
+							<li><a href='incluirTipoDeServico.php?tipo=carimbo'>Cadastrar Carimbo</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</li>
+		<li class="no-padding">
+			<ul class="collapsible collapsible-accordion">
+				<li>
+					<a class="collapsible-header waves-effect waves-red accent-4">Material<i class="mdi-navigation-arrow-drop-down right"></i></a>
+					<div class="collapsible-body">
+						<ul>
+							<li><a href='incluirMaterial.php?tipo=material'>Cadastrar</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</li>
+		<li class="no-padding">
+			<ul class="collapsible collapsible-accordion">
+				<li>
+					<a class="collapsible-header waves-effect waves-red accent-4">Papel<i class="mdi-navigation-arrow-drop-down right"></i></a>
+					<div class="collapsible-body">
+						<ul>
+							<li><a href='incluirMaterial.php?tipo=papel'>Cadastrar</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</li>
+		<li class="no-padding">
+			<ul class="collapsible collapsible-accordion">
+				<li>
 					<a class="collapsible-header waves-effect waves-red accent-4">Cliente<i class="mdi-navigation-arrow-drop-down right"></i></a>
 					<div class="collapsible-body">
 						<ul>
@@ -65,30 +125,6 @@
 					<div class="collapsible-body">
 						<ul>
 							<li><a href='incluirPessoa.php?tipo=funcionario'>Cadastrar</a></li>
-						</ul>
-					</div>
-				</li>
-			</ul>
-		</li>
-		<li class="no-padding">
-			<ul class="collapsible collapsible-accordion">
-				<li>
-					<a class="collapsible-header waves-effect waves-red accent-4">Material<i class="mdi-navigation-arrow-drop-down right"></i></a>
-					<div class="collapsible-body">
-						<ul>
-							<li><a href='incluirMaterial.php?tipo=material'>Cadastrar</a></li>
-						</ul>
-					</div>
-				</li>
-			</ul>
-		</li>
-		<li class="no-padding">
-			<ul class="collapsible collapsible-accordion">
-				<li>
-					<a class="collapsible-header waves-effect waves-red accent-4">Papel<i class="mdi-navigation-arrow-drop-down right"></i></a>
-					<div class="collapsible-body">
-						<ul>
-							<li><a href='incluirMaterial.php?tipo=papel'>Cadastrar</a></li>
 						</ul>
 					</div>
 				</li>

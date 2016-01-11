@@ -31,7 +31,9 @@ $usuario = isset($_POST['usuario']) ? $_POST['usuario'] : '';
 $tipoFuncionario = "padrao";
 
 $telefone = isset($_POST['telefone']) ? $_POST['telefone'] : '';
+$idTelefone = isset($_POST['idTelefone']) ? $_POST['idTelefone'] : '';
 $email = isset($_POST['email']) ? $_POST['email'] : '';
+$idEmail = isset($_POST['idEmail']) ? $_POST['idEmail'] : '';
 
 $categoria = isset($_POST['categoria']) ? $_POST['categoria'] : '';
 
@@ -73,7 +75,7 @@ if($acao == '') {
 	if($idPessoa == null) {
 		header('Location: ../listarPessoa.php?at=no&tipo='.$tipo);
 	}
-	$sql = "update `Pessoa` set `status`=".$_GET['tipo']."Inativo where `idPessoa`=".$idPessoa.";";
+	$sql = "update `Pessoa` set `status`='".$_GET['tipo']."Inativo' where `idPessoa`='".$idPessoa."';";
 	$query = mysql_query($sql);
 	// $sql = "delete from `Fornecedor_Categoria` where `idPessoa=`".$idPessoa.";" .
 	// "delete from `Telefone` where `idPessoa`=".$idPessoa.";" .
@@ -82,5 +84,39 @@ if($acao == '') {
 	// "delete from `Pessoa` where `idPessoa`=".$idPessoa.";";
 	// $query = mysql_query($sql);
 	//header('Location: ../listarPessoa.php?at=no&tipo='.$tipo);
+} else if($acao == 'atualizar') {
+	if($idPessoa == null ) {
+		header('Location: ../incluirPessoa.php?at=no&tipo='.$tipo);
+	}
+	$sql = "UPDATE `Pessoa` SET `nome`='". $nome."',`status`='".$status."',`isPessoaFisica`='".$isPessoaFisica."',`cpf`='".$cpf.
+	"',`rg`='".$rg."',`cnpj`='".$cnpj."',`inscricaoEstadual`='".$inscricaoEstadual."',`inscricaoMunicipal`='".$inscricaoMunicipal.
+	"',`razaoSocial`='".$razaoSocial."',`nomeFantasia`='".$nomeFantasia."',`nomeRua`='".$nomeRua."',`numero`='".$numero.
+	"',`complemento`='".$complemento."',`cep`='".$cep."',`bairro`='".$bairro."',`estado`='".$estado."',`cidade`='".$cidade.
+	"',`orgaoExpedidor`='".$orgaoExpedidor."' WHERE `idPessoa`='".$idPessoa."';";
+	$query = mysql_query($sql);
+	foreach($telefone as $t) {
+		$sql = "INSERT INTO `Telefone` (`idTelefone`, `idPessoa`, `numero`) values (NULL,'".$idPessoa."', '".$t."') ON DUPLICATE KEY UPDATE `numero`='".$t."';";
+		$query = mysql_query($sql);
+		echo $sql;
+	}/*
+	foreach($email as $e) {
+		$sql = "INSERT INTO `Email` (`idEmail`,`idPessoa`,`endereco`) VALUES (NULL,\"".$idPessoa."\",\"".$e."\") ON DUPLICATE KEY UPDATE `endereco`='".$e."';";
+		$query = mysql_query($sql);
+	}
+	if($tipo == "fornecedor") {
+		if($categoria != NULL) {
+			foreach($categoria as $c) {
+				$sql = "INSERT INTO `Fornecedor_Categoria` (`idPessoa`,`idCategoria`) VALUES (\"".$idPessoa."\",\"".$c."\") ON DUPLICATE KEY UPDATE `idPessoa`='".$idCategoria."';";
+				$query = mysql_query($sql);
+			}
+		}
+	}*/
+	header('Location: ../incluirPessoa.php?idPessoa='.$idPessoa.'&at=ok&tipo='.$tipo);
+} else if($acao == 'excluirTelefone') {
+	$sql = "DELETE FROM `Telefone` WHERE `idTelefone`=".$idTelefone." AND `idPessoa`=".$idPessoa.";";
+	$query = mysql_query($sql);
+} else if($acao == 'excluirEmail') {
+	$sql = "DELETE FROM `Email` WHERE `idEmail`=".$idEmail." AND `idPessoa`=".$idPessoa.";";
+	$query = mysql_query($sql);
 }
 ?>

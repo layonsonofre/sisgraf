@@ -6,4 +6,8 @@ $(document).ready(function($){
     $('.modal-trigger').leanModal();
     $('select').material_select();
     //$('input#usuario').setFocus();
+    $('.datepicker').pickdate({
+    	selectMonths: true,
+    	selectYears: 5
+    });
 }); // end of jQuery name space
