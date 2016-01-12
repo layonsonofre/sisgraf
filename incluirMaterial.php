@@ -93,7 +93,7 @@ protegePagina(); // Chama a função que protege a página
                                 <label for="quantidadeMinima" class="active">Quantidade Mínima</label>
                             </div>
                             <div class="input-field col s3">
-                                <select id="unidade" name="unidade">
+                                <select id="selectUnidade" name="selectUnidade">
                                     <option value="" disabled>Selecione</option>
                                     <?php
                                     $sql = "select * from MaterialUnidade;";
@@ -126,7 +126,7 @@ protegePagina(); // Chama a função que protege a página
                                     <label for="altura" class="active">Altura (mm)</label>
                                 </div>
                                 <div class="input-field col s2">
-                                <select id="gramatura" name="gramatura">
+                                <select id="selectGramatura" name="selectGramatura">
                                     <option value="" disabled>Selecione</option>
                                     <?php
                                     $sql = "select * from GramaturaPapel;";
@@ -147,15 +147,15 @@ protegePagina(); // Chama a função que protege a página
                         ?>
                         <div class="row">
                             <div class="input-field col s11">
-                                <select id="cor" name="cor[]" multiple>
+                                <select id="selectCor" name="selectCor[]" multiple>
                                     <option value="" disabled>Selecione as cores do material</option>
-                                <?php
-                                $sql = "select * from Cor;";
-                                $query = mysql_query($sql);
-                                while($cores = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                    echo "<option value='" . $cores['idCor'] . "'>" . $cores['nome'] . "</option>";
-                                }
-                                ?>
+                                    <?php
+                                    $sql = "select * from Cor;";
+                                    $query = mysql_query($sql);
+                                    while($cores = mysql_fetch_array($query, MYSQL_ASSOC)) {
+                                        echo "<option value='" . $cores['idCor'] . "'>" . $cores['nome'] . "</option>";
+                                    }
+                                    ?>
                                 </select>
                                 <label>Cores</label>
                             </div>
@@ -166,7 +166,7 @@ protegePagina(); // Chama a função que protege a página
                         <div id="categorias">
                             <div class="row">
                                 <div class="input-field col s11">
-                                    <select id="categoria" name="categoria[]" multiple>
+                                    <select id="selectCategoria" name="selectCategoria[]" multiple>
                                         <option value="" disabled>Selecione as categorias que o material pertence</option>
                                     <?php
                                     $sql = "select * from Categoria;";
@@ -209,10 +209,14 @@ protegePagina(); // Chama a função que protege a página
                 </div>
             </div>
         </main>
-        <script src="js/jquery.js" type="text/javascript"></script>
-        <script src="js/materialize.js" type="text/javascript"></script>
-        <script src="js/init.js" type="text/javascript"></script>
-        <script src="js/cadastro.js" type="text/javascript"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/materialize.js"></script>
+        <script src="js/init.js"></script>
+        <script src="js/cadastro.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
+        <script src="js/ajax/categorias.js"></script>
+        <script src="js/ajax/cor.js"></script>
+        <script src="js/ajax/gramatura.js"></script>
+        <script src="js/ajax/unidadeDeMedida.js"></script>
     </body>
 </html>

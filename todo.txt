@@ -11,3 +11,4 @@
 	- Modelo: mais campos com thumbnail
 	- Matriz: mais campos
 - Duplicando telefone e email na atualização
+- Material falta cadastrar o fornecedor

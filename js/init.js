@@ -6,7 +6,7 @@ $(document).ready(function($){
     $('.modal-trigger').leanModal();
     $('select').material_select();
     //$('input#usuario').setFocus();
-    $('.datepicker').pickdate({
+    $('.datepicker').pickadate({
     	selectMonths: true,
     	selectYears: 5
     });

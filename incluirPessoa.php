@@ -170,7 +170,7 @@ if(isset($_GET['logout'])) {
                                     }
                                     ?>
                                     <div class="input-field col s5">
-                                        <input name="telefone[]" id="telefone" type="text" class="validate" data-mask="(99) 9999-9999?9" required>
+                                        <input name="telefone[]" id="telefone" type="text" class="validate" data-mask="(99) 9999-9999?9">
                                         <label for="telefone">Telefone</label>
                                     </div>
                                     <div class="col s1">
@@ -232,7 +232,7 @@ if(isset($_GET['logout'])) {
                         <div id="endereco">
                             <div class="row">
                                 <div class="input-field col s2">
-                                    <input name="cep" id="cep" type="text" class="validate" data-mask="99.999-999" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cep']."'"; ?>>
+                                    <input name="cep" id="cep" type="text" class="validate" data-mask="99999-999" <?php if(isset($_GET['idPessoa']))echo "value='".$resultado['cep']."'"; ?>>
                                     <label for="cep" class="active">CEP</label>
                                 </div>
                                 <div class="input-field col s5">
@@ -354,6 +354,5 @@ if(isset($_GET['logout'])) {
         <script src="js/init.js"></script>
         <script src="js/cadastro.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
-        <script src="control/cep/js/cep.js"></script>
     </body>
 </html>

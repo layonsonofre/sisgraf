@@ -94,24 +94,43 @@ if($acao == '') {
 	"',`complemento`='".$complemento."',`cep`='".$cep."',`bairro`='".$bairro."',`estado`='".$estado."',`cidade`='".$cidade.
 	"',`orgaoExpedidor`='".$orgaoExpedidor."' WHERE `idPessoa`='".$idPessoa."';";
 	$query = mysql_query($sql);
-	foreach($telefone as $t) {
-		$sql = "INSERT INTO `Telefone` (`idTelefone`, `idPessoa`, `numero`) values (NULL,'".$idPessoa."', '".$t."') ON DUPLICATE KEY UPDATE `numero`='".$t."';";
-		$query = mysql_query($sql);
-		echo $sql;
-	}/*
-	foreach($email as $e) {
-		$sql = "INSERT INTO `Email` (`idEmail`,`idPessoa`,`endereco`) VALUES (NULL,\"".$idPessoa."\",\"".$e."\") ON DUPLICATE KEY UPDATE `endereco`='".$e."';";
+	// atualizando telefones já existentes e inserindo novos
+	for($i = 0, $size = count($idTelefone); $i < $size; $i++) {
+		$sql = "UPDATE `Telefone` SET `numero`='".$telefone[$i]."' WHERE `idTelefone`='".$idTelefone[$i]."'; ";
 		$query = mysql_query($sql);
 	}
+	for($i = count($idTelefone), $size = count($telefone); $i < $size; $i++) {
+		if($telefone[$i] == NULL) continue;
+		$sql = "INSERT INTO `Telefone` (`idTelefone`, `idPessoa`, `numero`) VALUES (NULL,'".$idPessoa."', '".$telefone[$i]."'); ";
+		$query = mysql_query($sql);
+	}
+
+	// atualizando emails já existentes e inserindo novos
+	echo var_dump($idEmail);
+	echo "aloualou";
+	echo var_dump($email);
+	for($i = 0, $size = count($idEmail); $i < $size; $i++) {
+		//$sql = "UPDATE `Email` SET `endereco`='".$email[$i]."' WHERE `idEmail`='".$idEmail[$i]."'; ";
+		//$query = mysql_query($sql);
+		echo $idEmail[$i] ."->".$email[$i];
+	}
+	for($i = count($idEmail), $size = count($email); $i < $size; $i++) {
+		if($email[$i] == NULL) continue;
+		//$sql = "INSERT INTO `Email` (`idEmail`, `idPessoa`, `endereco`) VALUES (NULL,'".$idPessoa."', '".$email[$i]."'); ";
+		//$query = mysql_query($sql);
+		echo $email[$i];
+	}
+
+	// atualizando categorias de materiais
 	if($tipo == "fornecedor") {
 		if($categoria != NULL) {
 			foreach($categoria as $c) {
-				$sql = "INSERT INTO `Fornecedor_Categoria` (`idPessoa`,`idCategoria`) VALUES (\"".$idPessoa."\",\"".$c."\") ON DUPLICATE KEY UPDATE `idPessoa`='".$idCategoria."';";
+				$sql = "INSERT INTO `Fornecedor_Categoria` (`idPessoa`,`idCategoria`) VALUES (\"".$idPessoa."\",\"".$c."\")";
 				$query = mysql_query($sql);
 			}
 		}
-	}*/
-	header('Location: ../incluirPessoa.php?idPessoa='.$idPessoa.'&at=ok&tipo='.$tipo);
+	}
+	//header('Location: ../incluirPessoa.php?idPessoa='.$idPessoa.'&at=ok&tipo='.$tipo);
 } else if($acao == 'excluirTelefone') {
 	$sql = "DELETE FROM `Telefone` WHERE `idTelefone`=".$idTelefone." AND `idPessoa`=".$idPessoa.";";
 	$query = mysql_query($sql);
