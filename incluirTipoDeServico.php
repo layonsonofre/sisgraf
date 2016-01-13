@@ -54,7 +54,7 @@ if(isset($_GET['logout'])) {
                             } else if($_GET['tipo'] == 'nota') {
                                 echo "<h4>Atualizar Nota Fiscal</h4>";
                             }
-                            $sql = "select * from TipoServico, Carimbo, NotaFiscal, ModeloNotaFiscal where TipoServico.idTipoServico=" . $idTipoServico . ";";
+                            $sql = "select * from TipoServico, Carimbo, NotaFiscal, ModeloNotaFiscal where TipoServico.idTipoServico=" . $idTipoDeServico . ";";
                             $query = mysql_query($sql);
                             $resultado = mysql_fetch_assoc($query);
                         }
@@ -93,21 +93,28 @@ if(isset($_GET['logout'])) {
                         if($_GET['tipo'] == 'carimbo') {
                         ?>
                             <div class="row">
-                                <h5>Dados do Carimbo</h5>
+                                <div class="col s12">
+                                    <h5>Dados do Carimbo</h5>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="input-field col s2">
-                                    <input name="isAutomatico" id="isAutomatico" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['isAutomatico']."'"; ?>>
-                                    <label for="isAutomatico" class="active">Auto./Mad.</label>
+                                    <select id="isAutomatico" name="isAutomatico">
+                                        <option value="true" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == 'TRUE') echo "selected"; } ?> >Automático</option>
+                                        <option value="false" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == 'FALSE') echo "selected"; } ?> >Madeira</option>
+                                    </select>
+                                    <label for="isAutomatico" class="active">Tipo</label>
                                 </div>
                                 <div class="input-field col s4">
-                                    <input name="nomeCarimbo" id="nomeCarimbo" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['nomeCarimbo']."'"; ?>>
+                                    <input name="nomeCarimbo" id="nomeCarimbo" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['nomeCarimbo']."'"; ?> length="10" maxlength="10">
                                     <label for="nomeCarimbo" class="active">Nome</label>
                                 </div>
                                 <div class="input-field col s2">
-                                    <input name="base" id="base" type="text" class="validate right-align" data-mask="9?99"<?php if(isset($_GET['idMaterial']))echo "value='".$resultado['base']."'"; ?>>
+                                    <input name="base" id="base" type="text" class="validate right-align" data-mask="9?99"<?php if(isset($_GET['idTS'])) echo "value='".$resultado['base']."'"; ?>>
                                     <label for="base" class="active">Base (mm)</label>
                                 </div>
                                 <div class="input-field col s2">
-                                    <input name="altura" id="altura" type="text" class="validate right-align" data-mask="9?99" <?php if(isset($_GET['idMaterial']))echo "value='".$resultado['altura']."'"; ?>>
+                                    <input name="altura" id="altura" type="text" class="validate right-align" data-mask="9?99" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['altura']."'"; ?>>
                                     <label for="altura" class="active">Altura (mm)</label>
                                 </div>
                             </div>
@@ -115,92 +122,10 @@ if(isset($_GET['logout'])) {
                         }
                         ?>
                         <?php
-                        if($_GET['tipo'] == 'nota') {
-                        ?>
-                            <div class="row">
-                                <div class="input-field col s5">
-                                    <input name="tipoPapel" id="tipoPapel" type="text" class="validate" <?php if(isset($_GET['idMaterial']))echo "value='".$resultado['tipo']."'"; ?>>
-                                    <label for="tipoPapel" class="active">Descricao do Papel</label>
-                                </div>
-                                <div class="input-field col s2">
-                                    <input name="base" id="base" type="text" class="validate right-align" data-mask="99?99"<?php if(isset($_GET['idMaterial']))echo "value='".$resultado['base']."'"; ?>>
-                                    <label for="base" class="active">Base (mm)</label>
-                                </div>
-                                <div class="input-field col s2">
-                                    <input name="altura" id="altura" type="text" class="validate right-align" data-mask="99?99" <?php if(isset($_GET['idMaterial']))echo "value='".$resultado['altura']."'"; ?>>
-                                    <label for="altura" class="active">Altura (mm)</label>
-                                </div>
-                                <div class="input-field col s2">
-                                <select id="gramatura" name="gramatura">
-                                    <option value="" disabled>Selecione</option>
-                                    <?php
-                                    $sql = "select * from GramaturaPapel;";
-                                    $query = mysql_query($sql);
-                                    while($gramatura = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                        echo "<option value='" . $gramatura['idGramaturaPapel'] . "'>" . $gramatura['gramatura'] . " <i>(g/m<sup>2</sup>)</i></option>";
-                                    }
-                                    ?>
-                                </select>
-                                <label>Gramatura</label>
-                            </div>
-                                <div class="col s1">
-                                    <a id="addGramatura" href="#modalGramatura" class="waves-effect modal-trigger waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
-                                </div>
-                            </div>
-                        <?php
-                        }
-                        ?>
-                        <div class="row">
-                            <div class="input-field col s11">
-                                <select id="cor" name="cor[]" multiple>
-                                    <option value="" disabled>Selecione as cores do material</option>
-                                <?php
-                                $sql = "select * from Cor;";
-                                $query = mysql_query($sql);
-                                while($cores = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                    echo "<option value='" . $cores['idCor'] . "'>" . $cores['nome'] . "</option>";
-                                }
-                                ?>
-                                </select>
-                                <label>Cores</label>
-                            </div>
-                            <div class="col s1">
-                                <a id="incluirCor" href="#modalCor" class="waves-effect modal-trigger waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
-                            </div>
-                        </div>
-                        <div id="categorias">
-                            <div class="row">
-                                <div class="input-field col s11">
-                                    <select id="categoria" name="categoria[]" multiple>
-                                        <option value="" disabled>Selecione as categorias de materiais fornecidos</option>
-                                    <?php
-                                    $sql = "select * from Categoria;";
-                                    $query = mysql_query($sql);
-                                    while($categorias = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                        echo "<option value='".$categorias['idCategoria']."' ";
-                                        if(isset($_GET['idPessoa'])) {
-                                            $sql2 = "select * from Categoria_Material where idCategoria=".$categorias['idCategoria']." and idMaterial=".$idMaterial.";";
-                                            $query2 = mysql_query($sql2);
-                                            if( mysql_num_rows($query2) == 1) {
-                                                echo "selected";
-                                            }
-                                        }
-                                        echo ">".$categorias['nome']." (" .$categorias['descricao'].")</option>";
-                                    }
-                                    ?>
-                                    </select>
-                                    <label>Materiais Fornecidos</label>
-                                </div>
-                                <div class="col s1">
-                                    <a id="incluirCategoria" href="#modalCategoria" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-                        if(isset($_GET['idMaterial']))
+                        if(isset($_GET['idTS']))
                             echo "<a class=\"btn waves-effect waves-light red accent-4\" name=\"exlcuir\" onclick=\"document.forms['excluir'].submit()\">Excluir<i class=\"material-icons right\">delete</i></a>";
                             echo "<input type=\"hidden\" name=\"acao\" value=\"incluir\" />";
-                            echo "<input type=\"hidden\" name=\"idMaterial\" value=\"" . $idMaterial . "\" />";
+                            echo "<input type=\"hidden\" name=\"idTS\" value=\"" . $idTipoDeServico . "\" />";
                         ?>
                         <button class="btn waves-effect waves-light green accent-4" type="submit" name="salvar">Salvar<i class="material-icons right">send</i></button>
                         <input type="hidden" name="acao" value="<?php echo isset($_GET['idTS']) ? 'atualizar' : 'inserir';  ?>" />
@@ -208,7 +133,7 @@ if(isset($_GET['logout'])) {
                     </form>
                     <form role="form" method="POST" name="excluir" action="control/material.php">
                         <input type="hidden" name="acao" value="excluir" />
-                        <input type="hidden" name="idMaterial" value="<?php echo $idMaterial; ?>" />
+                        <input type="hidden" name="idTipoDeServico" value="<?php echo $idTipoDeServico; ?>" />
                         <input type="hidden" name="tipo" value="<?php echo $_GET['tipo']; ?>" />
                     </form>
                 </div>

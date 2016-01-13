@@ -4,11 +4,11 @@
             <h4>Atualizar Categoria</h4>
             <div class="row">
                 <div class="input-field col s4">
-                    <input name="nome" id="nome" type="text" class="validate">
+                    <input name="nome" id="nome" type="text" class="validate" length="24" maxlength="24">
                     <label for="nome">Nome</label>
                 </div>
                 <div class="input-field col s8">
-                    <input name="descricao" id="descricao" type="text" class="validate">
+                    <input name="descricao" id="descricao" type="text" class="validate" length="60">
                     <label for="descricao">Descrição</label>
                 </div>
             </div>

@@ -4,7 +4,7 @@
             <h4>Atualizar Unidade de Medida</h4>
             <div class="row">
                 <div class="input-field col s6">
-                    <input name="descricao" id="descricao" type="text" class="validate">
+                    <input name="descricao" id="descricao" type="text" class="validate" length="10" maxlength="10">
                     <label for="descricao">Descrição</label>
                 </div>
             </div>

@@ -106,7 +106,7 @@ protegePagina(); // Chama a função que protege a página
                         
 						<div class="row">
 							<div class="input-field col s12">
-								<input name="status" id="status" maxlength="24" type="text" class="validate right-align" <?php if(isset($_GET['idOS'])) echo "value='".$resultado['status']."'"; ?>>
+								<input name="status" id="status" length="24" maxlength="24" type="text" class="validate right-align" <?php if(isset($_GET['idOS'])) echo "value='".$resultado['status']."'"; ?>>
 								<label for="status" class="active">Status</label>
 							</div>
 							

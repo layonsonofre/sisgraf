@@ -1,14 +1,50 @@
+- Pesquisar 'Pessoa' com status='%ativo'
 - Centralizar card do login.php
-- Permitir Atualizar Senha na atualização do funcionário
-- Pesquisar pessoa
+- Listagem/Pesquisas
 - Centralizar Campos Modal
 - No mesmo modal (cor, gramatura, unidade de medida) permitir alteração/exclusão
-- Cadastro no Modal com AJAX, para não perder o que foi inserido
-- JavaScript para alterar o valor do campo 'tipo' dentro do modal
 - Buscar por CEP
 - Corrigir acentuação
 - Unir Arquivos e interligar o arquivo com a O.S.
 	- Modelo: mais campos com thumbnail
 	- Matriz: mais campos
-- Duplicando telefone e email na atualização
-- Material falta cadastrar o fornecedor
+
+
+Elaborar e implementar relatórios
+Implementar edição dos dados
+Implementar adição de produtos na OS de forma dinâmica
+Implementar pedidos por email para fornecedor, pelo menos uma lista de produtos em falta e o contato do fornecedor de cada categoria
+Melhorar controle dos arquivos
+Fazer help, manual e vídeo
+Implementar controle de modelos
+Implementar listagem de arquivos e matrizes
+Implantar
+
+
+Observacoes da banca - SISGRAF
+
+1o bim
+- modelagem - boleto, controle de estoque, tamanho de varchar, ver unidades de medida,
+- diagnostico atual - cliente e o processo (ordem de serviço e execucao).
+- proposta - versoes
+- ver objetivos especificos e escopo - contradicao.
+- custos - fontes e referencias, descrever mao de obra
+- risco - ver estrategia de uso de gerador de programa
+- DER - atributos
+- cronograma - atividade exame, execucao dos testes, atividades realizadas/nao realizadas
+
+2o bim
+- DD - rever valores numericos;
+- rever escopo
+- rever ortografia
+- interface: relatorio (ver design alternativo para os filtros); padroes; rever perguntas sobre funcionarios na interface; ver design para entrada de dados repetidos
+- 
+3. bim
+trocar campo numérico em cadastro clientes para campo texto
+campos obrigatórios (informar)
+RG órgão expedidor
+ver disposição de botões (ex.: add telefone)
+tratar erros
+traduzir itens em inglês da interface
+ordem de serviço: desabilitar data de saída, cores frente/verso, descrição valores numéricos, número de cores, unir OS com arquivo
+confirmação de senha (funcionário)

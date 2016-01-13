@@ -4,7 +4,7 @@
             <h4>Atualizar Cor</h4>
             <div class="row">
                 <div class="input-field col s6">
-                    <input name="cor" id="cor" type="text" class="validate">
+                    <input name="cor" id="cor" type="text" class="validate" length="15" maxlength="15">
                     <label for="cor">Nome da Cor</label>
                 </div>
             </div>

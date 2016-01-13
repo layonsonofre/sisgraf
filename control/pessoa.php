@@ -106,19 +106,16 @@ if($acao == '') {
 	}
 
 	// atualizando emails já existentes e inserindo novos
-	echo var_dump($idEmail);
-	echo "aloualou";
-	echo var_dump($email);
 	for($i = 0, $size = count($idEmail); $i < $size; $i++) {
-		//$sql = "UPDATE `Email` SET `endereco`='".$email[$i]."' WHERE `idEmail`='".$idEmail[$i]."'; ";
-		//$query = mysql_query($sql);
+		$sql = "UPDATE `Email` SET `endereco`='".$email[$i]."' WHERE `idEmail`='".$idEmail[$i]."'; ";
+		$query = mysql_query($sql);
 		echo $idEmail[$i] ."->".$email[$i];
 	}
 	for($i = count($idEmail), $size = count($email); $i < $size; $i++) {
 		if($email[$i] == NULL) continue;
-		//$sql = "INSERT INTO `Email` (`idEmail`, `idPessoa`, `endereco`) VALUES (NULL,'".$idPessoa."', '".$email[$i]."'); ";
-		//$query = mysql_query($sql);
-		echo $email[$i];
+		$sql = "INSERT INTO `Email` (`idEmail`, `idPessoa`, `endereco`) VALUES (NULL,'".$idPessoa."', '".$email[$i]."'); ";
+		$query = mysql_query($sql);
+		//echo $email[$i];
 	}
 
 	// atualizando categorias de materiais
@@ -130,7 +127,7 @@ if($acao == '') {
 			}
 		}
 	}
-	//header('Location: ../incluirPessoa.php?idPessoa='.$idPessoa.'&at=ok&tipo='.$tipo);
+	header('Location: ../incluirPessoa.php?idPessoa='.$idPessoa.'&at=ok&tipo='.$tipo);
 } else if($acao == 'excluirTelefone') {
 	$sql = "DELETE FROM `Telefone` WHERE `idTelefone`=".$idTelefone." AND `idPessoa`=".$idPessoa.";";
 	$query = mysql_query($sql);

@@ -75,11 +75,11 @@ protegePagina(); // Chama a função que protege a página
                     <form class="col s12" role="form" method="POST" action="control/material.php">
                         <div class="row">
                             <div class="input-field col s8">
-                                <input name="descricao" id="descricao" type="text" class="validate" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['descricao']."'"; if($_GET['tipo'] == 'papel') echo "value='Papel' disabled" ?>>
+                                <input name="descricao" id="descricao" type="text" class="validate" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['descricao']."'"; if($_GET['tipo'] == 'papel') echo "value='Papel' disabled" ?> length="20" maxlength="20">
                                 <label for="descricao" class="active">Descrição</label>
                             </div>
                             <div class="input-field col s4">
-                                <input name="valorUnitario" id="valorUnitario" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['valorUnitario']."'"; ?>>
+                                <input name="valorUnitario" id="valorUnitario" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['valorUnitario']."'"; ?> length="10" maxlength="10">
                                 <label for="valorUnitario" class="active">Valor Unitário (R$)</label>
                             </div>
                         </div>
@@ -114,7 +114,7 @@ protegePagina(); // Chama a função que protege a página
                         ?>
                             <div class="row">
                                 <div class="input-field col s5">
-                                    <input name="tipoPapel" id="tipoPapel" type="text" class="validate" <?php if(isset($_GET['idMaterial']))echo "value='".$resultado['tipo']."'"; ?>>
+                                    <input name="tipoPapel" id="tipoPapel" type="text" class="validate" <?php if(isset($_GET['idMaterial']))echo "value='".$resultado['tipo']."'"; ?> length="15" maxlength="15">
                                     <label for="tipoPapel" class="active">Descricao do Papel</label>
                                 </div>
                                 <div class="input-field col s2">
