@@ -15,10 +15,6 @@ protegePagina(); // Chama a função que protege a página
     <body>
     	<?php
     		include 'header.php';
-            include 'modal/unidadeDeMedida.php';
-            include 'modal/cor.php';
-            include 'modal/gramatura.php';
-            include 'modal/categorias.php';
     	?>
         <div id="help" class="modal">
             <div class="modal-content">
@@ -214,9 +210,11 @@ protegePagina(); // Chama a função que protege a página
         <script src="js/init.js"></script>
         <script src="js/cadastro.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
-        <script src="js/ajax/categorias.js"></script>
-        <script src="js/ajax/cor.js"></script>
-        <script src="js/ajax/gramatura.js"></script>
-        <script src="js/ajax/unidadeDeMedida.js"></script>
+        <?php
+        include 'modal/unidadeDeMedida.php';
+        include 'modal/cor.php';
+        include 'modal/gramatura.php';
+        include 'modal/categorias.php';
+        ?>
     </body>
 </html>

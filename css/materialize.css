@@ -2079,7 +2079,8 @@ img.responsive-img, video.responsive-video {
   .pagination li.active a {
     color: #fff; }
   .pagination li.active {
-    background-color: #ee6e73; }
+    /*background-color: #ee6e73; }*/
+    background-color: #D50000; }
   .pagination li.disabled a {
     cursor: default;
     color: #999; }

@@ -16,3 +16,4 @@
         <input type="hidden" name="acao" value="inserirGramatura">
     </form>
 </div>
+<script src="js/ajax/gramatura.js"></script>

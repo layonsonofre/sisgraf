@@ -16,3 +16,4 @@
         <input type="hidden" name="acao" value="inserirUnidadeDeMedida">
     </form>
 </div>
+<script src="js/ajax/unidadeDeMedida.js"></script>

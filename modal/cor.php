@@ -16,3 +16,4 @@
         <input type="hidden" name="acao" value="inserirCor">
     </form>
 </div>
+<script src="js/ajax/cor.js"></script>

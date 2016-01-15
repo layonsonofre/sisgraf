@@ -1,8 +1,6 @@
 // Variable to hold request
 var request;
-
-// Bind to the submit event of our form
-$("#formUnidadeDeMedida").submit(function(event){
+$("#formAcabamento").submit(function(event){
     // Abort any pending request
     if (request) {
         request.abort();
@@ -19,7 +17,7 @@ $("#formUnidadeDeMedida").submit(function(event){
     $inputs.prop("disabled", true);
     // Fire off the request to /form.php
     request = $.ajax({
-        url: "control/material.php",
+        url: "control/tipoDeServico.php",
         type: "post",
         data: serializedData
     });
@@ -28,9 +26,9 @@ $("#formUnidadeDeMedida").submit(function(event){
         // Log a message to the console
         //console.log("Hooray, it worked!");
         console.log(response);
-        $('#selectUnidade').empty().append(response);
+        $('#selectAcabamento').empty().append(response);
         $('select').material_select();
-        $('#modalUnidadeDeMedida a').click();
+        $('#modalAcabamento a').click();
     });
     // Callback handler that will be called on failure
     request.fail(function (jqXHR, textStatus, errorThrown){

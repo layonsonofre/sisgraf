@@ -1,8 +1,6 @@
 // Variable to hold request
 var request;
-
-// Bind to the submit event of our form
-$("#formUnidadeDeMedida").submit(function(event){
+$("#formModeloNotaFiscal").submit(function(event){
     // Abort any pending request
     if (request) {
         request.abort();
@@ -28,9 +26,9 @@ $("#formUnidadeDeMedida").submit(function(event){
         // Log a message to the console
         //console.log("Hooray, it worked!");
         console.log(response);
-        $('#selectUnidade').empty().append(response);
+        $('#selectModeloNotaFiscal').empty().append(response);
         $('select').material_select();
-        $('#modalUnidadeDeMedida a').click();
+        $('#modalModeloNotaFiscal a').click();
     });
     // Callback handler that will be called on failure
     request.fail(function (jqXHR, textStatus, errorThrown){

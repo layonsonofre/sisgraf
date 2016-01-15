@@ -1,6 +1,5 @@
 // Variable to hold request
 var request;
-
 $("#formGramatura").submit(function(event){
     // Abort any pending request
     if (request) {

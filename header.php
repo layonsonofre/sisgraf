@@ -37,7 +37,7 @@
 		<li class="no-padding">
 			<ul class="collapsible collapsible-accordion">
 				<li>
-					<a class="collapsible-header waves-effect waves-red accent-4">Ordem de Serviço<i class="mdi-navigation-arrow-drop-down right"></i></a>
+					<a class="collapsible-header waves-effect waves-red accent-4">Ordem Serviço<i class="mdi-navigation-arrow-drop-down right"></i></a>
 					<div class="collapsible-body">
 						<ul>
 							<li><a href='incluirOrdemDeServico.php'>Cadastrar</a></li>
@@ -61,10 +61,12 @@
 		<li class="no-padding">
 			<ul class="collapsible collapsible-accordion">
 				<li>
-					<a class="collapsible-header waves-effect waves-red accent-4">Tipo de Serviço<i class="mdi-navigation-arrow-drop-down right"></i></a>
+					<a class="collapsible-header waves-effect waves-red accent-4">Tipo Serviço<i class="mdi-navigation-arrow-drop-down right"></i></a>
 					<div class="collapsible-body">
 						<ul>
-							<li><a href='incluirTipoDeServico.php?tipo=carimbo'>Cadastrar Carimbo</a></li>
+							<li><a href='incluirTipoDeServico.php?tipo=outro'>Cadastrar</a></li>
+							<li><a href='incluirTipoDeServico.php?tipo=carimbo'>Cad. Carimbo</a></li>
+							<li><a href='incluirTipoDeServico.php?tipo=nota'>Cad. Nota Fiscal</a></li>
 						</ul>
 					</div>
 				</li>
@@ -77,6 +79,7 @@
 					<div class="collapsible-body">
 						<ul>
 							<li><a href='incluirMaterial.php?tipo=material'>Cadastrar</a></li>
+							<li><a href='listarMaterial.php?tipo=material'>Buscar</a></li>
 						</ul>
 					</div>
 				</li>
@@ -89,6 +92,7 @@
 					<div class="collapsible-body">
 						<ul>
 							<li><a href='incluirMaterial.php?tipo=papel'>Cadastrar</a></li>
+							<li><a href='listarMaterial.php?tipo=papel'>Buscar</a></li>
 						</ul>
 					</div>
 				</li>

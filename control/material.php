@@ -120,5 +120,61 @@ if($acao == '') {
         echo ">".$categorias['nome']." (" .$categorias['descricao'].")</option>";
     }
 	// header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
+} else if($acao == 'listar') {
+	$busca  = mysql_real_escape_string($_POST['consulta']);
+	// registros por página
+	$por_pagina = 5;
+	// monta a consulta sql para saber quantos registros serão encontrados
+	if($tipo == 'papel') {
+		$condicoes = "((`tipo` LIKE '%{$busca}') OR (`gramatura` LIKE '%{$busca}')) AND (Material.idMaterial = Papel.idMaterial AND MaterialUnidade.idMaterialUnidade = Material.idMaterialUnidade AND Papel.idGramaturaPapel = GramaturaPapel.idGramaturaPapel)";
+		$sql = "SELECT COUNT(*) AS total FROM `Material`, `MaterialUnidade`, `Papel`, `GramaturaPapel` WHERE {$condicoes}";
+	}
+	// executa a consulta
+	$query = mysql_query($sql);
+	// salva o valor da coluna 'total', do primeiro registro encontrado pela consulta
+	$total = mysql_result($query, 0, 'total');
+	// calcula o máximo de páginas
+	$paginas = (($total % $por_pagina) > 0) ? (int)($total / $por_pagina) + 1 : ($total / $por_pagina);
+
+	if(isset($_POST['pagina'])) {
+		$pagina = (int)$_POST['pagina'];
+	} else {
+		$pagina = 1;
+	}
+	$pagina = max(min($paginas, $pagina), 1);
+	$offset = ($pagina - 1) * $por_pagina;
+
+	// monta outra consulta, agora que fará a busca com paginação
+	if($tipo == 'papel') {
+		$sql = "SELECT Material.descricao as descricao, Material.quantidade as quantidade, Papel.tipo as tipo, GramaturaPapel.gramatura as gramatura FROM `Material`, `MaterialUnidade`, `Papel`, `GramaturaPapel` WHERE {$condicoes} ORDER BY Papel.tipo DESC LIMIT {$offset}, {$por_pagina}";
+		// executa
+		$query = mysql_query($sql);
+	}
+
+	echo "Resultados ".min($total, ($offset + 1))." - ".min($total, ($offset + $por_pagina))." de ".$total." resultados encontrados para '".$_POST['consulta']."'";
+	echo "<ul>";
+	while ($resultado = mysql_fetch_assoc($query)) {
+		echo "<li>";
+		echo $resultado['descricao'] . " - ";
+		echo $resultado['quantidade'] . " - ";
+		echo $resultado['tipo'] . " - ";
+		echo $resultado['gramatura'];
+		echo "</li>";
+	}
+	echo "<ul class=\"pagination\">";
+		if($pagina > 1) {
+	        echo "<li class=\"waves-effect\"><a href=\"listarMaterial.php?pg=".($pagina - 1)."\"<i class=\"material-icons\">chevron_left</i></a></li>";
+	    }
+	    for($i = 1; $i < $paginas + 1; $i++) {
+	        $ativo = ($i == $pagina) ? TRUE : FALSE;
+	        echo "<li class=\"";
+	        if($ativo) echo "active";
+	        else echo "waves-effect";
+	        echo "\"><a href=\"listarMaterial.php?pg=".$i."\">".$i."</a></li>";
+	    }
+	    if($pagina < $paginas) {
+	        echo "<li class=\"waves-effect\"><a href=\"listarMaterial.php?pg=".($pagina + 1)."\"<i class=\"material-icons\">chevron_right</i></a></li>";
+	    }
+    echo "</ul>";
 }
 ?>
