@@ -38,8 +38,8 @@ protegePagina(); // Chama a função que protege a página
                         ?>
                     </div>
                 </div>
-            </div>
-            <div class="container">
+            <!-- </div>
+            <div class="container"> -->
                 <div class="row valign-wrapper">
                     <div class="col s12 l10">
                         <?php
@@ -55,7 +55,7 @@ protegePagina(); // Chama a função que protege a página
                     </div>
                 </div>
                 <div class="row">
-                	<form class="col s12" role="form" method="GET" action="control/material.php" id="buscarMaterial">
+                	<form class="col s12" role="form" method="POST" action="control/material.php" id="buscarMaterial">
                 		<div class="row">
                 			<?php
 	                        if($_GET['tipo'] == 'material') {
@@ -76,11 +76,14 @@ protegePagina(); // Chama a função que protege a página
 	                        <div class="col s3">
                             	<button class="btn waves-effect waves-light green accent-4" type="submit" name="buscar">Buscar<i class="material-icons right">send</i></button>
                             </div>
+                            <input type="hidden" id="pagina" name="pagina" value="">
 	                        <input type="hidden" name="acao" value="listar">
                             <input type="hidden" name="tipo" value="<?php echo $_GET['tipo']; ?>">
                 		</div>
                 	</form>
                 	<div id="resultadoBuscaMaterial">
+                        <div class="col s12">
+                        </div>
                 	</div>
                 </div>
             </div>
@@ -91,5 +94,6 @@ protegePagina(); // Chama a função que protege a página
         <script src="js/cadastro.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
         <script src="js/ajax/buscarMaterial.js"></script>
+        <script src="js/paginacao.js"></script>
     </body>
 </html>

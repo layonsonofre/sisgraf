@@ -123,7 +123,7 @@ if($acao == '') {
 } else if($acao == 'listar') {
 	$busca  = mysql_real_escape_string($_POST['consulta']);
 	// registros por página
-	$por_pagina = 5;
+	$por_pagina = 1;
 	// monta a consulta sql para saber quantos registros serão encontrados
 	if($tipo == 'papel') {
 		$condicoes = "((`tipo` LIKE '%{$busca}') OR (`gramatura` LIKE '%{$busca}')) AND (Material.idMaterial = Papel.idMaterial AND MaterialUnidade.idMaterialUnidade = Material.idMaterialUnidade AND Papel.idGramaturaPapel = GramaturaPapel.idGramaturaPapel)";
@@ -151,8 +151,9 @@ if($acao == '') {
 		$query = mysql_query($sql);
 	}
 
-	echo "Resultados ".min($total, ($offset + 1))." - ".min($total, ($offset + $por_pagina))." de ".$total." resultados encontrados para '".$_POST['consulta']."'";
-	echo "<ul>";
+	echo "<p>Resultados ".min($total, ($offset + 1))." - ".min($total, ($offset + $por_pagina))." de ".$total." resultados encontrados para '".$_POST['consulta']."'</p>";
+	// echo "<h5><i class='material-icons'>search</i>&nbsp;&nbsp;&nbsp;Resultados da busca por: '{$_POST['consulta']}'</h5>";
+	echo "<ul id='pag'>";
 	while ($resultado = mysql_fetch_assoc($query)) {
 		echo "<li>";
 		echo $resultado['descricao'] . " - ";
@@ -161,20 +162,22 @@ if($acao == '') {
 		echo $resultado['gramatura'];
 		echo "</li>";
 	}
-	echo "<ul class=\"pagination\">";
+	echo "</ul>";
+	echo "<br><ul class=\"pagination\">";
 		if($pagina > 1) {
-	        echo "<li class=\"waves-effect\"><a href=\"listarMaterial.php?pg=".($pagina - 1)."\"<i class=\"material-icons\">chevron_left</i></a></li>";
+	        echo "<li class=\"waves-effect\"><a class=\"paginacao\" href=\"#\" pagina=\"".($pagina-1)."\"><i class=\"material-icons\">chevron_left</i></a></li>";
 	    }
 	    for($i = 1; $i < $paginas + 1; $i++) {
 	        $ativo = ($i == $pagina) ? TRUE : FALSE;
 	        echo "<li class=\"";
-	        if($ativo) echo "active";
-	        else echo "waves-effect";
-	        echo "\"><a href=\"listarMaterial.php?pg=".$i."\">".$i."</a></li>";
+	        if($ativo) echo "active\">";
+	        else echo "waves-effect\">";
+	        echo "<a class=\"paginacao\" href=\"#\" pagina=\"".$i."\">".$i."</a></li>";
 	    }
 	    if($pagina < $paginas) {
-	        echo "<li class=\"waves-effect\"><a href=\"listarMaterial.php?pg=".($pagina + 1)."\"<i class=\"material-icons\">chevron_right</i></a></li>";
+	        echo "<li class=\"waves-effect\"><a class=\"paginacao\" href=\"#\" pagina=\"".($pagina+1)."\"><i class=\"material-icons\">chevron_right</i></a></li>";
 	    }
     echo "</ul>";
+    // echo "<br>Mostrando dos registros ".min($total, ($offset + 1))." ao ".min($total, ($offset + $por_pagina))." do total de ".$total." resultados encontrados para a consulta especificada.";
 }
 ?>
