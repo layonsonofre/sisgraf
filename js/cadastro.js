@@ -1,18 +1,18 @@
 $(function(){
-    $('input[name=isPessoaFisica]').val('true');
+    $('input[name=isPessoaFisica]').val('1');
     $('#pessoaFisica').show();
     $('#pessoaJuridica').hide();
     $('input[name="tipoPessoa"]').click(function () {
         if ($(this).attr('id')==='pFisica') {
             $('#pessoaFisica').show();
             $('#pessoaJuridica').hide();
-            $('input[name=isPessoaFisica]').value('true');
+            $('input[name=isPessoaFisica]').value('1');
         }
 
         else {
             $('#pessoaFisica').hide();
             $('#pessoaJuridica').show();
-            $('input[name=isPessoaFisica]').value('false');
+            $('input[name=isPessoaFisica]').value('0');
         }
     });
 

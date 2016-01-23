@@ -77,18 +77,18 @@ if(isset($_GET['logout'])) {
                 <?php
                 ?>
                 <div class="row">
-                    <form class="col s12" role="form" method="POST" action="control/material.php">
+                    <form class="col s12" role="form" method="POST" action="control/tipoDeServico.php">
                         <div class="row">
                             <div class="input-field col s3">
-                                <input name="nome" id="nome" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['nome']."'"; if($_GET['tipo'] == 'carimbo') echo "value='Carimbo' disabled"; if($_GET['tipo'] == 'nota') echo "value='Nota Fiscal' disabled"; ?>>
+                                <input name="nome" id="nome" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['nome']."'"; if($_GET['tipo'] == 'carimbo') echo "value='Carimbo' readonly"; if($_GET['tipo'] == 'nota') echo "value='Nota Fiscal' readonly"; ?> length="24" maxlength="24">
                                 <label for="nome" class="active">Nome</label>
                             </div>
                             <div class="input-field col s7">
-                                <input name="descricao" id="descricao" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['descricao']."'"; if($_GET['tipo'] == 'carimbo') echo "value='Material auxiliar de uso diverso' disabled"; if($_GET['tipo'] == 'nota') echo "value='Tipo de impresso usado como documento fiscal' disabled"; ?>>
+                                <input name="descricao" id="descricao" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['descricao']."'"; if($_GET['tipo'] == 'carimbo') echo "value='Material auxiliar de uso diverso' readonly"; if($_GET['tipo'] == 'nota') echo "value='Tipo de impresso usado como documento fiscal' readonly"; ?> length="64" maxlength="64">
                                 <label for="descricao" class="active">Descrição</label>
                             </div>
                             <div class="input-field col s2">
-                                <input name="valorUnitario" id="valorUnitario" type="text" class="validate right-align" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['valor']."'"; ?>>
+                                <input name="valorUnitario" id="valorUnitario" type="text" class="validate right-align" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['valor']."'"; ?> length="10" maxlength="10">
                                 <label for="valorUnitario" class="active">Valor (R$)</label>
                             </div>
                         </div>
@@ -103,8 +103,8 @@ if(isset($_GET['logout'])) {
                             <div class="row">
                                 <div class="input-field col s2">
                                     <select id="isAutomatico" name="isAutomatico">
-                                        <option value="true" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == 'TRUE') echo "selected"; } ?> >Automático</option>
-                                        <option value="false" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == 'FALSE') echo "selected"; } ?> >Madeira</option>
+                                        <option value="1" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == 'TRUE') echo "selected"; } ?> >Automático</option>
+                                        <option value="0" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == 'FALSE') echo "selected"; } ?> >Madeira</option>
                                     </select>
                                     <label for="isAutomatico" class="active">Tipo</label>
                                 </div>
@@ -113,12 +113,12 @@ if(isset($_GET['logout'])) {
                                     <label for="nomeCarimbo" class="active">Nome</label>
                                 </div>
                                 <div class="input-field col s3">
-                                    <input name="base" id="base" type="text" class="validate right-align" data-mask="9?99"<?php if(isset($_GET['idTS'])) echo "value='".$resultado['base']."'"; ?>>
-                                    <label for="base" class="active">Base (mm)</label>
+                                    <input name="baseCarimbo" id="baseCarimbo" type="text" class="validate right-align" data-mask="9?99"<?php if(isset($_GET['idTS'])) echo "value='".$resultado['base']."'"; ?>>
+                                    <label for="baseCarimbo" class="active">Base (mm)</label>
                                 </div>
                                 <div class="input-field col s3">
-                                    <input name="altura" id="altura" type="text" class="validate right-align" data-mask="9?99" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['altura']."'"; ?>>
-                                    <label for="altura" class="active">Altura (mm)</label>
+                                    <input name="alturaCarimbo" id="alturaCarimbo" type="text" class="validate right-align" data-mask="9?99" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['altura']."'"; ?>>
+                                    <label for="alturaCarimbo" class="active">Altura (mm)</label>
                                 </div>
                             </div>
                         <?php
@@ -199,7 +199,7 @@ if(isset($_GET['logout'])) {
                                     <select id="selectAcabamento" name="selectAcabamento[]" multiple>
                                     <?php
                                         echo "<option value='' disabled>Selecione os acabamentos disponíveis para o serviço</option>";
-                                        $sql = "SELECT * FROM 'Acabamento';";
+                                        $sql = "SELECT * FROM Acabamento;";
                                         $query = mysql_query($sql);
                                         while($acabs = mysql_fetch_array($query, MYSQL_ASSOC)) {
                                             echo "<option value='".$acabs['idAcabamento']."' ";

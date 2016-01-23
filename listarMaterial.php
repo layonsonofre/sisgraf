@@ -71,7 +71,14 @@ protegePagina(); // Chama a função que protege a página
 	                                <label for="consulta" class="active">Pesquise por tipo de papel ou gramatura</label>
 	                            </div>
                         	<?php
-	                        }
+	                        } else if($_GET['tipo'] == 'material') {
+                            ?>
+                                <div class="input-field col s9">
+                                    <input name="consulta" id="consulta" type="text" class="validate" length="20" maxlength="20">
+                                    <label for="consulta" class="active">Pesquise pela categoria ou descricao do material</label>
+                                </div>
+                            <?php   
+                            }
 	                        ?>
 	                        <div class="col s3">
                             	<button class="btn waves-effect waves-light green accent-4" type="submit" name="buscar">Buscar<i class="material-icons right">send</i></button>

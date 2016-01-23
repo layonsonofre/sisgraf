@@ -7,8 +7,6 @@ $idPessoa = isset($_POST['idPessoa']) ? $_POST['idPessoa'] : '';
 $nome = isset($_POST['nome']) ? $_POST['nome'] : '';
 $status = isset($_POST['status']) ? $_POST['status'] : '';
 $isPessoaFisica = isset($_POST['isPessoaFisica']) ? $_POST['isPessoaFisica'] : '';
-if($isPessoaFisica != 'true') $isPessoaFisica = false;
-else $isPesoaFisica = true;
 $cpf = isset($_POST['cpf']) ? $_POST['cpf'] : '';
 $rg = isset($_POST['rg']) ? $_POST['rg'] : '';
 $cnpj = isset($_POST['cnpj']) ? $_POST['cnpj'] : '';

@@ -71,7 +71,7 @@ protegePagina(); // Chama a função que protege a página
                     <form class="col s12" role="form" method="POST" action="control/material.php">
                         <div class="row">
                             <div class="input-field col s8">
-                                <input name="descricao" id="descricao" type="text" class="validate" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['descricao']."'"; if($_GET['tipo'] == 'papel') echo "value='Papel' disabled" ?> length="20" maxlength="20">
+                                <input name="descricao" id="descricao" type="text" class="validate" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['descricao']."'"; if($_GET['tipo'] == 'papel') echo "value='Papel' readonly" ?> length="20" maxlength="20">
                                 <label for="descricao" class="active">Descrição</label>
                             </div>
                             <div class="input-field col s4">

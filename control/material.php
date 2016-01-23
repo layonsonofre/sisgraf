@@ -123,11 +123,14 @@ if($acao == '') {
 } else if($acao == 'listar') {
 	$busca  = mysql_real_escape_string($_POST['consulta']);
 	// registros por página
-	$por_pagina = 1;
+	$por_pagina = 10;
 	// monta a consulta sql para saber quantos registros serão encontrados
 	if($tipo == 'papel') {
 		$condicoes = "((`tipo` LIKE '%{$busca}') OR (`gramatura` LIKE '%{$busca}')) AND (Material.idMaterial = Papel.idMaterial AND MaterialUnidade.idMaterialUnidade = Material.idMaterialUnidade AND Papel.idGramaturaPapel = GramaturaPapel.idGramaturaPapel)";
 		$sql = "SELECT COUNT(*) AS total FROM `Material`, `MaterialUnidade`, `Papel`, `GramaturaPapel` WHERE {$condicoes}";
+	} else if($tipo == 'material') {
+		$condicoes = "((Categoria.nome LIKE '%{$busca}') OR (Categoria.descricao LIKE '%{$busca}') OR (Material.descricao LIKE '%{$busca}')) AND (MaterialUnidade.idMaterialUnidade = Material.idMaterialUnidade AND Categoria.idCategoria = Categoria_Material.idCategoria AND Categoria_Material.idMaterial = Material.idMaterial)";
+		$sql = "SELECT COUNT(*) AS total FROM `Material`, `MaterialUnidade`, `Categoria`, `Categoria_Material` WHERE {$condicoes}";
 	}
 	// executa a consulta
 	$query = mysql_query($sql);
@@ -146,23 +149,81 @@ if($acao == '') {
 
 	// monta outra consulta, agora que fará a busca com paginação
 	if($tipo == 'papel') {
-		$sql = "SELECT Material.descricao as descricao, Material.quantidade as quantidade, Papel.tipo as tipo, GramaturaPapel.gramatura as gramatura FROM `Material`, `MaterialUnidade`, `Papel`, `GramaturaPapel` WHERE {$condicoes} ORDER BY Papel.tipo DESC LIMIT {$offset}, {$por_pagina}";
-		// executa
+		// $sql = "SELECT Material.idMaterial as idMaterial, Material.descricao as descricao, Material.quantidade as quantidade, Papel.tipo as tipo, GramaturaPapel.gramatura as gramatura FROM `Material`, `MaterialUnidade`, `Papel`, `GramaturaPapel` WHERE {$condicoes} ORDER BY Papel.tipo DESC LIMIT {$offset}, {$por_pagina}";
+		// $sql = "SELECT * FROM `Material`, `MaterialUnidade`, `Papel`, `GramaturaPapel` WHERE {$condicoes} ORDER BY Papel.tipo DESC LIMIT {$offset}, {$por_pagina}";
+		$sql = "SELECT Material.idMaterial as idMaterial, Material.descricao as descricao, Material.quantidade as quantidade, Material.quantidadeMinima as quantidadeMinima, Papel.tipo as tipo, Papel.base as base, Papel.altura as altura,
+				GramaturaPapel.gramatura as gramatura, MaterialUnidade.descricao as unidade
+				FROM Material
+				INNER JOIN Papel ON Material.idMaterial = Papel.idMaterial
+				INNER JOIN GramaturaPapel ON Papel.idGramaturaPapel = GramaturaPapel.idGramaturaPapel
+				INNER JOIN MaterialUnidade ON Material.idMaterialUnidade = MaterialUnidade.idMaterialUnidade
+			  	WHERE {$condicoes} ORDER BY Papel.tipo DESC LIMIT {$offset}, {$por_pagina}";
+		$query = mysql_query($sql);
+	} else if($tipo == 'material') {
+		$sql = "SELECT Material.idMaterial as idMaterial, Material.descricao as descricao, Material.quantidade as quantidade, MaterialUnidade.descricao as unidade FROM `Material`, `MaterialUnidade`, `Categoria`, `Categoria_material` WHERE {$condicoes} ORDER BY Material.descricao DESC LIMIT {$offset}, {$por_pagina}";
 		$query = mysql_query($sql);
 	}
+	// executa a query acima
+	
 
 	echo "<p>Resultados ".min($total, ($offset + 1))." - ".min($total, ($offset + $por_pagina))." de ".$total." resultados encontrados para '".$_POST['consulta']."'</p>";
 	// echo "<h5><i class='material-icons'>search</i>&nbsp;&nbsp;&nbsp;Resultados da busca por: '{$_POST['consulta']}'</h5>";
-	echo "<ul id='pag'>";
+	//echo "<ul id='pag'>";
+	// while ($resultado = mysql_fetch_assoc($query)) {
+	// 	echo "<li>";
+	// 	echo $resultado['descricao'] . " - ";
+	// 	echo $resultado['quantidade'] . " - ";
+	// 	echo $resultado['tipo'] . " - ";
+	// 	echo $resultado['gramatura'];
+	// 	echo "</li>";
+	// }
+	//echo "</ul>";
+
 	while ($resultado = mysql_fetch_assoc($query)) {
-		echo "<li>";
-		echo $resultado['descricao'] . " - ";
-		echo $resultado['quantidade'] . " - ";
-		echo $resultado['tipo'] . " - ";
-		echo $resultado['gramatura'];
-		echo "</li>";
+		echo "<div class='card'>";
+	 		echo "<div class='card-content'>";
+	 			echo "<span class='card-title'>{$resultado['descricao']}</span>";
+ 				echo "<p>Id: {$resultado['idMaterial']}</p>";
+	 			echo "<p>Quantidade Atual: {$resultado['quantidade']} - Quantidade Mínima: {$resultado['quantidadeMinima']} - Unidade de Medida: {$resultado['unidade']}</p>";
+	 			echo "<p>{$resultado['tipo']} - Gramatura: {$resultado['gramatura']} g/cm^2 - Tamanho: {$resultado['base']} x {$resultado['altura']} mm</p>";
+
+	 			$tempId = $resultado['idMaterial'];
+	 			$sql2 = "SELECT Cor.nome FROM Cor
+	 					INNER JOIN Cor_Material on Cor.idCor = Cor_Material.idCor
+	 					INNER JOIN Material on Material.idMaterial = Cor_Material.idMaterial
+	 					WHERE Material.idMaterial = {$tempId}
+	 					ORDER BY Cor.nome";
+				$query2 = mysql_query($sql2);
+				echo "<p>" . print_r($query2) . "</p>";
+	 		echo "</div>";
+	 		echo "<div class='card-action'>";
+	 			echo "<a href='#'>Editar</a>";
+	 			echo "</div>";
+	 		echo "</div>";
+	 	echo "</div>";
 	}
-	echo "</ul>";
+
+	// echo "<table class='highlight responsive-table'>";
+	// echo "<thead>";
+	// 	echo "<tr>";
+	// 		echo "<th data-field='idMaterial' hidden>ID</th>";
+	// 		echo "<th data-field='descricao'>Descrição</th>";
+	// 		echo "<th data-field='tipo'>Tipo</th>";
+	// 		echo "<th data-field='quantidade'>Quantidade</th>";
+	// 	echo "</tr>";
+	// echo "</thead>";
+	// echo "<tbody>";
+	// while ($resultado = mysql_fetch_assoc($query)) {
+	// 	echo "<tr>";
+	// 		echo "<td hidden>{$resultado['idMaterial']}</td>";
+	// 		echo "<td>{$resultado['descricao']}</td>";
+	// 		echo "<td>{$resultado['tipo']}</td>";
+	// 		echo "<td>{$resultado['quantidade']}</td>";
+	// 	echo "</tr>";
+	// }
+	// echo "</tbody>";
+	// echo "</table>";
+
 	echo "<br><ul class=\"pagination\">";
 		if($pagina > 1) {
 	        echo "<li class=\"waves-effect\"><a class=\"paginacao\" href=\"#\" pagina=\"".($pagina-1)."\"><i class=\"material-icons\">chevron_left</i></a></li>";

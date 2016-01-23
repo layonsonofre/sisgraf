@@ -37,10 +37,10 @@
 		<li class="no-padding">
 			<ul class="collapsible collapsible-accordion">
 				<li>
-					<a class="collapsible-header waves-effect waves-red accent-4">Ordem Serviço<i class="mdi-navigation-arrow-drop-down right"></i></a>
+					<a class="collapsible-header waves-effect waves-red accent-4">Ordem de Serviço<i class="mdi-navigation-arrow-drop-down right"></i></a>
 					<div class="collapsible-body">
 						<ul>
-							<li><a href='incluirOrdemDeServico.php'>Cadastrar</a></li>
+							<li><a href='incluirOS.php'>Cadastrar</a></li>
 						</ul>
 					</div>
 				</li>

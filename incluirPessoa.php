@@ -96,9 +96,9 @@ if(isset($_GET['logout'])) {
                             <div class="row">
                                 <div class="col s12">
                                     <p>
-                                        <input name="tipoPessoa" type="radio" id="pFisica" value="pFisica" checked>
+                                        <input name="tipoPessoa" type="radio" id="pFisica" value="1" checked>
                                         <label for="pFisica">Pessoa Física&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                        <input name="tipoPessoa" type="radio" id="pJuridica" value="pJuridica">
+                                        <input name="tipoPessoa" type="radio" id="pJuridica" value="0">
                                         <label for="pJuridica">Pessoa Juridica</label>
                                     </p>
                                 </div>
@@ -346,7 +346,7 @@ if(isset($_GET['logout'])) {
                         ?>
                         <button class="btn waves-effect waves-light green accent-4" type="submit" name="salvar">Salvar<i class="material-icons right">send</i></button>
 
-                        <input type="hidden" name="isPessoaFisica" value="true" /> 
+                        <input type="hidden" name="isPessoaFisica" value="1" /> 
                         <input type="hidden" name="tipo" value="<?php echo $_GET['tipo']; ?>"/>
                         <input type="hidden" name="status" value="<?php echo $_GET['tipo'].'Ativo'; ?>"/>
                         <input type="hidden" name="acao" value="<?php echo isset($_GET['idPessoa']) ? 'atualizar' : 'inserir';  ?>" />

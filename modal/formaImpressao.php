@@ -21,7 +21,7 @@
             <button class="modal-action btn waves-effect waves-light green accent-4" type="submit" name="salvar" id="salvar">Salvar<i class="material-icons right">send</i></button>
             <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
         </div>
-        <input type="hidden" name="acao" value="inserirAcabamento">
+        <input type="hidden" name="acao" value="inserirFormaImpressao">
     </form>
 </div>
 <script src="js/ajax/formaImpressao.js"></script>

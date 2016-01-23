@@ -25,7 +25,7 @@ $nomeAcabamento = isset($_POST['nomeAcabamento']) ? $_POST['nomeAcabamento'] : '
 $descricaoAcabamento = isset($_POST['localAcabamento']) ? $_POST['descricaoAcabamento'] : '';
 $valorAcabamento = isset($_POST['valorAcabamento']) ? $_POST['valorAcabamento'] : '';
 $localAcabamento = isset($_POST['localAcabamento']) ? $_POST['localAcabamento'] : '';
-
+$idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '';
 
 if($acao == '') {
 	header('Location: ../incluirTipoDeServico.php?at=no&tipo='.$tipo);
@@ -34,9 +34,7 @@ if($acao == '') {
 	$query = mysql_query($sql);
 	$idTSInserido = mysql_insert_id();
 	if($tipo == 'carimbo') {
-		if($isAutomatico == 'automatico') $isAutomatico = 'TRUE';
-		else $isAutomatico = 'FALSE';
-		$sql = "INSERT INTO `Carimbo` (`idTipoServico`,`isAutomatico`,`nomeCarimbo`,`base`,`altura`) VALUES (\"".$idTSInserido."\",\"".$isAutomatico."\",\"".$nomeCarimbo."\",\"".$baseCarimbo."\",\"".$alturaCarimbo."\");";
+		$sql = "INSERT INTO `Carimbo` (`idTipoServico`,`isAutomatico`,`nomeCarimbo`,`base`,`altura`) VALUES ('{$idTSInserido}','{$isAutomatico}','{$nomeCarimbo}','{$baseCarimbo}','{$alturaCarimbo}');";
 		$query = mysql_query($sql);
 	}
 	if($formatos != NULL) {
@@ -54,7 +52,7 @@ if($acao == '') {
 	header('Location: ../incluirTipoDeServico.php?at=ok&tipo='.$tipo);
 } else if($acao == 'excluir') {
 	if($idTS == null) {
-		header('Location: ../incluirTipoServico.php?at=ok&tipo='.$tipo);
+		header('Location: ../incluirTipoDeServico.php?at=ok&tipo='.$tipo);
 	}
 } else if($acao == 'inserirFormato') {
 	// if($descricao != null || $nome != null) {
@@ -102,5 +100,42 @@ if($acao == '') {
         echo ">".$acabs['nome']." (" .$acabs['descricao']." - Local: " .$acabs['local'].")</option>";
     }
 	// header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
+} else if($acao == 'inserirFormaImpressao') {
+	$sql = "INSERT INTO `FormaImpressao` (`idFormaImpressao`,`nome`,`descricao`,`valor`) VALUES (NULL,\"{$nome}\",\"{$descricao}\",\"{$valor}\");";
+	$query = mysql_query($sql);
+
+	echo "<option value='' disabled>Selecione as formas de impressão do serviço</option>";
+    $sql = "SELECT * FROM `FormaImpressao`;";
+    $query = mysql_query($sql);
+    while($forms = mysql_fetch_array($query, MYSQL_ASSOC)) {
+        echo "<option value='".$forms['idFormaImpressao']."' ";
+        if($idTS != '' && $idOS != '') {
+            $sql2 = "select * from OrdemDeServico_TipoServico where idFormaImpressao=".$forms['idFormaImpressao']." and idTipoServico=".$idTS." and idOrdemDeServico={$idOS};";
+            $query2 = mysql_query($sql2);
+            if( mysql_num_rows($query2) == 1) {
+                echo "selected";
+            }
+        }
+        echo ">{$forms['nome']} ({$forms['descricao']})</option>";
+    }
+}
+else if($acao == 'inserirQuantidadeCores') {
+	$sql = "INSERT INTO `QuantidadeCores` (`idQuantidadeCores`,`descricao`,`valor`) VALUES (NULL,\"{$descricao}\",\"{$valor}\");";
+	$query = mysql_query($sql);
+
+	echo "<option value='' disabled>Selecione</option>";
+    $sql = "SELECT * FROM `QuantidadeCores`;";
+    $query = mysql_query($sql);
+    while($quantidadeCores = mysql_fetch_array($query, MYSQL_ASSOC)) {
+        echo "<option value='".$quantidadeCores['idQuantidadeCores']."' ";
+        if($idTS != '' && $idOS != '') {
+            $sql2 = "select * from OrdemDeServico_TipoServico where idQuantidadeCores=".$quantidadeCores['idQuantidadeCores']." and idTipoServico=".$idTS." and idOrdemDeServico={$idOS};";
+            $query2 = mysql_query($sql2);
+            if( mysql_num_rows($query2) == 1) {
+                echo "selected";
+            }
+        }
+        echo ">{$quantidadeCores['descricao']}</option>";
+    }
 }
 ?>

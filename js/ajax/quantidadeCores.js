@@ -1,6 +1,6 @@
 // Variable to hold request
 var request;
-$("#formModeloNotaFiscal").submit(function(event){
+$("#formQuantidadeCores").submit(function(event){
     // Abort any pending request
     if (request) {
         request.abort();
@@ -17,7 +17,7 @@ $("#formModeloNotaFiscal").submit(function(event){
     $inputs.prop("disabled", true);
     // Fire off the request to /form.php
     request = $.ajax({
-        url: "control/ordemDeServico.php",
+        url: "control/tipoDeServico.php",
         type: "post",
         data: serializedData
     });
@@ -26,9 +26,9 @@ $("#formModeloNotaFiscal").submit(function(event){
         // Log a message to the console
         //console.log("Hooray, it worked!");
         console.log(response);
-        $('#selectModeloNotaFiscal').empty().append(response);
+        $('#selectQuantidadeCores').empty().append(response);
         $('select').material_select();
-        $('#modalModeloNotaFiscal a').click();
+        $('#modalQuantidadeCores a').click();
     });
     // Callback handler that will be called on failure
     request.fail(function (jqXHR, textStatus, errorThrown){

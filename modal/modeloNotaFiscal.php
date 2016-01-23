@@ -3,13 +3,19 @@
         <div class="modal-content">
             <h4>Atualizar Modelo de Nota Fiscal</h4>
             <div class="row">
-                <div class="input-field col s4">
+                <div class="input-field col s5">
                     <input name="modelo" id="modelo" type="text" class="validate" length="10" maxlength="10">
                     <label for="modelo">Modelo</label>
                 </div>
-                <div class="input-field col s8">
-                    <input name="descricao" id="descricao" type="text" class="validate" length="50">
+                <div class="input-field col s7">
+                    <input name="descricao" id="descricao" type="text" class="validate" length="50" maxlength="50">
                     <label for="descricao">Descrição</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s5">
+                    <input name="valor" id="valor" type="text" class="validate" length="10" maxlength="10">
+                    <label for="valor">Valor (R$)</label>
                 </div>
             </div>
         </div>
