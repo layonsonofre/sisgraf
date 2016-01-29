@@ -29,5 +29,5 @@ $("#selectQuantidadeCores").change(function(event){
         $("#cv2").prop("disabled", false);
         $("#cv3").prop("disabled", false);
     }
-    $("select").material_select();
+    $("#cores select").material_select();
 });

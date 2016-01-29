@@ -36,7 +36,7 @@ $("#selectTipoServico").change(function(event){
         // Log a message to the console
         //console.log("Hooray, it worked!");
         $('#selectAcabamento').empty().append(response);
-        $('select').material_select();
+        $('#selectAcabamento').material_select();
         // $('#modalAcabamento a').click();
     });
     // Callback handler that will be called on failure
@@ -54,8 +54,25 @@ $("#selectTipoServico").change(function(event){
     });
     request.done(function (response, textStatus, jqXHR){
         console.log(response);
-        $('#selectFormato').empty().append(response);
-        $('select').material_select();
+        $('#selectFormato1').empty().append(response);
+        $('#selectFormato1').material_select();
+    });
+    request.fail(function (jqXHR, textStatus, errorThrown){
+        console.error(
+            "The following error occurred: "+
+            textStatus, errorThrown
+        );
+    });
+
+    request = $.ajax({
+        url: "control/ordemDeServico.php",
+        type: "post",
+        data: "idTS=" + idTS + "&acao=listarPapeisOS"
+    });
+    request.done(function (response, textStatus, jqXHR){
+        console.log(response);
+        $('#selectPapel').empty().append(response);
+        $('#selectPapel').material_select();
     });
     request.fail(function (jqXHR, textStatus, errorThrown){
         console.error(

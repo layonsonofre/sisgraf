@@ -180,7 +180,7 @@ protegePagina(); // Chama a função que protege a página
                                     }
                                     ?>
                                     </select>
-                                    <label>Materiais Fornecidos</label>
+                                    <label>Categorias</label>
                                 </div>
                                 <div class="col s1">
                                     <a id="incluirCategoria" href="#modalCategoria" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>

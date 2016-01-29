@@ -1,7 +1,4 @@
-<?php
-include("control/seguranca.php"); // Inclui o arquivo com o sistema de segurança
-protegePagina(); // Chama a função que protege a página
-?>
+
 <!DOCTYPE php>
 <html>
     <head>
@@ -15,6 +12,7 @@ protegePagina(); // Chama a função que protege a página
     <body>
     	<?php
     		include 'header.php';
+			include 'modal/arquivomatriz.php';
     	?>
         <div id="help" class="modal">
             <div class="modal-content">
@@ -95,12 +93,9 @@ protegePagina(); // Chama a função que protege a página
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="input-field col s11">
-                                    <input name="urlModelo" id="url" type="text" class="validate" <?php if(isset($_GET['idArquivoModelo'])) echo "value='".$resultado['urlModelo']."'"; ?>>
+                                <div class="input-field col s12">
+                                    <input multiple name="urlModelo[]" id="url" type="file" class="validate" <?php if(isset($_GET['idArquivoModelo'])) echo "value='".$resultado['urlModelo']."'"; ?>>
                                     <label for="urlModelo" class="active">Insira o local em que o arquivo está armazenado</label>
-                                </div>
-                                <div class="col s1">
-                                    <a id="addModelo" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
                                 </div>
                             </div>
                         </div>
@@ -110,25 +105,24 @@ protegePagina(); // Chama a função que protege a página
                                     <h4>Matriz</h4>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="input-field col s11">
-                                    <input name="urlMatriz" id="urlMatriz" type="text" class="validate" <?php if(isset($_GET['idArquivoMatriz'])) echo "value='".$resultado['urlMatriz']."'"; ?>>
-                                    <label for="urlMatriz" class="active">URL</label>
-                                </div>
-                                <div class="col s1">
-                                    <a id="addMatriz" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
-                                </div>
+							<div class="row">
+                            <div class="input-field col s3">
+                                <select id="selectArquivoMatriz" name="selectArquivoMatriz[]" multiple>
+                                    <option value="" disabled>Selecione</option>
+                                    <?php
+                                    $sql = "select * from ArquivoMatriz;";
+                                    $query = mysql_query($sql);
+                                    while($arquivomatriz = mysql_fetch_array($query, MYSQL_ASSOC)) {
+                                        echo "<option value='" . $arquivomatriz['idArquivoMatriz'] . "'>" . $arquivomatriz['url'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <label>Arquivo Matriz</label>
+							</div>
+							<div class="col s1">
+                                <a href="#modalArquivoMatriz" id="addArquivoMatriz" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">+</i></a>
                             </div>
-                            <div class="row">
-                                <div class="input-field col s6">
-                                    <input name="utilizacoes" id="utilizacoes" type="text" class="validate right-align" <?php if(isset($_GET['idArquivoMatriz'])) echo "value='".$resultado['utilizacoes']."'"; ?>>
-                                    <label for="utilizacoes" class="active">Utilizações</label>
-                                </div>
-                                <div class="input-field col s6">
-                                    <input name="idChapa" id="idChapa" type="text" class="validate right-align" <?php if(isset($_GET['idArquivoMatriz'])) echo "value='".$resultado['idChapa']."'"; ?>>
-                                    <label for="idChapa" class="active">ID da Chapa</label>
-                                </div>
-                            </div>
+							
                         </div>
                        
                         <?php

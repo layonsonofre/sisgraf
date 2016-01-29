@@ -40,7 +40,7 @@
 					<a class="collapsible-header waves-effect waves-red accent-4">Ordem de Serviço<i class="mdi-navigation-arrow-drop-down right"></i></a>
 					<div class="collapsible-body">
 						<ul>
-							<li><a href='incluirOS.php'>Cadastrar</a></li>
+							<li id="novaOS"><a href='incluirOS.php'>Cadastrar</a></li>
 						</ul>
 					</div>
 				</li>
@@ -66,7 +66,6 @@
 						<ul>
 							<li><a href='incluirTipoDeServico.php?tipo=outro'>Cadastrar</a></li>
 							<li><a href='incluirTipoDeServico.php?tipo=carimbo'>Cad. Carimbo</a></li>
-							<li><a href='incluirTipoDeServico.php?tipo=nota'>Cad. Nota Fiscal</a></li>
 						</ul>
 					</div>
 				</li>

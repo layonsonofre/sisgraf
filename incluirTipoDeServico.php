@@ -50,20 +50,16 @@ if(isset($_GET['logout'])) {
                         if($idTS != '') {
                             if($_GET['tipo'] == 'carimbo') {
                                 echo "<h4>Atualizar Carimbo</h4>";
-                            } else if($_GET['tipo'] == 'nota') {
-                                echo "<h4>Atualizar Nota Fiscal</h4>";
                             } else if($_GET['tipo'] == 'outro') {
                                 echo "<h4>Atualizar Tipo de Serviço</h4>";
                             }
-                            $sql = "select * from TipoServico, Carimbo, NotaFiscal, ModeloNotaFiscal where TipoServico.idTipoServico=" . $idTS . ";";
+                            $sql = "select * from TipoServico, Carimbo where TipoServico.idTipoServico=" . $idTS . ";";
                             $query = mysql_query($sql);
                             $resultado = mysql_fetch_assoc($query);
                         }
                         else {
                             if($_GET['tipo'] == 'carimbo') {
                                 echo "<h4>Cadastrar Carimbo</h4>";
-                            } else if($_GET['tipo'] == 'nota') {
-                                echo "<h4>Cadastrar Nota Fiscal</h4>";
                             } else if($_GET['tipo'] == 'outro') {
                                 echo "<h4>Cadastrar Tipo de Serviço</h4>";
                             }
@@ -103,8 +99,8 @@ if(isset($_GET['logout'])) {
                             <div class="row">
                                 <div class="input-field col s2">
                                     <select id="isAutomatico" name="isAutomatico">
-                                        <option value="1" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == 'TRUE') echo "selected"; } ?> >Automático</option>
-                                        <option value="0" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == 'FALSE') echo "selected"; } ?> >Madeira</option>
+                                        <option value="1" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == '1') echo "selected"; } ?> >Automático</option>
+                                        <option value="0" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == '0') echo "selected"; } ?> >Madeira</option>
                                     </select>
                                     <label for="isAutomatico" class="active">Tipo</label>
                                 </div>
@@ -125,40 +121,6 @@ if(isset($_GET['logout'])) {
                         }
                         ?>
                         <?php
-                        if($_GET['tipo'] == 'nota'){
-                        ?>
-                            <div class="row">
-                                <div class="col s12">
-                                    <h5>Dados da Nota Fiscal</h5>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s11">
-                                    <select id="selectModeloNotaFiscal" name="selectModeloNotaFiscal">
-                                        <option value="" disabled>Selecione</option>
-                                        <?php
-                                        $sql = "select * from ModeloNotaFiscal;";
-                                        $query = mysql_query($sql);
-                                        while($modeloNotaFiscal = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                            echo "<option value='" . $modeloNotaFiscal['idModeloNotaFiscal'] . "'>" . $modeloNotaFiscal['modelo'] . "(" . $modeloNotaFiscal['descricao'] . ") </option>";
-                                        }
-                                        ?>
-                                    </select>
-                                    <label>Modelo</label>
-                                </div>
-                                <div class="col s1">
-                                    <a href="#modalModeloNotaFiscal" id="addModeloNotaFiscal" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
-                                </div>
-                            </div>
-                            <!--
-                            //
-                            Mais detalhes sobre as as notas fiscais
-                            //
-                            -->
-                        <?php
-                        }
-                        ?>
-                        <?php
                         $temp = isset($_GET['tipo']) ? $_GET['tipo'] : '';
                         if( $temp != '' && $temp != 'carimbo')
                         {
@@ -166,6 +128,36 @@ if(isset($_GET['logout'])) {
                             <div class="row">
                                 <div class="col s12">
                                     <h5>Dados do Tipo de Serviço</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s8">
+                                    <select id="selectPapel" name="selectPapel">
+                                        <?php
+                                        echo "<option value='' disabled>Selecione os papéis em que pode ser impresso</option>";
+                                        $sql = "SELECT * FROM `Papel`;";
+                                        $query = mysql_query($sql);
+                                        while($papel = mysql_fetch_array($query, MYSQL_ASSOC)) {
+                                            echo "<option value='".$papel['idMaterial']."' ";
+                                            if($idTS != NULL) {
+                                                $sql2 = "select * from Material_TipoServico where idMaterial=".$papel['idMaterial']." and idTipoServico=".$idTS.";";
+                                                $query2 = mysql_query($sql2);
+                                                if( mysql_num_rows($query2) == 1) {
+                                                    echo "selected";
+                                                }
+                                            }
+                                            $sql2 = "select gramatura from GramaturaPapel where idGramaturaPapel = {$papel['idGramaturaPapel']}";
+                                            $query2 = mysql_query($sql2);
+                                            $gram = mysql_fetch_assoc($query2);
+                                            echo ">{$papel['tipo']} {$gram['gramatura']} <i>g/m^2</i></option>";
+                                        }
+                                        ?>
+                                    </select>
+                                    <label>Papel</label>
+                                </div>
+                                <div class="input-field col s4">
+                                    <input name="valorPapel" id="valorPapel" type="text" class="validate right-align" length="10" maxlength="10">
+                                    <label for="valorPapel" class="active">Valor (R$)</label>
                                 </div>
                             </div>
                             <div class="row">

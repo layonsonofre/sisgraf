@@ -27,6 +27,9 @@ $valorAcabamento = isset($_POST['valorAcabamento']) ? $_POST['valorAcabamento'] 
 $localAcabamento = isset($_POST['localAcabamento']) ? $_POST['localAcabamento'] : '';
 $idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '';
 
+$papel = isset($_POST['selectPapel']) ? $_POST['selectPapel'] : '';
+$valorPapel = isset($_POST['valorPapel']) ? $_POST['valorPapel'] : '';
+
 if($acao == '') {
 	header('Location: ../incluirTipoDeServico.php?at=no&tipo='.$tipo);
 } else if($acao == 'inserir') {
@@ -49,6 +52,10 @@ if($acao == '') {
 			$query = mysql_query($sql);
 		}
 	}
+    if($papel != NULL) {
+        $sql = "INSERT INTO `Material_TipoServico` (`idTipoServico`,`idMaterial`,`valor`) VALUES ('{$idTSInserido}', '{$papel}', '{$valorPapel}')";
+        $query = mysql_query($sql);
+    }
 	header('Location: ../incluirTipoDeServico.php?at=ok&tipo='.$tipo);
 } else if($acao == 'excluir') {
 	if($idTS == null) {

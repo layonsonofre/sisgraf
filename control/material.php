@@ -27,7 +27,7 @@ if($acao == '') {
 	$query = mysql_query($sql);
 	$idMaterialInserido = mysql_insert_id();
 	if($tipo == "papel") {
-		$sql = "INSERT INTO `Papel` (`idMaterial`,`tipo`,`idGramaturaPapel`,`base`,`altura`) VALUES (\"".$idMaterialInserido."\",\"".$tipo."\",\"".$gramatura."\",\"".$base."\",\"".$altura."\")";
+		$sql = "INSERT INTO `Papel` (`idMaterial`,`tipo`,`idGramaturaPapel`,`base`,`altura`) VALUES (\"".$idMaterialInserido."\",\"".$tipoPapel."\",\"".$gramatura."\",\"".$base."\",\"".$altura."\")";
 		$query = mysql_query($sql);
 	}
 	if($categoria != NULL) {
