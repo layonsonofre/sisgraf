@@ -1,6 +1,8 @@
 <?php
 include("control/seguranca.php"); // Inclui o arquivo com o sistema de segurança
 protegePagina(); // Chama a função que protege a página
+
+unset($_SESSION['idOS']);
 ?>
 <!DOCTYPE php>
 <html>
@@ -42,10 +44,9 @@ protegePagina(); // Chama a função que protege a página
             <div class="container">
                 <div class="row valign-wrapper">
                     <div class="col s12 l10">
-                        <input type="hidden" name="idOS" id="idOS">
                         <?php
-                        echo "<h1>{$_SESSION['idOS']}</h1>";
-                        $idOS = isset($_GET['idOS']) ? $_GET['idOS'] : '';
+                        $idOS = isset($_SESSION['idOS']) ? $_SESSION['idOS'] : '';
+                        echo "<h1>{$idOS}</h1>";
                         if ($idOS != '') {
                             //if($_GET['tipo'] == 'material') {
                             echo "<h4>Atualizar Ordem de Serviço</h4>";
@@ -104,6 +105,7 @@ protegePagina(); // Chama a função que protege a página
                                 <label for="valorTotal" class="active">Valor Total (R$)</label>
                             </div>
                         </div>
+                        <input type="hidden" name="valor" value="35">
                         <div class="row">
                             <div class="input-field col s11">
                                 <select id="selectCliente" name="selectCliente[]" multiple>
@@ -615,6 +617,10 @@ protegePagina(); // Chama a função que protege a página
                             <label for="observacoes">Observações</label>
                         </div>
                     </div>
+                    <?php
+                    $idOS = isset($_SESSION['idOS']) ? $_SESSION['idOS'] : '';
+                    echo "<h1>{$idOS}</h1>";
+                    ?>
                     <div id="items"></div>
                     <?php
                     if (isset($_GET['idOS']))
@@ -622,15 +628,15 @@ protegePagina(); // Chama a função que protege a página
                     ?>
                     <!-- <button class="btn waves-effect waves-light green accent-4" type="submit" name="salvar">Salvar<i class="material-icons right">send</i></button> -->
                     <a class="btn waves-effect waves-light red accent-4" name="cancelar" onclick="document.forms['excluir'].submit()">Cancelar OS<i class="material-icons right">delete</i></a>
-                    <input type="hidden" name="primeiraVez" id="primeiraVez" value="1">
-                    <input type="hidden" name="idOS" id="idOS">
-                    <input type="hidden" name="acao" id="acao" value="<?php echo isset($_GET['idOS']) ? 'atualizar' : 'inserir'; ?>" />
-                    <input type="hidden" name="tipo" id="tipo">
+                    <input type="text" name="primeiraVez" id="primeiraVez" value="1">
+                    <input type="text" name="idOS" id="idOS">
+                    <input type="text" name="acao" id="acao" value="<?php echo isset($_GET['idOS']) ? 'atualizar' : 'inserir'; ?>" />
+                    <input type="text" name="tipo" id="tipo">
                 </form>
-                <form role="form" method="POST" name="excluir" action="control/material.php">
+                <!-- <form role="form" method="POST" name="excluir" action="control/material.php">
                     <input type="hidden" name="acao" value="excluir" />
                     <input type="hidden" name="idOS" value="<?php echo $idOS; ?>" />
-                </form>
+                </form> -->
             </div>
         </div>
     </main>

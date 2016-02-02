@@ -78,7 +78,6 @@ $("#selecionarTipo").click(function(event){
         data: "acao=add" + element.id
     });
     request.done(function (response, textStatus, jqXHR){
-        console.log(response);
         $("#selectTipoServico").empty().append(response);
         $('#selectTipoServico').material_select();
     });

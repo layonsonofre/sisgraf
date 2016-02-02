@@ -14,13 +14,10 @@ $(function() {
 		request = $.ajax({
 			url: "control/ordemDeServico.php",
 			type: "post",
-			data: "acao=listarServicos&idOS="+temp
+			data: "acao=listarServicos"
 		});
-		console.log(request);
 		request.done(function (response, textStatus, jqXHR){
-			console.log(response);
 			$('#items').empty().append(response);
-			// $('#items').empty().append(response);
 		});
 		request.fail(function (jqXHR, textStatus, errorThrown){
 	        console.error(
@@ -54,11 +51,8 @@ $(function() {
 			data: serializedData
 		});
 		request.done(function (response, textStatus, jqXHR){
-			console.log(response);
-			// $('#items').empty().append(response);
-			if($("#primeiraVez") === 'sim') {
-				$("#idOS").val(response[0]);
-			}
+			$('#items').empty().append(response);
+			$("#idOS").val(response);
 			mostrar();
 		});
 		request.fail(function (jqXHR, textStatus, errorThrown){
@@ -74,8 +68,8 @@ $(function() {
 			$("#primeiraVez").val('0');
 		}
 	    event.preventDefault();
-	    setTimeout(function(){
-	    	location.reload();
-	    }, 002);
+	    // setTimeout(function(){
+	    // 	location.reload();
+	    // }, 002);
 	});
 });

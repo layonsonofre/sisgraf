@@ -9,6 +9,7 @@ $modelo = isset($_POST['modelo']) ? $_POST['modelo'] : '';
 $descricao = isset($_POST['descricao']) ? $_POST['descricao'] : '';
 $valor = isset($_POST['valor']) ? $_POST['valor'] : '';
 
+$idMaterial = isset($_POST['selectMaterial']) ? $_POST['selectMaterial'] : '';
 $dataEntrada = isset($_POST['dataEntrada']) ? $_POST['dataEntrada'] : '';
 $dataSaida = isset($_POST['dataSaida']) ? $_POST['dataSaida'] : '';
 $status = isset($_POST['status']) ? $_POST['status'] : '';
@@ -59,9 +60,11 @@ if($acao == '') {
         $idOS = mysql_insert_id();
         $_SESSION['idOS'] = $idOS;
     }
-    echo $_SESSION['idOS'];
-    $sql = "INSERT INTO `OrdemDeServico_TipoServico` (`idTipoServico`,`idOrdemDeServico`,`quantidade`,`valor`,`idFormaImpressao`,`idQuantidadeCores`,`idFormato`) VALUES ('{$idTipoServico}','{$idOS}','{$quantidade}','{$valor}','{$formaImpressao}','{$quantidadeCores}','{$formato}')";
+    $idOS = $_SESSION['idOS'];
+    echo $idOS; //o idOS é usado no ajax
+    $sql = "INSERT INTO `OrdemDeServico_TipoServico` (`idTipoServico`,`idOrdemDeServico`,`quantidade`,`valor`,`idFormaImpressao`,`idQuantidadeCores`,`idFormato`,`idMaterial`) VALUES ('{$idTipoServico}','{$idOS}','{$quantidade}','{$valorTotal}','{$formaImpressao}','{$quantidadeCores}','{$formato}', '{$idMaterial}')";
     $query = mysql_query($sql);
+    
     if($cliente != '') {
         foreach($cliente as $temp) {
             $sql = "INSERT INTO `Pessoa_OrdemDeServico` (`idOrdemDeServico`,`idPessoa`,`data`) VALUES ('{$idOS}','{$temp}','{$dataEntrada}')";
@@ -100,7 +103,6 @@ if($acao == '') {
             }
         }
     }
-
     if($tipo == 'externo') {
         foreach($fornecedor as $temp) {
             $sql = "INSERT INTO `ServicoExterno` (`idTipoServico`,`idPessoa`) VALUES ('{$idTipoServico}','{$temp}')";
@@ -114,91 +116,78 @@ if($acao == '') {
         $sql = "INSERT INTO `NotaFiscal` (`idTipoServico`,`idVias`,`numeracaoInicial`,`numeracaoFinal`,`numeroTalao`,`folhasBloco`,`aidf`,`idModeloNotaFiscal`) VALUES ('{$idTSInserido}','{$vias}','{$numeracaoInicial}','{$numeracaoFinal}','{$numeroTalao}','{$folhasBloco}','{$aidf}','{$modeloNota}')";
         $query = mysql_query($sql);
     }
+    
 } else if($acao == 'listarServicos') {
-    $por_pagina = 1;
+    $idOS = isset($_SESSION['idOS']) ? $_SESSION['idOS'] : '-1';
     if($idOS == '-1') {
-        $condicoes = '1';
+        echo "<h5>É necessário adicionar um produto na Ordem de Serviço antes de listar</h5><br>";
     } else {
+        $por_pagina = 10;
         $condicoes = "OrdemDeServico_TipoServico.idOrdemDeServico LIKE '{$idOS}'";
-    }
-    $sql = "SELECT COUNT(*) AS total FROM OrdemDeServico_TipoServico WHERE {$condicoes}";
-    $query = mysql_query($sql);
-    $total = mysql_result($query, 0, 'total');
-    $paginas = (($total % $por_pagina) > 0) ? (int)($total / $por_pagina) + 1 : ($total / $por_pagina);
+        $sql = "SELECT COUNT(*) AS total FROM OrdemDeServico_TipoServico WHERE {$condicoes}";
+        $query = mysql_query($sql);
+        $total = mysql_result($query, 0, 'total');
+        $paginas = (($total % $por_pagina) > 0) ? (int)($total / $por_pagina) + 1 : ($total / $por_pagina);
 
-    if(isset($_POST['pagina'])) {
-        $pagina = (int)$_POST['pagina'];
-    } else {
-        $pagina = 1;
-    }
-    $pagina = max(min($paginas, $pagina), 1);
-    $offset = ($pagina - 1) * $por_pagina;
+        if(isset($_POST['pagina'])) {
+            $pagina = (int)$_POST['pagina'];
+        } else {
+            $pagina = 1;
+        }
+        $pagina = max(min($paginas, $pagina), 1);
+        $offset = ($pagina - 1) * $por_pagina;
 
-    $sql = "SELECT OrdemDeServico_TipoServico.idOrdemDeServico as idOrdemDeServico, OrdemDeServico_TipoServico.idTipoServico as idTipoServico,
-            OrdemDeServico_TipoServico.quantidade as quantidade, OrdemDeServico_TipoServico.valor as valor,
-            FormaImpressao.nome as formaImpressaoNome, QuantidadeCores.descricao as quantidadeCoresDescricao, 
-            TipoServico.nome as tipoServico
-            FROM OrdemDeServico_TipoServico
-            INNER JOIN FormaImpressao ON OrdemDeServico_TipoServico.idFormaImpressao = FormaImpressao.idFormaImpressao
-            INNER JOIN QuantidadeCores ON OrdemDeServico_TipoServico.idQuantidadeCores = QuantidadeCores.idQuantidadeCores
-            INNER JOIN TipoServico ON OrdemDeServico_TipoServico.idTipoServico = TipoServico.idTipoServico
-            WHERE {$condicoes} ORDER BY TipoServico.nome DESC LIMIT {$offset}, {$por_pagina}";
-    $query = mysql_query($sql);
-    // echo "<p>Resultados ".min($total, ($offset + 1))." - ".min($total, ($offset + $por_pagina))." de ".$total." resultados encontrados para '".$_POST['consulta']."'</p>";
-    while ($resultado = mysql_fetch_assoc($query)) {
-        echo "<div class='card'>";
-            echo "<div class='card-content'>";
-                echo "<span class='card-title'><b>{$resultado['tipoServico']}</b></span>";
-                //echo "<p>Id: {$resultado['idTipoServico']} ({$resultado['idOrdemDeServico']})</p>";
-                echo "<p>Quantidade: <b>{$resultado['quantidade']}</b></p>";
-                echo "<p>Valor: <b>R$ {$resultado['valor']}</b></p>";
-                echo "<p>Quantidade de Cores: <b>{$resultado['quantidadeCoresDescricao']}</b>";
-                echo " - Cores: <b>";
-                $tempIdTS = $resultado['idTipoServico'];
-                $tempIdOS = $resultado['idOrdemDeServico'];
-                $sql2 = "SELECT Cor.nome FROM Cor
-                        INNER JOIN Cor_OrdemDeServico_TipoServico on Cor.idCor = Cor_OrdemDeServico_TipoServico.idCor
-                        WHERE Cor_OrdemDeServico_TipoServico.idTipoServico = {$resultado['idTipoServico']} AND
-                        Cor_OrdemDeServico_TipoServico.idOrdemDeServico = {$resultado['idOrdemDeServico']}
-                        ORDER BY Cor.nome";
-                $query2 = mysql_query($sql2);
-                while($result = mysql_fetch_assoc($query2)) {
-                    echo $result['nome'] . " ";
-                }
-                echo "</b></p>";
-                echo "<p>Acabamento: ";
-                $sql2 = "SELECT Acabamento.nome as nome FROM Acab_OS_TS
-                        INNER JOIN Acabamento ON Acabamento.idAcabamento = Acab_OS_TS.idAcabamento
-                        WHERE Acab_OS_TS.idTipoServico = {$resultado['idTipoServico']} AND
-                        Acab_OS_TS.idOrdemDeServico = {$resultado['idOrdemDeServico']}";
-                $query2 = mysql_query($sql2);
-                while($result = mysql_fetch_assoc($query2)) {
-                    echo $result['nome'] + " ";
-                }
-                echo "</p>";
-                echo "<p>Forma de Impressão: <b>{$resultado['formaImpressaoNome']}</b></p>";
-            echo "</div>";
-            echo "<div class='card-action'>";
-                echo "<a href='#'>Editar</a>";
+        $sql = "SELECT OrdemDeServico_TipoServico.idOrdemDeServico as idOrdemDeServico, OrdemDeServico_TipoServico.idTipoServico as idTipoServico,
+                OrdemDeServico_TipoServico.quantidade as quantidade, OrdemDeServico_TipoServico.valor as valor,
+                FormaImpressao.nome as formaImpressaoNome, QuantidadeCores.descricao as quantidadeCoresDescricao, 
+                TipoServico.nome as tipoServico
+                FROM OrdemDeServico_TipoServico
+                INNER JOIN FormaImpressao ON OrdemDeServico_TipoServico.idFormaImpressao = FormaImpressao.idFormaImpressao
+                INNER JOIN QuantidadeCores ON OrdemDeServico_TipoServico.idQuantidadeCores = QuantidadeCores.idQuantidadeCores
+                INNER JOIN TipoServico ON OrdemDeServico_TipoServico.idTipoServico = TipoServico.idTipoServico
+                WHERE {$condicoes} ORDER BY TipoServico.nome DESC LIMIT {$offset}, {$por_pagina}";
+        $query = mysql_query($sql);
+        // echo "<p>Resultados ".min($total, ($offset + 1))." - ".min($total, ($offset + $por_pagina))." de ".$total." resultados encontrados para '".$_POST['consulta']."'</p>";
+        while ($resultado = mysql_fetch_assoc($query)) {
+            echo "<div class='card'>";
+                echo "<div class='card-content'>";
+                    echo "<span class='card-title'><b>{$resultado['tipoServico']}</b></span>";
+                    //echo "<p>Id: {$resultado['idTipoServico']} ({$resultado['idOrdemDeServico']})</p>";
+                    echo "<p>Quantidade: <b>{$resultado['quantidade']}</b></p>";
+                    echo "<p>Valor: <b>R$ {$resultado['valor']}</b></p>";
+                    echo "<p>Quantidade de Cores: <b>{$resultado['quantidadeCoresDescricao']}</b>";
+                    echo " - Cores: <b>";
+                    $tempIdTS = $resultado['idTipoServico'];
+                    $tempIdOS = $resultado['idOrdemDeServico'];
+                    $sql2 = "SELECT Cor.nome FROM Cor
+                            INNER JOIN Cor_OrdemDeServico_TipoServico on Cor.idCor = Cor_OrdemDeServico_TipoServico.idCor
+                            WHERE Cor_OrdemDeServico_TipoServico.idTipoServico = {$resultado['idTipoServico']} AND
+                            Cor_OrdemDeServico_TipoServico.idOrdemDeServico = {$resultado['idOrdemDeServico']}
+                            ORDER BY Cor.nome";
+                    $query2 = mysql_query($sql2);
+                    while($result = mysql_fetch_assoc($query2)) {
+                        echo $result['nome'] . " ";
+                    }
+                    echo "</b></p>";
+                    echo "<p>Acabamento: ";
+                    $sql2 = "SELECT Acabamento.nome as nome FROM Acab_OS_TS
+                            INNER JOIN Acabamento ON Acabamento.idAcabamento = Acab_OS_TS.idAcabamento
+                            WHERE Acab_OS_TS.idTipoServico = {$resultado['idTipoServico']} AND
+                            Acab_OS_TS.idOrdemDeServico = {$resultado['idOrdemDeServico']}";
+                    $query2 = mysql_query($sql2);
+                    while($result = mysql_fetch_assoc($query2)) {
+                        echo $result['nome'] + " ";
+                    }
+                    echo "</p>";
+                    echo "<p>Forma de Impressão: <b>{$resultado['formaImpressaoNome']}</b></p>";
+                echo "</div>";
+                echo "<div class='card-action'>";
+                    echo "<a href='#'>Editar</a>";
+                    echo "</div>";
                 echo "</div>";
             echo "</div>";
-        echo "</div>";
+        }
     }
-    echo "<br><ul class=\"pagination\">";
-        if($pagina > 1) {
-            echo "<li class=\"waves-effect\"><a class=\"paginacao\" href=\"#\" pagina=\"".($pagina-1)."\"><i class=\"material-icons\">chevron_left</i></a></li>";
-        }
-        for($i = 1; $i < $paginas + 1; $i++) {
-            $ativo = ($i == $pagina) ? TRUE : FALSE;
-            echo "<li class=\"";
-            if($ativo) echo "active\">";
-            else echo "waves-effect\">";
-            echo "<a class=\"paginacao\" href=\"#\" pagina=\"".$i."\">".$i."</a></li>";
-        }
-        if($pagina < $paginas) {
-            echo "<li class=\"waves-effect\"><a class=\"paginacao\" href=\"#\" pagina=\"".($pagina+1)."\"><i class=\"material-icons\">chevron_right</i></a></li>";
-        }
-    echo "</ul>";
 } else if($acao == 'adddiverso') {
     echo "<option value='' disabled selected>Selecione o tipo de serviço desejado</option>";
     $sql = "SELECT * FROM TipoServico WHERE nome NOT LIKE '%nota%' AND nome NOT LIKE '%carimbo%' AND nome NOT LIKE '%externo%' ORDER BY nome;";

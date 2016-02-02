@@ -53,7 +53,6 @@ $("#selectTipoServico").change(function(event){
         data: "idTS=" + idTS + "&acao=listarFormatosOS"
     });
     request.done(function (response, textStatus, jqXHR){
-        console.log(response);
         $('#selectFormato1').empty().append(response);
         $('#selectFormato1').material_select();
     });
@@ -70,7 +69,6 @@ $("#selectTipoServico").change(function(event){
         data: "idTS=" + idTS + "&acao=listarPapeisOS"
     });
     request.done(function (response, textStatus, jqXHR){
-        console.log(response);
         $('#selectPapel').empty().append(response);
         $('#selectPapel').material_select();
     });
