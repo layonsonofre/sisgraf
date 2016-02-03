@@ -165,6 +165,10 @@ unset($_SESSION['idOS']);
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="input-field col s3">
+                                        <input name="quantidade" id="quantidade" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['quantidade'] . "'"; ?>>
+                                        <label for="quantidade" class="active">Quantidade</label>
+                                    </div>
                                     <div class="input-field col s5">
                                         <select id="selectModeloNotaFiscal" name="selectModeloNotaFiscal">
                                             <option value="" disabled selected>Selecione</option>
@@ -181,7 +185,7 @@ unset($_SESSION['idOS']);
                                     <div class="col s1">
                                         <a href="#modalModeloNotaFiscal" id="addModeloNota" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
                                     </div>
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s3">
                                         <input name="aidf" id="aidf" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['AIDF'] . "'"; ?> data-mask="9?999">
                                         <label for="aidf" class="active">AIDF</label>
                                     </div>
@@ -404,7 +408,7 @@ unset($_SESSION['idOS']);
 
                             <div id="tipoServico_quantidade">
                                 <div class="row">
-                                    <div class="input-field col s7">
+                                    <div class="input-field col s6">
                                         <select id="selectTipoServico" name="selectTipoServico">
                                             <option value="" disabled selected>Selecione</option>
                                             <?php
@@ -420,9 +424,13 @@ unset($_SESSION['idOS']);
                                     <div class="col s1">
                                         <a href="incluirTipoDeServico.php?tipo=outro" target="_blank" id="addTipoDeServico" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
                                     </div>
-                                    <div class="input-field col s4">
+                                    <div class="input-field col s3">
                                         <input name="quantidade" id="quantidade" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['quantidade'] . "'"; ?>>
                                         <label for="quantidade" class="active">Quantidade</label>
+                                    </div>
+                                    <div class="input-field col s2">
+                                        <input name="valor" id="valor" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['valorTotal'] . "'"; ?>>
+                                        <label for="valor" class="active">Valor (R$)</label>
                                     </div>
                                 </div>
                             </div>

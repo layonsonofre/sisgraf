@@ -17,6 +17,7 @@ $(function() {
 			data: "acao=listarServicos"
 		});
 		request.done(function (response, textStatus, jqXHR){
+			console.log(response);
 			$('#items').empty().append(response);
 		});
 		request.fail(function (jqXHR, textStatus, errorThrown){
@@ -51,7 +52,8 @@ $(function() {
 			data: serializedData
 		});
 		request.done(function (response, textStatus, jqXHR){
-			$('#items').empty().append(response);
+			console.log(response);
+			//$('#items').empty().append(response);
 			$("#idOS").val(response);
 			mostrar();
 		});
