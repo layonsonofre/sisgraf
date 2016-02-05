@@ -578,7 +578,7 @@ unset($_SESSION['idOS']);
                             <div id="fornecedor">
                                 <div class="row">
                                     <div class="input-field col s11">
-                                        <select id="selectFornecedor" name="selectFornecedor[]">
+                                        <select id="selectFornecedor" name="selectFornecedor">
                                             <option value="" disabled selected>Selecione quem vai imprimir o serviço</option>
                                             <?php
                                             $sql = "select * from Pessoa order by nome, nomeFantasia;";
@@ -609,11 +609,9 @@ unset($_SESSION['idOS']);
                             </div>
                             <div class="row">
                                 <div class="col s4">
-                                    <!-- <a href="#adicionar" id="adicionar" class="waves-effect waves-light amber accent-4 btn right-align"><i class="material-icons left">add</i>Adicionar</a> -->
                                     <button class="btn waves-effect waves-light amber accent-4" name="adicionar" id="adicionar">Adicionar<i class="material-icons left">add</i></button>
                                 </div>
-                                <div class="col s4"><p>&nbsp;</p></div>
-                                <div class="col s4">
+                                <div class="col s4 right-align">
                                     <a class="btn waves-effect waves-light yellow accent-4" name="mostrar" id="mostrar">Serviços<i class="material-icons left">list</i></a>
                                 </div>
                             </div>
@@ -625,21 +623,21 @@ unset($_SESSION['idOS']);
                             <label for="observacoes">Observações</label>
                         </div>
                     </div>
-                    <?php
-                    $idOS = isset($_SESSION['idOS']) ? $_SESSION['idOS'] : '';
-                    echo "<h1>{$idOS}</h1>";
-                    ?>
                     <div id="items"></div>
                     <?php
                     if (isset($_GET['idOS']))
                         echo "<a class=\"btn waves-effect waves-light red accent-4\" name=\"exlcuir\" onclick=\"document.forms['excluir'].submit()\">Excluir<i class=\"material-icons right\">delete</i></a>";
                     ?>
                     <!-- <button class="btn waves-effect waves-light green accent-4" type="submit" name="salvar">Salvar<i class="material-icons right">send</i></button> -->
-                    <a class="btn waves-effect waves-light red accent-4" name="cancelar" onclick="document.forms['excluir'].submit()">Cancelar OS<i class="material-icons right">delete</i></a>
-                    <input type="text" name="primeiraVez" id="primeiraVez" value="1">
-                    <input type="text" name="idOS" id="idOS">
-                    <input type="text" name="acao" id="acao" value="<?php echo isset($_GET['idOS']) ? 'atualizar' : 'inserir'; ?>" />
-                    <input type="text" name="tipo" id="tipo">
+                    <div class="row">
+                        <a type="hidden" target="_blank" id="incluirArquivo"></a>
+                        <div class="col s6 left-align"><a class="btn waves-effect waves-light blue accent-4" name="arquivo" id="arquivo">Arquivo<i class="material-icons right">description</i></a></div>
+                        <div class="col s6 right-align"><a class="btn waves-effect waves-light red accent-4" name="cancelar" id="cancelar">Cancelar O.S.<i class="material-icons right">delete</i></a></div>
+                    </div>
+                    <input type="hidden" name="primeiraVez" id="primeiraVez" value="1">
+                    <input type="hidden" name="idOS" id="idOS">
+                    <input type="hidden" name="acao" id="acao" value="<?php echo isset($_GET['idOS']) ? 'atualizar' : 'inserir'; ?>" />
+                    <input type="hidden" name="tipo" id="tipo">
                 </form>
                 <!-- <form role="form" method="POST" name="excluir" action="control/material.php">
                     <input type="hidden" name="acao" value="excluir" />

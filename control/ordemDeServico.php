@@ -51,7 +51,6 @@ $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
 
 if($acao == '') {
 	//header('Location: ../incluirTipoDeServico.php?at=no&tipo='.$tipo);
-    echo var_dump($_POST);
 } else if($acao == 'adicionar') {
     if($primeiraVez == '1') {
         $sql = "INSERT INTO `OrdemDeServico` (`idOrdemDeServico`,`dataEntrada`,`dataSaida`,`status`,`isOrcamento`,`valorTotal`,`observacoes`) VALUES (NULL,'{$dataEntrada}','{$dataSaida}','{$status}','{$isOrcamento}','{$valorTotal}','{$observacoes}')";
@@ -63,31 +62,22 @@ if($acao == '') {
     echo $idOS; //o idOS é usado no ajax
 
     if($tipo == 'externo') {
-        foreach($fornecedor as $temp) {
-            $sql = "INSERT INTO `ServicoExterno` (`idTipoServico`,`idPessoa`) VALUES ('{$idTipoServico}','{$temp}')";
-            $query = mysql_query($sql);
-        }
+        $sql = "INSERT INTO `ServicoExterno` (`idTipoServico`,`idPessoa`, `idOrdemDeServico`) VALUES ('{$idTipoServico}','{$fornecedor}', '{$idOS}')";
+        $query = mysql_query($sql);
     } else if($tipo == 'nota') {
         $sql = "INSERT INTO `TipoServico` (`idTipoServico`,`nome`,`descricao`,`valor`) VALUES (NULL,'{$nomeNota}','{$descricaoNota}','{$valorNota}');";
         $query = mysql_query($sql);
         $idTipoServico = mysql_insert_id();
         $sql = "INSERT INTO `NotaFiscal` (`idTipoServico`,`idVias`,`numeracaoInicial`,`numeracaoFinal`,`numeroTalao`,`folhasBloco`,`aidf`,`idModeloNotaFiscal`) VALUES ('{$idTipoServico}','{$vias}','{$numeracaoInicial}','{$numeracaoFinal}','{$numeroTalao}','{$folhasBloco}','{$aidf}','{$modeloNota}')";
         $query = mysql_query($sql);
-    }
-    if($tipo == 'carimbo') {
+    } else if($tipo == 'carimbo') {
         $sql = "INSERT INTO `OrdemDeServico_TipoServico` (`idTipoServico`,`idOrdemDeServico`,`quantidade`,`valor`,`idFormaImpressao`,`idQuantidadeCores`,`idFormato`,`idMaterial`) VALUES ('{$idTipoServico}','{$idOS}','{$quantidade}','{$valor}',NULL,NULL,NULL,NULL)";
         $query = mysql_query($sql);
-    } else {
-        $sql = "INSERT INTO `OrdemDeServico_TipoServico` (`idTipoServico`,`idOrdemDeServico`,`quantidade`,`valor`,`idFormaImpressao`,`idQuantidadeCores`,`idFormato`,`idMaterial`) VALUES ('{$idTipoServico}','{$idOS}','{$quantidade}','{$valor}','{$formaImpressao}','{$quantidadeCores}','{$formato}', '{$papel}')";
-        $query = mysql_query($sql);
-    }
-    if($cliente != '') {
-        foreach($cliente as $temp) {
-            $sql = "INSERT INTO `Pessoa_OrdemDeServico` (`idOrdemDeServico`,`idPessoa`,`data`) VALUES ('{$idOS}','{$temp}','{$dataEntrada}')";
-            $query = mysql_query($sql);
-        }
     }
     if($tipo != 'carimbo') {
+        $sql = "INSERT INTO `OrdemDeServico_TipoServico` (`idTipoServico`,`idOrdemDeServico`,`quantidade`,`valor`,`idFormaImpressao`,`idQuantidadeCores`,`idFormato`,`idMaterial`) VALUES ('{$idTipoServico}','{$idOS}','{$quantidade}','{$valor}','{$formaImpressao}','{$quantidadeCores}','{$formato}', '{$papel}')";
+        $query = mysql_query($sql);
+
         if($cf1 != '') {
             $sql = "INSERT INTO `Cor_OrdemDeServico_TipoServico` (`idCor`,`idTipoServico`,`idOrdemDeServico`,`isFrente`) VALUES ('{$cf1}','{$idTipoServico}','{$idOS}','1')";
             $query = mysql_query($sql);
@@ -114,9 +104,16 @@ if($acao == '') {
         }
         if($acabamento != '') {
             foreach($acabamento as $temp) {
-                $sql = "INSERT INTO `Acab_OS_TS` (`idAcab_OS_TS`,`idTipoServico`,`idOrdemDeServico`,`idAcabamento`) VALUES (NULL,'{$idTipoServico}','{$idOS}','{$temp}')";
+                $sql = "INSERT INTO `Acab_OS_TS` (`idAcab_OS_TS`,`idTipoServico`,`idOrdemDeServico`,`idAcabamento`)
+                        VALUES (NULL,'{$idTipoServico}','{$idOS}','{$temp}')";
                 $query = mysql_query($sql);
             }
+        }
+    }
+    if($cliente != '') {
+        foreach($cliente as $temp) {
+            $sql = "INSERT INTO `Pessoa_OrdemDeServico` (`idOrdemDeServico`,`idPessoa`,`data`) VALUES ('{$idOS}','{$temp}','{$dataEntrada}')";
+            $query = mysql_query($sql);
         }
     }
 } else if($acao == 'listarServicos') {
@@ -233,9 +230,26 @@ if($acao == '') {
                                 Vias:  <b>{$resultado['qtdVias']}</b><br>
                                 AIDF: <b>{$resultado['aidf']}</b></p>";
                         }
+                        $sql2 = "SELECT Pessoa.nomeFantasia as nomeFantasia, Pessoa.nome as nome
+                                FROM Pessoa
+                                INNER JOIN ServicoExterno ON Pessoa.idPessoa = ServicoExterno.idPessoa
+                                WHERE ServicoExterno.idTipoServico LIKE '{$resultado['idTipoServico']}'
+                                AND ServicoExterno.idOrdemDeServico LIKE '{$resultado['idOrdemDeServico']}'";
+                        $query2 = mysql_query($sql2);
+                        if(mysql_num_rows($query2) > 0) {
+                            echo "<p>Fornecedores: ";
+                            while($result = mysql_fetch_assoc($query2)) {
+                                if($result['nomeFantasia'] != NULL) {
+                                    echo "{$result['nomeFantasia']} ({$result['nome']}) ";
+                                } else {
+                                    echo "{$result['nome']} ";
+                                }
+                            }
+                            echo "</p>";
+                        }
                     echo "</div>";
                     echo "<div class='card-action'>";
-                        echo "<a href='#'><i class='material-icons right'>delete</i></a>";
+                        echo "<a id='remover' idTS='{$resultado['idTipoServico']}' idOS='{$resultado['idOrdemDeServico']}'><i class='material-icons right'>delete</i></a>";
                     echo "</div>";
                 echo "</div>";
             echo "</div>";
@@ -358,6 +372,68 @@ if($acao == '') {
     $query = mysql_query($sql);
     while($temp = mysql_fetch_array($query, MYSQL_ASSOC)) {
         echo "<option value='{$temp['idCor']}'>{$temp['nome']}</option>";
+    }
+} else if($acao == 'removerProduto') {
+    $idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '';
+    $idTS = isset($_POST['idTS']) ? $_POST['idTS'] : '';
+    if($idTS != '' && $idOS != '') {
+        $sql = "DELETE FROM TipoServico WHERE idTipoServico LIKE '{$idTS}' AND nome like '%nota%'";
+        $query = mysql_query($sql);
+
+        $sql = "DELETE ServicoExterno FROM ServicoExterno
+                INNER JOIN TipoServico ON ServicoExterno.idTipoServico = TipoServico.idTipoServico
+                WHERE ServicoExterno.idTipoServico LIKE '{$idTS}'
+                AND ServicoExterno.idOrdemDeServico LIKE '{$idOS}'";
+        $query = mysql_query($sql);
+
+        $sql = "DELETE NotaFiscal FROM NotaFiscal
+                INNER JOIN TipoServico ON NotaFiscal.idTipoServico = TipoServico.idTipoServico
+                WHERE NotaFiscal.idTipoServico LIKE '{$idTS}'";
+        $query = mysql_query($sql);
+
+        $sql = "DELETE FROM Cor_OrdemDeServico_TipoServico
+                WHERE Cor_OrdemDeServico_TipoServico.idTipoServico LIKE '{$idTS}' AND
+                Cor_OrdemDeServico_TipoServico.idOrdemDeServico LIKE '{$idOS}'";
+        $query = mysql_query($sql);
+
+        $sql = "DELETE FROM Acab_OS_TS
+                WHERE Acab_OS_TS.idTipoServico LIKE '{$idTS}' AND
+                Acab_OS_TS.idOrdemDeServico LIKE '{$idOS}'";
+        $query = mysql_query($sql);
+
+        $sql = "DELETE FROM OrdemDeServico_TipoServico
+                WHERE OrdemDeServico_TipoServico.idTipoServico LIKE '{$idTS}' AND
+                OrdemDeServico_TipoServico.idOrdemDeServico LIKE '{$idOS}'";
+        $query = mysql_query($sql);
+    }
+} else if($acao == 'cancelar') {
+    $idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '';
+    if($idOS != '') {
+        $sql = "DELETE ServicoExterno FROM ServicoExterno
+                INNER JOIN TipoServico ON ServicoExterno.idTipoServico = TipoServico.idTipoServico
+                WHERE ServicoExterno.idOrdemDeServico LIKE '{$idOS}'";
+        $query = mysql_query($sql);
+
+        $sql = "DELETE NotaFiscal, TipoServico FROM NotaFiscal
+                INNER JOIN TipoServico ON NotaFiscal.idTipoServico = TipoServico.idTipoServico
+                INNER JOIN OrdemDeServico_TipoServico ON TipoServico.idOrdemDeServico = OrdemDeServico_TipoServico.idOrdemDeServico
+                WHERE OrdemDeServico_TipoServico.idOrdemDeServico LIKE '{$idOS}'";
+        $query = mysql_query($sql);
+
+        $sql = "DELETE FROM Cor_OrdemDeServico_TipoServico
+                WHERE Cor_OrdemDeServico_TipoServico.idOrdemDeServico LIKE '{$idOS}'";
+        $query = mysql_query($sql);
+
+        $sql = "DELETE FROM Acab_OS_TS
+                WHERE Acab_OS_TS.idOrdemDeServico LIKE '{$idOS}'";
+        $query = mysql_query($sql);
+
+        $sql = "DELETE FROM OrdemDeServico_TipoServico
+                WHERE OrdemDeServico_TipoServico.idOrdemDeServico LIKE '{$idOS}'";
+        $query = mysql_query($sql);
+
+        $sql = "UPDATE OrdemDeServico SET `status`='cancelada' WHERE `idOrdemDeServico`='{$idOS}'";
+        $query = mysql_query($sql);
     }
 }
 ?>

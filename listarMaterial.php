@@ -57,12 +57,6 @@ protegePagina(); // Chama a função que protege a página
                 <div class="row">
                 	<form class="col s12" role="form" method="POST" action="control/material.php" id="buscarMaterial">
                 		<div class="row">
-                			<?php
-	                        if($_GET['tipo'] == 'material') {
-	                        ?>
-	                        <?php
-	                    	}
-	                    	?>
 	                    	<?php
 	                        if($_GET['tipo'] == 'papel') {
                         	?>

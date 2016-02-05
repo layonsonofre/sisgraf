@@ -8,19 +8,17 @@
 - Unir Arquivos e interligar o arquivo com a O.S.
 	- Modelo: mais campos com thumbnail
 	- Matriz: mais campos
+- Elaborar e implementar relatórios
+- Implementar edição dos dados
+- Implementar pedidos por email para fornecedor, pelo menos uma lista de produtos em falta e o contato do fornecedor de cada categoria
+- Melhorar controle dos arquivos
+- Fazer help, manual e vídeo
+- Implementar controle de modelos
+- Implementar listagem de arquivos e matrizes
+- Implantar
+- http://stackoverflow.com/questions/3190464/php-check-if-any-posted-vars-are-empty-form-all-fields-required
 
-
-Elaborar e implementar relatórios
-Implementar edição dos dados
-Implementar adição de produtos na OS de forma dinâmica
-Implementar pedidos por email para fornecedor, pelo menos uma lista de produtos em falta e o contato do fornecedor de cada categoria
-Melhorar controle dos arquivos
-Fazer help, manual e vídeo
-Implementar controle de modelos
-Implementar listagem de arquivos e matrizes
-Implantar
-
-
+// ======================================
 Observacoes da banca - SISGRAF
 
 1o bim

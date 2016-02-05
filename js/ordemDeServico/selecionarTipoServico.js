@@ -23,6 +23,7 @@ $("#selecionarTipo").click(function(event){
         $("#tipoServico_quantidade").show("slow");
         $("#formato_acabamento").show("slow");
         $("#material_vias").hide("slow");
+        $("#fornecedor").hide("slow");
 
         $("#diverso").toggleClass("amber");
         $("#externo").removeClass("amber");
@@ -35,7 +36,7 @@ $("#selecionarTipo").click(function(event){
         $("#baseTipoServico").show("slow");
         $("#tipoServico_quantidade").show("slow");
         $("#formato_acabamento").show("slow");
-        $("#fornecedor").show();
+        $("#fornecedor").show("slow");
         $("#detalhesNota").hide("slow");
         $("#material_vias").hide("slow");
 
@@ -51,6 +52,7 @@ $("#selecionarTipo").click(function(event){
         $("#tipoServico_quantidade").hide("slow");
         $("#formato_acabamento").hide("slow");
         $("#material_vias").show("slow");
+        $("#fornecedor").hide("slow");
 
         $("#diverso").removeClass("amber");
         $("#externo").removeClass("amber");
@@ -65,6 +67,7 @@ $("#selecionarTipo").click(function(event){
         $("#tipoServico_quantidade").show("slow");
         $("#formato_acabamento").hide("slow");
         $("#material_vias").hide("slow");
+        $("#fornecedor").hide("slow");
 
         $("#diverso").removeClass("amber");
         $("#externo").removeClass("amber");

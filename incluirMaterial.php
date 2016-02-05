@@ -34,7 +34,7 @@ protegePagina(); // Chama a função que protege a página
                         if(isset($_GET['at']) && $_GET['at'] == 'ok')
                             echo "<div class='card-panel green lighten-2 white-text'>Dados atualizados com sucesso!<i class='material-icons right'>close</i></div>";
                         if(isset($_GET['at']) && $_GET['at'] == 'no')
-                            echo "<div class='card-panel red lighten-2 white-text'>Dados não atualizados no sistema, tente novamente.<i class='material-icons right'>close</i></div>";
+                            echo "<div class='card-panel red lighten-2 white-text'>Dados não atualizados no sistema, talvez este material esteja sendo utilizado e não pode ser excluído.<i class='material-icons right'>close</i></div>";
                         ?>
                     </div>
                 </div>
@@ -95,7 +95,9 @@ protegePagina(); // Chama a função que protege a página
                                     $sql = "select * from MaterialUnidade;";
                                     $query = mysql_query($sql);
                                     while($materialUnidade = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                        echo "<option value='" . $materialUnidade['idMaterialUnidade'] . "'>" . $materialUnidade['descricao'] . "</option>";
+                                        echo "<option value='" . $materialUnidade['idMaterialUnidade'] . "'";
+                                        if($idMaterial != '') if($materialUnidade['idMaterialUnidade'] == $idMaterial) echo "selected";
+                                        echo ">" . $materialUnidade['descricao'] . "</option>";
                                     }
                                     ?>
                                 </select>

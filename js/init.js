@@ -6,6 +6,7 @@ $(document).ready(function($){
     $('.modal-trigger').leanModal();
     $('select').material_select();
     //$('input#usuario').setFocus();
+    $('.tooltipped').tooltip({delay: 50});
     $('.datepicker').pickadate({
     	selectMonths: true,
     	selectYears: 5

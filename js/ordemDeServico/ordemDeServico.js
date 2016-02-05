@@ -1,89 +1,96 @@
-/*$(function() {
-    $(document).on('change', '#selectTipoServico', function(event) {
-        var idTS = $(this).val();
-        alert('oi');
-    });
-});*/
+$(function() {
+    $("#selectTipoServico").change(function(event){
+        var request;
+        if (request) {
+            request.abort();
+        }
+        var temp = $(this).children("option").filter(":selected");
+        var idTS = temp.val();
+        var descricao = temp.text();
+        request = $.ajax({
+            url: "control/ordemDeServico.php",
+            type: "post",
+            data: "idTS=" + idTS + "&acao=listarAcabamentosOS"
+        });
+        request.done(function (response, textStatus, jqXHR){
+            $('#selectAcabamento').empty().append(response);
+            $('#selectAcabamento').material_select();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error(
+                "The following error occurred: "+
+                textStatus, errorThrown
+            );
+        });
+        request = $.ajax({
+            url: "control/ordemDeServico.php",
+            type: "post",
+            data: "idTS=" + idTS + "&acao=listarFormatosOS"
+        });
+        request.done(function (response, textStatus, jqXHR){
+            $('#selectFormato1').empty().append(response);
+            $('#selectFormato1').material_select();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error(
+                "The following error occurred: "+
+                textStatus, errorThrown
+            );
+        });
 
-// Variable to hold request
-var request;
-$("#selectTipoServico").change(function(event){
-    // Abort any pending request
-    if (request) {
-        request.abort();
-    }
-    // setup some local variables
-    var temp = $(this).children("option").filter(":selected");
-    var idTS = temp.val();
-    var descricao = temp.text();
-    // var idTS = $(this).val();
-    // Let's select and cache all the fields
-    // var $inputs = $form.find("input, select, button, textarea");
-    // Serialize the data in the form
-    // var serializedData = $form.serialize();
-    // Let's disable the inputs for the duration of the Ajax request.
-    // Note: we disable elements AFTER the form data has been serialized.
-    // Disabled form elements will not be serialized.
-    // $inputs.prop("disabled", true);
-    // Fire off the request to /form.php
-    request = $.ajax({
-        url: "control/ordemDeServico.php",
-        type: "post",
-        data: "idTS=" + idTS + "&acao=listarAcabamentosOS"
+        request = $.ajax({
+            url: "control/ordemDeServico.php",
+            type: "post",
+            data: "idTS=" + idTS + "&acao=listarPapeisOS"
+        });
+        request.done(function (response, textStatus, jqXHR){
+            $('#selectPapel').empty().append(response);
+            $('#selectPapel').material_select();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error(
+                "The following error occurred: "+
+                textStatus, errorThrown
+            );
+        });
+        request.always(function () {
+        });
+        event.preventDefault();
     });
-    // Callback handler that will be called on success
-    request.done(function (response, textStatus, jqXHR){
-        // Log a message to the console
-        //console.log("Hooray, it worked!");
-        $('#selectAcabamento').empty().append(response);
-        $('#selectAcabamento').material_select();
-        // $('#modalAcabamento a').click();
+    
+    $(document).on("click", "#cancelar", function(event) {
+        var request;
+        if (request) {
+            request.abort();
+        }
+        var idOS = $("#idOS").val();
+        if(confirm('Tem certeza que deseja excluir esta Ordem de Serviço?')) {
+            if(idOS === '') {
+                window.location.replace("index.php");
+            } else {
+                request = $.ajax({
+                    url: "control/ordemDeServico.php",
+                    type: "post",
+                    data: "acao=cancelar&idOS="+idOS
+                });
+                request.done(function (response, textStatus, jqXHR) {
+                    console.log(response);
+                    window.location.replace("incluirOS.php");
+                });
+                request.fail(function (jqXHR, textStatus, errorThrown){
+                    console.error(
+                        "The following error occurred: "+
+                        textStatus, errorThrown
+                    );
+                });
+            }
+        }
     });
-    // Callback handler that will be called on failure
-    request.fail(function (jqXHR, textStatus, errorThrown){
-        // Log the error to the console
-        console.error(
-            "The following error occurred: "+
-            textStatus, errorThrown
-        );
-    });
-    request = $.ajax({
-        url: "control/ordemDeServico.php",
-        type: "post",
-        data: "idTS=" + idTS + "&acao=listarFormatosOS"
-    });
-    request.done(function (response, textStatus, jqXHR){
-        $('#selectFormato1').empty().append(response);
-        $('#selectFormato1').material_select();
-    });
-    request.fail(function (jqXHR, textStatus, errorThrown){
-        console.error(
-            "The following error occurred: "+
-            textStatus, errorThrown
-        );
-    });
-
-    request = $.ajax({
-        url: "control/ordemDeServico.php",
-        type: "post",
-        data: "idTS=" + idTS + "&acao=listarPapeisOS"
-    });
-    request.done(function (response, textStatus, jqXHR){
-        $('#selectPapel').empty().append(response);
-        $('#selectPapel').material_select();
-    });
-    request.fail(function (jqXHR, textStatus, errorThrown){
-        console.error(
-            "The following error occurred: "+
-            textStatus, errorThrown
-        );
-    });
-    // Callback handler that will be called regardless
-    // if the request failed or succeeded
-    request.always(function () {
-        // Reenable the inputs
-        //$inputs.prop("disabled", false);
-    });
-    // Prevent default posting of form
-    event.preventDefault();
+    
+    $(document).on("click", "#arquivo", function(event) {
+        var idOS = $("#idOS").val();
+        $("#incluirArquivo").attr("href", "incluirArquivo.php?idOS=" + idOS);
+        console.log($("#incluirArquivo").attr("href"));
+        $("#incluirArquivo")[0].click();
+    })
 });
