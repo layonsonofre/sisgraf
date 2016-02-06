@@ -32,9 +32,9 @@ protegePagina(); // Chama a função que protege a página
                     <div class="col s12">
                         <?php
                         if(isset($_GET['at']) && $_GET['at'] == 'ok')
-                            echo "<div class='card-panel green lighten-2 white-text'>Dados atualizados com sucesso!<i class='material-icons right'>close</i></div>";
+                            echo "<div id='msg' class='card-panel green lighten-2 white-text'>Dados atualizados com sucesso!<i class='material-icons right'>close</i></div>";
                         if(isset($_GET['at']) && $_GET['at'] == 'no')
-                            echo "<div class='card-panel red lighten-2 white-text'>Dados não atualizados no sistema, talvez este material esteja sendo utilizado e não pode ser excluído.<i class='material-icons right'>close</i></div>";
+                            echo "<div id='msg' class='card-panel red lighten-2 white-text'>Dados não atualizados no sistema, talvez este material esteja sendo utilizado e não pode ser excluído.<i class='material-icons right'>close</i></div>";
                         ?>
                     </div>
                 </div>
@@ -95,9 +95,9 @@ protegePagina(); // Chama a função que protege a página
                                     $sql = "select * from MaterialUnidade;";
                                     $query = mysql_query($sql);
                                     while($materialUnidade = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                        echo "<option value='" . $materialUnidade['idMaterialUnidade'] . "'";
-                                        if($idMaterial != '') if($materialUnidade['idMaterialUnidade'] == $idMaterial) echo "selected";
-                                        echo ">" . $materialUnidade['descricao'] . "</option>";
+                                        echo "<option value='{$materialUnidade['idMaterialUnidade']}'";
+                                        if($idMaterial != '') if($materialUnidade['idMaterialUnidade'] == $resultado['idMaterialUnidade']) echo "selected";
+                                        echo ">{$materialUnidade['descricao']}</option>";
                                     }
                                     ?>
                                 </select>
@@ -130,7 +130,9 @@ protegePagina(); // Chama a função que protege a página
                                     $sql = "select * from GramaturaPapel;";
                                     $query = mysql_query($sql);
                                     while($gramatura = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                        echo "<option value='" . $gramatura['idGramaturaPapel'] . "'>" . $gramatura['gramatura'] . " <i>(g/m<sup>2</sup>)</i></option>";
+                                        echo "<option value='{$gramatura['idGramaturaPapel']}' ";
+                                        if($idMaterial != '') if($gramatura['idGramaturaPapel'] == $resultado['idGramaturaPapel']) echo "selected ";
+                                        echo ">{$gramatura['gramatura']} <i>(g/m<sup>2</sup>)</i></option>";
                                     }
                                     ?>
                                 </select>
@@ -151,7 +153,15 @@ protegePagina(); // Chama a função que protege a página
                                     $sql = "select * from Cor;";
                                     $query = mysql_query($sql);
                                     while($cores = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                        echo "<option value='" . $cores['idCor'] . "'>" . $cores['nome'] . "</option>";
+                                        echo "<option value='{$cores['idCor']}' ";
+                                        if($idMaterial != '') {
+                                            $sql2 = "SELECT * FROM Cor_Material WHERE idCor='{$cores['idCor']}' AND idMaterial='{$idMaterial}'";
+                                            $query2 = mysql_query($sql2);
+                                            if(mysql_num_rows($query2) == 1) {
+                                                echo "selected";
+                                            }
+                                        }
+                                        echo ">{$cores['nome']}</option>";
                                     }
                                     ?>
                                 </select>
@@ -163,26 +173,30 @@ protegePagina(); // Chama a função que protege a página
                         </div>
                         <div id="categorias">
                             <div class="row">
-                                <div class="input-field col s11">
-                                    <select id="selectCategoria" name="selectCategoria[]" multiple>
+                                <div class="col s11">
+                                    <label>Categorias</label>
+                                    <select id="selectCategoria" name="selectCategoria[]" multiple class="browser-default">
                                         <option value="" disabled>Selecione as categorias que o material pertence</option>
                                     <?php
-                                    $sql = "select * from Categoria;";
+                                    $sql = "select * from Categoria order by nome;";
                                     $query = mysql_query($sql);
-                                    while($categorias = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                        echo "<option value='".$categorias['idCategoria']."' ";
-                                        if(isset($_GET['idPessoa'])) {
-                                            $sql2 = "select * from Categoria_Material where idCategoria=".$categorias['idCategoria']." and idMaterial=".$idMaterial.";";
+                                    $cat = [];
+                                    $cat[] = "<p>";
+                                    while($categorias = mysql_fetch_assoc($query)) {
+                                        echo "<option value='{$categorias['idCategoria']}' ";
+                                        if($idMaterial != '') {
+                                            $sql2 = "SELECT * FROM Categoria_Material WHERE idCategoria='{$categorias['idCategoria']}' AND idMaterial='{$idMaterial}'";
                                             $query2 = mysql_query($sql2);
                                             if( mysql_num_rows($query2) == 1) {
                                                 echo "selected";
+                                                $cat[] = "{$categorias['nome']} ({$categorias['descricao']})<br>";
                                             }
                                         }
-                                        echo ">".$categorias['nome']." (" .$categorias['descricao'].")</option>";
+                                        echo ">{$categorias['nome']} ({$categorias['descricao']})</option>";
                                     }
+                                    $cat[] = "</p>"
                                     ?>
                                     </select>
-                                    <label>Categorias</label>
                                 </div>
                                 <div class="col s1">
                                     <a id="incluirCategoria" href="#modalCategoria" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>

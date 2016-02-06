@@ -43,6 +43,40 @@ if($acao == '') {
 		}
 	}
 	header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
+} else if($acao == 'atualizar') {
+	$sql = "UPDATE `Material`
+			SET `descricao`='{$descricao}',`valorUnitario`='{$valorUnitario}',`quantidade`='{$quantidade}',
+			`quantidadeMinima`='{$quantidadeMinima}',`idMaterialUnidade`='{$unidade}'
+			WHERE `idMaterial`='{$idMaterial}'";
+	$query = mysql_query($sql);
+	if($tipo == 'papel') {
+		$sql = "UPDATE Papel
+				SET tipo='{$tipoPapel}', idGramaturaPapel='{$gramatura}', base='{$base}', altura='{$altura}'
+				WHERE idMaterial='{$idMaterial}'";
+		$query = mysql_query($sql);
+		echo var_dump($query);
+	}
+	if($categoria != NULL) {
+		$sql = "DELETE FROM Categoria_Material WHERE idMaterial LIKE '{$idMaterial}'";
+		$query = mysql_query($sql);
+		echo var_dump($query);
+		foreach($categoria as $temp) {
+			$sql2 = "INSERT INTO `Categoria_Material` (`idMaterial`,`idCategoria`) VALUES ('{$idMaterial}','{$temp}')";
+			$query2 = mysql_query($sql2);
+			echo var_dump($query);
+		}
+	}
+	if($cor != NULL) {
+		$sql = "DELETE FROM Cor_Material WHERE idMaterial LIKE '{$idMaterial}'";
+		$query = mysql_query($sql);
+		echo var_dump($query);
+		foreach($cor as $temp) {
+			$sql2 = "INSERT INTO `Cor_Material` (`idMaterial`,`idCor`) VALUES ('{$idMaterial}','{$temp}')";
+			$query2 = mysql_query($sql2);
+			echo var_dump($query);
+		}
+	}
+	header('Location: ../incluirMaterial.php?idMaterial='.$idMaterial.'&tipo='.$tipo.'&at=ok');
 } else if($acao == 'excluir') {
 	if($idMaterial == null) {
 		header('Location: ../incluirMaterial.php?at=no&tipo='.$tipo);
@@ -133,6 +167,7 @@ if($acao == '') {
 	// header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
 } else if($acao == 'listar') {
 	$busca  = mysql_real_escape_string($_POST['consulta']);
+	$opc = isset($_POST['opc']) ? isset($_POST['opc']) : '';
 	// registros por página
 	$por_pagina = 10;
 	// monta a consulta sql para saber quantos registros serão encontrados
@@ -141,6 +176,9 @@ if($acao == '') {
 			$condicoes = "`tipo` LIKE '%{$busca}%' OR `gramatura` LIKE '%{$busca}%'";
 		} else {
 			$condicoes = "1";
+		}
+		if($opc == 'emFalta') {
+			$condicoes = "{$condicoes} AND Material.quantidade < Material.quantidadeMinima";
 		}
 		$sql = "SELECT COUNT(*) AS total FROM Material
 				INNER JOIN MaterialUnidade ON Material.idMaterialUnidade = MaterialUnidade.idMaterialUnidade
@@ -152,6 +190,9 @@ if($acao == '') {
 			$condicoes = "Categoria.nome LIKE '%{$busca}' OR Categoria.descricao LIKE '%{$busca}' OR Material.descricao LIKE '%{$busca}'";
 		} else {
 			$condicoes = "1";
+		}
+		if($opc == 'emFalta') {
+			$condicoes = "{$condicoes} AND Material.quantidade < Material.quantidadeMinima";
 		}
 		$sql = "SELECT COUNT(*) AS total FROM Material
 				INNER JOIN MaterialUnidade ON Material.idMaterialUnidade = MaterialUnidade.idMaterialUnidade
@@ -214,7 +255,7 @@ if($acao == '') {
 	//echo "</ul>";
 	echo "<div class='row'>";
 	while ($resultado = mysql_fetch_assoc($query)) {
-		echo "<div class='col s6'>";
+		echo "<div class='col s12'>";
 			echo "<div class='card'>";
 		 		echo "<div class='card-content'>";
 		 			if($tipo == 'papel') {
@@ -222,46 +263,14 @@ if($acao == '') {
 		 			} else {
 		 				echo "<span class='card-title'>{$resultado['descricao']}</span>";
 		 			}
-		 			echo "<p>Estoque: <b>{$resultado['quantidade']}</b></p>";
-		 			echo "<p>Estoque Mínimo: <b>{$resultado['quantidadeMinima']}</b></p>";
-		 			echo "<p>Unidade de Medida: <b>{$resultado['unidade']}</b></p>";
+		 			echo "<p>Estoque: <b>{$resultado['quantidade']}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+		 			echo "Estoque Mínimo: <b>{$resultado['quantidadeMinima']}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+		 			echo "Unidade de Medida: <b>{$resultado['unidade']}</b></p>";
 		 			if($tipo == 'papel') {
-		 				echo "<p>Gramatura: <b>{$resultado['gramatura']}</b> g/m^2</p>";
-		 				echo "<p>Tamanho: <b>{$resultado['base']} x {$resultado['altura']}</b> mm</p>";
+		 				echo "<p>Gramatura: <b>{$resultado['gramatura']}</b> g/m^2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+		 				echo "Tamanho: <b>{$resultado['base']} x {$resultado['altura']}</b> mm</p>";
 		 			}
 		 			$tempId = $resultado['idMaterial'];
-		 			if($tipo == 'material') {
-		 				$categorias = [];
-		 				$sql2 = "SELECT Categoria.nome as nome, Categoria.descricao as descricao, Categoria.idCategoria as idCategoria
-		 						FROM Categoria
-			 					INNER JOIN Categoria_Material on Categoria.idCategoria = CategoriaMaterial.idCategoria
-			 					INNER JOIN Material on Categoria_Material.idMaterial = Material.idMaterial
-			 					WHERE Material.idMaterial = {$tempId}
-			 					ORDER BY Cor.nome";
-						$query2 = mysql_query($sql2);
-						if(mysql_fetch_assoc($query2) != '') {
-							echo "<p>Categoria: ";
-							while($result = mysql_fetch_assoc($query2)) {
-								echo "{$result['nome']} ({$result['descricao']}) ";
-								$categorias[] = $result['idCategoria'];
-							}
-							echo "</p>";
-						}
-
-						$sql2 = "SELECT * FROM Pessoa ORDER BY nome, nomeFantasia";
-
-
-						$query2 = mysql_query($sql2);
-						echo "<p>Fornecedores: ";
-						while($pessoa = mysql_fetch_assoc($query2)) {
-							if ($pessoa['isPessoaFisica'] == 'FALSE') {
-                                echo "{$pessoa['nomeFantasia']} ({$pessoa['nomeRua']}, {$pessoa['numero']} - {$pessoa['cidade']})<br>";
-                            } else {
-                                echo "{$pessoa['nome']} ({$pessoa['nomeRua']}, {$pessoa['numero']} - {$pessoa['cidade']})<br>";
-                            }
-						}
-						echo "</p>";
-		 			}
 		 			$sql2 = "SELECT Cor.nome as cor FROM Cor
 		 					INNER JOIN Cor_Material on Cor.idCor = Cor_Material.idCor
 		 					INNER JOIN Material on Material.idMaterial = Cor_Material.idMaterial
@@ -270,13 +279,55 @@ if($acao == '') {
 					$query2 = mysql_query($sql2);
 					echo "<p>Cores: ";
 					while($result = mysql_fetch_assoc($query2)) {
-						echo "{$result['cor']} ";
+						echo "<b>{$result['cor']}</b> ";
 					}
 					echo "</p>";
+	 				$categorias = [];
+	 				$sql2 = "SELECT Categoria.nome as nome, Categoria.descricao as descricao, Categoria.idCategoria as idCategoria
+	 						FROM Categoria
+		 					INNER JOIN Categoria_Material ON Categoria.idCategoria = Categoria_Material.idCategoria
+		 					WHERE Categoria_Material.idMaterial = {$tempId}
+		 					ORDER BY Categoria.nome";
+					$query2 = mysql_query($sql2);
+					echo "<p>Categoria: ";
+					while($result = mysql_fetch_assoc($query2)) {
+						echo "<b>{$result['nome']}</b>, ";
+						$categorias[] = $result['idCategoria'];
+					}
+					echo "</b></p>";
+					foreach($categorias as $c) {
+			 			$sql2 = "SELECT * FROM Pessoa
+			 			INNER JOIN Fornecedor_Categoria ON Pessoa.idPessoa = Fornecedor_Categoria.idPessoa
+			 			WHERE Fornecedor_Categoria.idCategoria LIKE {$c}
+			 			ORDER BY nome, nomeFantasia";
+						$query2 = mysql_query($sql2);
+						echo "<p>Fornecedores: <br>";
+						while($pessoa = mysql_fetch_assoc($query2)) {
+							if ($pessoa['isPessoaFisica'] == 'FALSE') {
+	                            echo "<b>{$pessoa['nomeFantasia']}</b> <!-- ({$pessoa['nomeRua']}, {$pessoa['numero']} - {$pessoa['cidade']})-->";
+	                        } else {
+	                            echo "<b>{$pessoa['nome']}</b><!-- ({$pessoa['nomeRua']}, {$pessoa['numero']} - {$pessoa['cidade']})-->";
+	                        }
+	                        echo "&nbsp;&nbsp;&nbsp;";
+	                        $sql3 = "SELECT * FROM Telefone WHERE Telefone.idPessoa LIKE '{$pessoa['idPessoa']}'";
+	                        $query3 = mysql_query($sql3);
+	                        while($temp = mysql_fetch_assoc($query3)) {
+	                        	echo "{$temp['numero']}&nbsp;&nbsp;&nbsp;";
+	                        }
+	                        $sql3 = "SELECT * FROM Email WHERE Email.idPessoa LIKE '{$pessoa['idPessoa']}'";
+	                        $query3 = mysql_query($sql3);
+	                        while($temp = mysql_fetch_assoc($query3)) {
+	                        	echo "{$temp['endereco']}&nbsp;&nbsp;&nbsp;";
+	                        }
+	                        echo "<br>";
+						}
+						echo "</p>";
+					}
 		 		echo "</div>";
 		 		echo "<div class='card-action'>";
 		 			echo "<a id='editar' href='incluirMaterial.php?idMaterial={$tempId}&tipo={$tipo}'><i class='material-icons'>description</i>Editar</a>";
 		 			// echo "<a id='remover' href='' idMaterial={$tempId} tipo={$tipo}><i class='material-icons'>delete</i>Excluir</a>";
+		 			// echo "<a id='orcamento' href='orcamento.php?idMaterial={$tempId}&tipo={$tipo}'><i class='material-icons'>shopping_cart</i>Orçamento</a>";
 		 		echo "</div>";
 		 	echo "</div>";
 	 	echo "</div>";

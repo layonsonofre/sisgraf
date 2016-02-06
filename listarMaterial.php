@@ -77,6 +77,15 @@ protegePagina(); // Chama a função que protege a página
 	                        <div class="col s3">
                             	<button class="btn waves-effect waves-light green accent-4" type="submit" name="buscar">Buscar<i class="material-icons right">send</i></button>
                             </div>
+                        </div>
+                        <div class="row">
+                            <label>Opções</label>
+                            <div class="input-field col s12">
+                                <input name="opc" id="opc" type="checkbox">
+                                <label for="opc">Materiais em falta</label>
+                            </div>
+                        </div>
+                        <div class="row">
                             <input type="hidden" id="pagina" name="pagina" value="">
 	                        <input type="hidden" name="acao" value="listar">
                             <input type="hidden" name="tipo" value="<?php echo $_GET['tipo']; ?>">

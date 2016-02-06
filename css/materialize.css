@@ -7007,7 +7007,8 @@ select {
   display: none; }
 
 select.browser-default {
-  display: block; }
+  display: block;
+  height: 100px; }
 
 select:disabled {
   color: rgba(0, 0, 0, 0.3); }
