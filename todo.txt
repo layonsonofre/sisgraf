@@ -1,16 +1,15 @@
-- Pesquisar 'Pessoa' com status='%ativo'
++ Pesquisar 'Pessoa' com status='%ativo'
 - Centralizar card do login.php
-- Listagem/Pesquisas
++- Listagem/Pesquisas (Falta consertar a paginação)
 - Centralizar Campos Modal
 - No mesmo modal (cor, gramatura, unidade de medida) permitir alteração/exclusão
 - Buscar por CEP
-- Corrigir acentuação
 - Unir Arquivos e interligar o arquivo com a O.S.
 	- Modelo: mais campos com thumbnail
 	- Matriz: mais campos
 - Elaborar e implementar relatórios
-- Implementar edição dos dados
-- Implementar pedidos por email para fornecedor, pelo menos uma lista de produtos em falta e o contato do fornecedor de cada categoria
++- Implementar edição dos dados
++- Implementar pedidos por email para fornecedor, pelo menos uma lista de produtos em falta e o contato do fornecedor de cada categoria
 - Melhorar controle dos arquivos
 - Fazer help, manual e vídeo
 - Implementar controle de modelos

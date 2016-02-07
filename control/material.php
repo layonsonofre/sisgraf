@@ -98,18 +98,19 @@ if($acao == '') {
 		header('Location: ../incluirMaterial.php?idMaterial={$idMaterial}&at=no&tipo='.$tipo);
 	}
 } else if($acao == 'inserirCor') {
+	$cor = isset($_POST['cor']) ? $_POST['cor'] : NULL;
 	if($cor != null) {
 		// header('Location: ../incluirMaterial.php');
 		// insere os campos no banco
-		$sql = "INSERT INTO `Cor` (`idCor`,`nome`) VALUES (NULL,\"".$cor."\");";
+		$sql = "INSERT INTO `Cor` (`idCor`,`nome`) VALUES (NULL,'{$cor}');";
 		$query = mysql_query($sql);
 	}
 	// atualiza os campos no select
     $sql = "SELECT * FROM `Cor`;";
     $query = mysql_query($sql);
     echo "<option value='' disabled>Selecione as cores do material</option>";
-    while($cores = mysql_fetch_array($query, MYSQL_ASSOC)) {
-        echo "<option value='" . $cores['idCor'] . "'>" . $cores['nome'] . "</option>";
+    while($cores = mysql_fetch_assoc($query)) {
+        echo "<option value='{$cores['idCor']}'>{$cores['nome']}</option>";
     }
 	//header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
 } else if($acao == 'inserirGramatura') {
@@ -167,33 +168,31 @@ if($acao == '') {
 	// header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
 } else if($acao == 'listar') {
 	$busca  = mysql_real_escape_string($_POST['consulta']);
-	$opc = isset($_POST['opc']) ? isset($_POST['opc']) : '';
+	$opc = isset($_POST['opc']) ? $_POST['opc'] : array();
 	// registros por página
 	$por_pagina = 10;
 	// monta a consulta sql para saber quantos registros serão encontrados
-	if($tipo == 'papel') {
-		if($busca != '') {
+	if($busca != '') {
+		if($tipo == 'papel') {
 			$condicoes = "`tipo` LIKE '%{$busca}%' OR `gramatura` LIKE '%{$busca}%'";
-		} else {
-			$condicoes = "1";
+		} else if($tipo == 'material') {
+			$condicoes = "Categoria.nome LIKE '%{$busca}' OR Categoria.descricao LIKE '%{$busca}' OR Material.descricao LIKE '%{$busca}'";
 		}
-		if($opc == 'emFalta') {
+	} else {
+		$condicoes = "1";
+	}
+	foreach($opc as $o) {
+		if($o == 'emFalta') {
 			$condicoes = "{$condicoes} AND Material.quantidade < Material.quantidadeMinima";
 		}
+	}
+	if($tipo == 'papel') {
 		$sql = "SELECT COUNT(*) AS total FROM Material
 				INNER JOIN MaterialUnidade ON Material.idMaterialUnidade = MaterialUnidade.idMaterialUnidade
 				INNER JOIN Papel ON Material.idMaterial = Papel.idMaterial
 				INNER JOIN GramaturaPapel ON Papel.idGramaturaPapel = GramaturaPapel.idGramaturaPapel
 				WHERE {$condicoes}";
 	} else if($tipo == 'material') {
-		if($busca != '') {
-			$condicoes = "Categoria.nome LIKE '%{$busca}' OR Categoria.descricao LIKE '%{$busca}' OR Material.descricao LIKE '%{$busca}'";
-		} else {
-			$condicoes = "1";
-		}
-		if($opc == 'emFalta') {
-			$condicoes = "{$condicoes} AND Material.quantidade < Material.quantidadeMinima";
-		}
 		$sql = "SELECT COUNT(*) AS total FROM Material
 				INNER JOIN MaterialUnidade ON Material.idMaterialUnidade = MaterialUnidade.idMaterialUnidade
 				INNER JOIN Categoria_Material ON Material.idMaterial = Categoria_Material.idMaterial
@@ -277,7 +276,7 @@ if($acao == '') {
 		 					WHERE Material.idMaterial = {$tempId}
 		 					ORDER BY Cor.nome";
 					$query2 = mysql_query($sql2);
-					echo "<p>Cores: ";
+					echo "<p>Cor: ";
 					while($result = mysql_fetch_assoc($query2)) {
 						echo "<b>{$result['cor']}</b> ";
 					}
@@ -291,14 +290,15 @@ if($acao == '') {
 					$query2 = mysql_query($sql2);
 					echo "<p>Categoria: ";
 					while($result = mysql_fetch_assoc($query2)) {
-						echo "<b>{$result['nome']}</b>, ";
+						echo "<b>{$result['nome']}</b>&nbsp;&nbsp;&nbsp;";
 						$categorias[] = $result['idCategoria'];
 					}
 					echo "</b></p>";
 					foreach($categorias as $c) {
 			 			$sql2 = "SELECT * FROM Pessoa
 			 			INNER JOIN Fornecedor_Categoria ON Pessoa.idPessoa = Fornecedor_Categoria.idPessoa
-			 			WHERE Fornecedor_Categoria.idCategoria LIKE {$c}
+			 			WHERE Fornecedor_Categoria.idCategoria LIKE {$c} AND
+			 			Pessoa.status NOT LIKE '%Inativo'
 			 			ORDER BY nome, nomeFantasia";
 						$query2 = mysql_query($sql2);
 						echo "<p>Fornecedores: <br>";
@@ -317,7 +317,7 @@ if($acao == '') {
 	                        $sql3 = "SELECT * FROM Email WHERE Email.idPessoa LIKE '{$pessoa['idPessoa']}'";
 	                        $query3 = mysql_query($sql3);
 	                        while($temp = mysql_fetch_assoc($query3)) {
-	                        	echo "{$temp['endereco']}&nbsp;&nbsp;&nbsp;";
+	                        	echo "<a href='mailto:{$temp['endereco']}'>{$temp['endereco']}</a>&nbsp;&nbsp;&nbsp;";
 	                        }
 	                        echo "<br>";
 						}

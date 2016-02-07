@@ -1,18 +1,19 @@
 $(function(){
     $('input[name=isPessoaFisica]').val('1');
     $('#pessoaFisica').show();
+    $('#pFisica').attr("checked", "checked");
     $('#pessoaJuridica').hide();
     $('input[name="tipoPessoa"]').click(function () {
         if ($(this).attr('id')==='pFisica') {
             $('#pessoaFisica').show();
             $('#pessoaJuridica').hide();
-            $('input[name=isPessoaFisica]').value('1');
+            $('input[name=isPessoaFisica]').val('1');
         }
 
         else {
             $('#pessoaFisica').hide();
             $('#pessoaJuridica').show();
-            $('input[name=isPessoaFisica]').value('0');
+            $('input[name=isPessoaFisica]').val('0');
         }
     });
 
@@ -24,8 +25,8 @@ $(function(){
         xTel++;
         $(wrapperTel).append('<div>'+
             '<div class=\"input-field col s5\">'+
-            '<input id=\"telefone\" type=\"text\" class=\"validate\">'+
-            '<label for=\"telefone\">Telefone #' + xTel + '</label>'+
+            '<input name=\"telefoneNovo[]\" id=\"telefoneNovo' + xTel + '\" type=\"text\" class=\"validate\">'+
+            '<label for=\"telefoneNovo' + xTel + '\">Telefone #' + xTel + '</label>'+
             '</div>'+
             '<div class=\"col s1\">'+
             '<a id=\"remTelefone\" class=\"waves-effect waves-light red accent-4 btn-floating\"><i class=\"material-icons left\">phone</i></a>'+
@@ -61,8 +62,8 @@ $(function(){
         xEmail++;
         $(wrapperEmail).append('<div>' +
             '<div class=\"input-field col s5\">' +
-            '<input id=\"email\" type=\"text\" class=\"validate\">' +
-            '<label for=\"email\">Email #' + xEmail + '</label>' +
+            '<input name=\"emailNovo[]\" id=\"emailNovo' + xEmail + '\" type=\"text\" class=\"validate\">' +
+            '<label for=\"emailNovo' + xEmail + '\">Email #' + xEmail + '</label>' +
             '</div>' +
             '<div class=\"col s1\">' +
             '<a id=\"remEmail\" class=\"waves-effect waves-light red accent-4 btn-floating\"><i class=\"material-icons left\">mail</i></a>' +

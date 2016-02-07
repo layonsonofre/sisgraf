@@ -104,6 +104,7 @@
 					<div class="collapsible-body">
 						<ul>
 							<li><a href='incluirPessoa.php?tipo=cliente'>Cadastrar</a></li>
+							<li><a href='listarPessoa.php?tipo=cliente'>Buscar</a></li>
 						</ul>
 					</div>
 				</li>
@@ -116,6 +117,7 @@
 					<div class="collapsible-body">
 						<ul>
 							<li><a href='incluirPessoa.php?tipo=fornecedor'>Cadastrar</a></li>
+							<li><a href='listarPessoa.php?tipo=fornecedor'>Buscar</a></li>
 						</ul>
 					</div>
 				</li>
@@ -128,6 +130,7 @@
 					<div class="collapsible-body">
 						<ul>
 							<li><a href='incluirPessoa.php?tipo=funcionario'>Cadastrar</a></li>
+							<li><a href='listarPessoa.php?tipo=funcionario'>Buscar</a></li>
 						</ul>
 					</div>
 				</li>

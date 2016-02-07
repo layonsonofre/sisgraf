@@ -32,9 +32,9 @@ protegePagina(); // Chama a função que protege a página
                     <div class="col s12">
                         <?php
                         if(isset($_GET['at']) && $_GET['at'] == 'ok')
-                            echo "<div class='card-panel green lighten-2 white-text'>Dados atualizados com sucesso!<i class='material-icons right'>close</i></div>";
+                            echo "<div id='msg' class='card-panel green lighten-2 white-text'>Dados atualizados com sucesso!<i class='material-icons right'>close</i></div>";
                         if(isset($_GET['at']) && $_GET['at'] == 'no')
-                            echo "<div class='card-panel red lighten-2 white-text'>Dados não atualizados no sistema, tente novamente.<i class='material-icons right'>close</i></div>";
+                            echo "<div id='msg' class='card-panel red lighten-2 white-text'>Dados não atualizados no sistema, tente novamente.<i class='material-icons right'>close</i></div>";
                         ?>
                     </div>
                 </div>
@@ -43,10 +43,13 @@ protegePagina(); // Chama a função que protege a página
                 <div class="row valign-wrapper">
                     <div class="col s12 l10">
                         <?php
-                        if($_GET['tipo'] == 'material') {
-                            echo "<h4>Buscar Materiais</h4>";
-                        } else if($_GET['tipo'] == 'papel') {
-                            echo "<h4>Buscar Papel</h4>";
+                        $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : '';
+                        if($tipo == 'cliente') {
+                            echo "<h4>Buscar Clientes</h4>";
+                        } else if($_GET['tipo'] == 'fornecedor') {
+                            echo "<h4>Buscar Fornecedores</h4>";
+                        } else if($_GET['tipo'] == 'funcionario') {
+                            echo "<h4>Buscar Funcionários</h4>";
                         }
                         ?>
                     </div>
@@ -55,45 +58,57 @@ protegePagina(); // Chama a função que protege a página
                     </div>
                 </div>
                 <div class="row">
-                	<form class="col s12" role="form" method="POST" action="control/material.php" id="buscarMaterial">
+                	<form class="col s12" role="form" method="POST" action="control/pessoa.php" id="buscarPessoa">
                 		<div class="row">
 	                    	<?php
-	                        if($_GET['tipo'] == 'papel') {
+	                        //if($_GET['tipo'] == 'cliente') {
+                            {
                         	?>
 	                        	<div class="input-field col s9">
 	                                <input name="consulta" id="consulta" type="text" class="validate" length="15" maxlength="15">
-	                                <label for="consulta" class="active">Pesquise por tipo de papel ou gramatura</label>
+	                                <label for="consulta" class="active">Pesquise, por exemplo, utilizando o nome, endereço, cidade etc.</label>
 	                            </div>
                         	<?php
-	                        } else if($_GET['tipo'] == 'material') {
+	                        }
                             ?>
-                                <div class="input-field col s9">
-                                    <input name="consulta" id="consulta" type="text" class="validate" length="20" maxlength="20">
-                                    <label for="consulta" class="active">Pesquise pela categoria ou descricao do material</label>
-                                </div>
-                            <?php   
-                            }
-	                        ?>
 	                        <div class="col s3">
                             	<button class="btn waves-effect waves-light green accent-4" type="submit" name="buscar">Buscar<i class="material-icons right">send</i></button>
                             </div>
                         </div>
+                        <?php
+                        if($tipo != 'funcionario') {
+                        ?>
                         <div class="row">
                             <div class="col s12">
                                 <label>Opções</label>
                             </div>
-                            <div class="input-field col s12">
-                                <input name="opc[]" id="emFalta" type="checkbox" value="emFalta">
-                                <label for="emFalta">Materiais em falta</label>
+                            <div class="input-field col s3">
+                                <input name="opc[]" id="isPessoa" type="radio" value="isPessoa">
+                                <label for="isPessoa">Física/Juridica</label>
+                            </div>
+                            <div class="input-field col s3">
+                                <input name="opc[]" id="isPessoaFisica" type="radio" value="isPessoaFisica">
+                                <label for="isPessoaFisica">Pessoa Física</label>
+                            </div>
+                            <div class="input-field col s3">
+                                <input name="opc[]" id="isPessoaJuridica" type="radio" value="isPessoaJuridica">
+                                <label for="isPessoaJuridica">Pessoa Juridica</label>
+                            </div>
+                            <div class="input-field col s3">
+                                <input name="opc[]" id="inativo" type="checkbox" value="inativo">
+                                <label for="inativo">Inativo</label>
                             </div>
                         </div>
+                        <?php
+                        }
+                        ?>
                         <div class="row">
                             <input type="hidden" id="pagina" name="pagina" value="">
 	                        <input type="hidden" name="acao" value="listar">
                             <input type="hidden" name="tipo" value="<?php echo $_GET['tipo']; ?>">
                 		</div>
                 	</form>
-                	<div id="resultadoBuscaMaterial"></div>
+                	<div id="resultadoBuscaPessoa"></div>
                 </div>
             </div>
         </main>
@@ -102,7 +117,7 @@ protegePagina(); // Chama a função que protege a página
         <script src="js/init.js"></script>
         <script src="js/cadastro.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
-        <script src="js/ajax/buscarMaterial.js"></script>
+        <script src="js/ajax/buscarPessoa.js"></script>
         <script src="js/paginacao.js"></script>
     </body>
 </html>

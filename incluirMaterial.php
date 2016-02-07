@@ -146,8 +146,9 @@ protegePagina(); // Chama a função que protege a página
                         }
                         ?>
                         <div class="row">
-                            <div class="input-field col s11">
-                                <select id="selectCor" name="selectCor[]" multiple>
+                            <div class="col s11">
+                                <label>Cores</label>
+                                <select id="selectCor" name="selectCor[]" multiple class="browser-default">
                                     <option value="" disabled>Selecione as cores do material</option>
                                     <?php
                                     $sql = "select * from Cor;";
@@ -165,7 +166,6 @@ protegePagina(); // Chama a função que protege a página
                                     }
                                     ?>
                                 </select>
-                                <label>Cores</label>
                             </div>
                             <div class="col s1">
                                 <a id="incluirCor" href="#modalCor" class="waves-effect modal-trigger waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
