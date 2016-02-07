@@ -14,6 +14,7 @@
 - Fazer help, manual e vídeo
 - Implementar controle de modelos
 - Implementar listagem de arquivos e matrizes
+- Voltar itens excluídos à ativa
 - Implantar
 - http://stackoverflow.com/questions/3190464/php-check-if-any-posted-vars-are-empty-form-all-fields-required
 

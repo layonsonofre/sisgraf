@@ -65,7 +65,20 @@
 					<div class="collapsible-body">
 						<ul>
 							<li><a href='incluirTipoDeServico.php?tipo=outro'>Cadastrar</a></li>
-							<li><a href='incluirTipoDeServico.php?tipo=carimbo'>Cad. Carimbo</a></li>
+							<li><a href='listarTipoDeServico.php?tipo=outro'>Buscar</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</li>
+		<li class="no-padding">
+			<ul class="collapsible collapsible-accordion">
+				<li>
+					<a class="collapsible-header waves-effect waves-red accent-4">Carimbo<i class="mdi-navigation-arrow-drop-down right"></i></a>
+					<div class="collapsible-body">
+						<ul>
+							<li><a href='incluirTipoDeServico.php?tipo=carimbo'>Cadastrar</a></li>
+							<li><a href='listarTipoDeServico.php?tipo=carimbo'>Buscar</a></li>
 						</ul>
 					</div>
 				</li>

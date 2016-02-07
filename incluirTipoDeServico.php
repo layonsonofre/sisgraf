@@ -17,9 +17,6 @@ if(isset($_GET['logout'])) {
         <link href="css/materialdesignicons.min.css" type="text/css" rel="stylesheet" media="all" />
     </head>
     <body>
-    	<?php
-    		include 'header.php';
-    	?>
         <div id="help" class="modal">
             <div class="modal-content">
                 <h4>Modal Header</h4>
@@ -137,13 +134,17 @@ if(isset($_GET['logout'])) {
                                         echo "<option value='' disabled>Selecione os papéis em que pode ser impresso</option>";
                                         $sql = "SELECT * FROM `Papel`;";
                                         $query = mysql_query($sql);
+                                        $valorPapel = 0;
                                         while($papel = mysql_fetch_array($query, MYSQL_ASSOC)) {
                                             echo "<option value='".$papel['idMaterial']."' ";
                                             if($idTS != NULL) {
-                                                $sql2 = "select * from Material_TipoServico where idMaterial=".$papel['idMaterial']." and idTipoServico=".$idTS.";";
+                                                $sql2 = "select COUNT(*) as total, Material_TipoServico.* from Material_TipoServico where idMaterial=".$papel['idMaterial']." and idTipoServico=".$idTS.";";
                                                 $query2 = mysql_query($sql2);
-                                                if( mysql_num_rows($query2) == 1) {
-                                                    echo "selected";
+                                                while($temp = mysql_fetch_assoc($query2)) {
+                                                    if($temp['total'] == 1) {
+                                                        echo "selected";
+                                                        $valorPapel = $temp['valor'];
+                                                    }
                                                 }
                                             }
                                             $sql2 = "select gramatura from GramaturaPapel where idGramaturaPapel = {$papel['idGramaturaPapel']}";
@@ -156,13 +157,14 @@ if(isset($_GET['logout'])) {
                                     <label>Papel</label>
                                 </div>
                                 <div class="input-field col s4">
-                                    <input name="valorPapel" id="valorPapel" type="text" class="validate right-align" length="10" maxlength="10">
+                                    <input name="valorPapel" id="valorPapel" type="text" class="validate right-align" value="<?php echo $valorPapel; ?>" length="10" maxlength="10">
                                     <label for="valorPapel" class="active">Valor (R$)</label>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="input-field col s11">
-                                    <select id="selectFormato" name="selectFormato[]" multiple>
+                                <div class="col s11">
+                                    <label>Formato</label>
+                                    <select id="selectFormato" name="selectFormato[]" multiple class="browser-default">
                                         <?php
                                         echo "<option value='' disabled>Selecione os formatos que este serviço pode ser feito</option>";
                                         $sql = "SELECT * FROM `Formato`;";
@@ -180,15 +182,15 @@ if(isset($_GET['logout'])) {
                                         }
                                         ?>
                                     </select>
-                                    <label>Formato</label>
                                 </div>
                                 <div class="col s1">
                                     <a href="#modalFormato" id="addFormato" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="input-field col s11">
-                                    <select id="selectAcabamento" name="selectAcabamento[]" multiple>
+                                <div class="col s11">
+                                    <label>Acabamento</label>
+                                    <select id="selectAcabamento" name="selectAcabamento[]" multiple class="browser-default">
                                     <?php
                                         echo "<option value='' disabled>Selecione os acabamentos disponíveis para o serviço</option>";
                                         $sql = "SELECT * FROM Acabamento;";
@@ -206,7 +208,6 @@ if(isset($_GET['logout'])) {
                                         }
                                         ?>
                                     </select>
-                                    <label>Acabamento</label>
                                 </div>
                                 <div class="col s1">
                                     <a href="#modalAcabamento" id="addAcabamento" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
@@ -218,16 +219,15 @@ if(isset($_GET['logout'])) {
                         <?php
                         if(isset($_GET['idTS']))
                             echo "<a class=\"btn waves-effect waves-light red accent-4\" name=\"exlcuir\" onclick=\"document.forms['excluir'].submit()\">Excluir<i class=\"material-icons right\">delete</i></a>";
-                            echo "<input type=\"hidden\" name=\"acao\" value=\"incluir\" />";
-                            echo "<input type=\"hidden\" name=\"idTS\" value=\"" . $idTS . "\" />";
                         ?>
+                        <input type="hidden" name="idTS" value="<?php echo $idTS; ?>">
                         <button class="btn waves-effect waves-light green accent-4" type="submit" name="salvar">Salvar<i class="material-icons right">send</i></button>
                         <input type="hidden" name="acao" value="<?php echo isset($_GET['idTS']) ? 'atualizar' : 'inserir';  ?>" />
                         <input type="hidden" name="tipo" value="<?php echo $_GET['tipo']; ?>" />
                     </form>
-                    <form role="form" method="POST" name="excluir" action="control/material.php">
+                    <form role="form" method="POST" name="excluir" action="control/tipoDeServico.php">
                         <input type="hidden" name="acao" value="excluir" />
-                        <input type="hidden" name="idTipoDeServico" value="<?php echo $idTS; ?>" />
+                        <input type="hidden" name="idTS" value="<?php echo $idTS; ?>" />
                         <input type="hidden" name="tipo" value="<?php echo $_GET['tipo']; ?>" />
                     </form>
                 </div>
@@ -238,9 +238,9 @@ if(isset($_GET['logout'])) {
         <script src="js/init.js"></script>
         <script src="js/cadastro.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
-        <script src="control/cep/js/cep.js"></script>
         
         <?php
+        include 'header.php';
         include 'modal/acabamento.php';
         include 'modal/formato.php';
         ?>

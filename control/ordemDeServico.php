@@ -65,7 +65,7 @@ if($acao == '') {
         $sql = "INSERT INTO `ServicoExterno` (`idTipoServico`,`idPessoa`, `idOrdemDeServico`) VALUES ('{$idTipoServico}','{$fornecedor}', '{$idOS}')";
         $query = mysql_query($sql);
     } else if($tipo == 'nota') {
-        $sql = "INSERT INTO `TipoServico` (`idTipoServico`,`nome`,`descricao`,`valor`) VALUES (NULL,'{$nomeNota}','{$descricaoNota}','{$valorNota}');";
+        $sql = "INSERT INTO `TipoServico` (`idTipoServico`,`nome`,`descricao`,`valor`, `status`) VALUES (NULL,'{$nomeNota}','{$descricaoNota}','{$valorNota}','ativo');";
         $query = mysql_query($sql);
         $idTipoServico = mysql_insert_id();
         $sql = "INSERT INTO `NotaFiscal` (`idTipoServico`,`idVias`,`numeracaoInicial`,`numeracaoFinal`,`numeroTalao`,`folhasBloco`,`aidf`,`idModeloNotaFiscal`) VALUES ('{$idTipoServico}','{$vias}','{$numeracaoInicial}','{$numeracaoFinal}','{$numeroTalao}','{$folhasBloco}','{$aidf}','{$modeloNota}')";
@@ -258,28 +258,28 @@ if($acao == '') {
     }
 } else if($acao == 'adddiverso') {
     echo "<option value='' disabled selected>Selecione o tipo de serviço desejado</option>";
-    $sql = "SELECT * FROM TipoServico WHERE nome NOT LIKE '%nota%' AND nome NOT LIKE '%carimbo%' AND nome NOT LIKE '%externo%' ORDER BY nome;";
+    $sql = "SELECT * FROM TipoServico WHERE nome NOT LIKE '%nota%' AND nome NOT LIKE '%carimbo%' AND nome NOT LIKE '%externo%' AND status LIKE 'ativo' ORDER BY nome;";
     $query = mysql_query($sql);
     while($tipoServico = mysql_fetch_array($query, MYSQL_ASSOC)) {
         echo "<option value='{$tipoServico['idTipoServico']}'>{$tipoServico['nome']} ({$tipoServico['descricao']})</option>";
     }
 } else if($acao == 'addexterno') {
     echo "<option value='' disabled selected>Selecione o tipo de serviço desejado</option>";
-    $sql = "SELECT * FROM TipoServico WHERE nome NOT LIKE '%carimbo%' AND nome NOT LIKE '%nota%' ORDER BY nome;";
+    $sql = "SELECT * FROM TipoServico WHERE nome NOT LIKE '%carimbo%' AND nome NOT LIKE '%nota%' AND status LIKE 'ativo' ORDER BY nome;";
     $query = mysql_query($sql);
     while($tipoServico = mysql_fetch_array($query, MYSQL_ASSOC)) {
         echo "<option value='{$tipoServico['idTipoServico']}'>{$tipoServico['nome']} ({$tipoServico['descricao']})</option>";
     }
 } else if($acao == 'addnota') {
     echo "<option value='' disabled selected>Selecione o tipo de serviço desejado</option>";
-    $sql = "SELECT * FROM TipoServico WHERE nome LIKE '%nota%' ORDER BY nome;";
+    $sql = "SELECT * FROM TipoServico WHERE nome LIKE '%nota%' AND status LIKE 'ativo' ORDER BY nome;";
     $query = mysql_query($sql);
     while($tipoServico = mysql_fetch_array($query, MYSQL_ASSOC)) {
         echo "<option value='{$tipoServico['idTipoServico']}'>{$tipoServico['nome']} ({$tipoServico['descricao']})</option>";
     }
 } else if($acao == 'addcarimbo') {
     echo "<option value='' disabled selected>Selecione o tipo de serviço desejado</option>";
-    $sql = "SELECT Carimbo.* FROM Carimbo INNER JOIN TipoServico ON Carimbo.idTipoServico = TipoServico.idTipoServico WHERE TipoServico.nome LIKE '%carimbo%' ORDER BY Carimbo.nomeCarimbo;";
+    $sql = "SELECT Carimbo.* FROM Carimbo INNER JOIN TipoServico ON Carimbo.idTipoServico = TipoServico.idTipoServico WHERE TipoServico.nome LIKE '%carimbo%' AND TipoServico.status LIKE 'ativo'ORDER BY Carimbo.nomeCarimbo;";
     $query = mysql_query($sql);
     while($tipoServico = mysql_fetch_array($query, MYSQL_ASSOC)) {
         if($tipoServico['isAutomatico'])
