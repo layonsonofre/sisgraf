@@ -44,7 +44,6 @@ unset($_SESSION['idOS']);
                         <?php
                         $idOS = isset($_SESSION['idOS']) ? $_SESSION['idOS'] : '';
                         if($idOS == '') $idOS = isset($_GET['idOS']) ? $_GET['idOS'] : '';
-                        echo "<h1>{$idOS}</h1>";
                         if ($idOS != '') {
                             //if($_GET['tipo'] == 'material') {
                             echo "<h4>Atualizar Ordem de Serviço</h4>";
@@ -113,8 +112,9 @@ unset($_SESSION['idOS']);
                             </div>
                         </div>
                         <div class="row">
-                            <div class="input-field col s11">
-                                <select id="selectCliente" name="selectCliente[]" multiple>
+                            <div class="col s11">
+                                <label>Clientes</label>
+                                <select id="selectCliente" name="selectCliente[]" multiple class="browser-default">
                                     <option value="" disabled selected>Selecione os clientes</option>
                                     <?php
                                     $sql = "select * from Pessoa order by nome, nomeFantasia;";
@@ -136,7 +136,6 @@ unset($_SESSION['idOS']);
                                     }
                                     ?>
                                 </select>
-                                <label>Clientes</label>
                             </div>
                             <div class="col s1">
                                 <a href="incluirPessoa.php?tipo=cliente" target="_blank" id="addCliente" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
@@ -621,7 +620,7 @@ unset($_SESSION['idOS']);
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <textarea id="observacoes" class="materialize-textarea" length="2000" maxlength="2000"></textarea>
+                            <textarea name="observacoes" id="observacoes" class="materialize-textarea" length="2000" maxlength="2000"><?php if($idOS) echo htmlspecialchars($resultado['observacoes']); ?></textarea>
                             <label for="observacoes">Observações</label>
                         </div>
                     </div>
@@ -631,9 +630,10 @@ unset($_SESSION['idOS']);
                     <input type="hidden" name="acao" id="acao" value="<?php echo isset($_GET['idOS']) ? 'atualizar' : 'inserir'; ?>" />
                     <input type="hidden" name="tipo" id="tipo">
                 </form>
+                <div id="arquivos"></div>
                 <div class="row">
                     <a type="hidden" target="_blank" id="incluirArquivo"></a>
-                    <div class="col s4 left-align"><a class="btn waves-effect waves-light blue accent-4" name="arquivo" id="arquivo">Arquivo<i class="material-icons right">description</i></a></div>
+                    <div class="col s4 left-align"><a class="btn waves-effect waves-light blue accent-4" name="arquivo" id="arquivo">Arquivos<i class="material-icons right">description</i></a></div>
                     <div class="col s4 center-align"><a class="btn waves-effect waves-light green accent-4" name="salvar" id="salvar">Salvar<i class="material-icons right">send</i></a></div>
                     <div class="col s4 right-align"><a class="btn waves-effect waves-light red accent-4" name="cancelar" id="cancelar">Cancelar O.S.<i class="material-icons right">delete</i></a></div>
                 </div>

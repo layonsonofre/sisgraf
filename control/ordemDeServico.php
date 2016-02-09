@@ -14,7 +14,7 @@ $dataSaida = isset($_POST['dataSaida']) ? $_POST['dataSaida'] : '';
 $status = isset($_POST['status']) ? $_POST['status'] : '';
 $isOrcamento = isset($_POST['isOrcamento']) ? $_POST['isOrcamento'] : '';
 $valorTotal = isset($_POST['valorTotal']) ? $_POST['valorTotal'] : '';
-$observacoes = isset($_POST['observacoes']) ? $_POST['observacoes'] : '';
+$observacoes = isset($_POST['observacoes']) ? htmlspecialchars($_POST['observacoes']) : '';
 
 $quantidade = isset($_POST['quantidade']) ? $_POST['quantidade'] : '';
 $valor = isset($_POST['valor']) ? $_POST['valor'] : '';
@@ -115,6 +115,14 @@ if($acao == '') {
             $sql = "INSERT INTO `Pessoa_OrdemDeServico` (`idOrdemDeServico`,`idPessoa`,`data`) VALUES ('{$idOS}','{$temp}','{$dataEntrada}')";
             $query = mysql_query($sql);
         }
+    }
+
+} else if($acao == 'salvar') {
+    $idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '';
+    if($idOS != '') {
+        $sql = "UPDATE OrdemDeServico SET dataSaida='{$dataSaida}', status='{$status}', valorTotal='{$valorTotal}', observacoes='{$observacoes}'
+                WHERE idOrdemDeServico={$idOS}";
+        $query = mysql_query($sql);
     }
 } else if($acao == 'listarServicos') {
     $idOS = isset($_SESSION['idOS']) ? $_SESSION['idOS'] : '-1';
@@ -436,15 +444,37 @@ if($acao == '') {
         $sql = "UPDATE OrdemDeServico SET `status`='cancelada' WHERE `idOrdemDeServico`='{$idOS}'";
         $query = mysql_query($sql);
     }
-} else if($acao == 'salvar') {
+} else if($acao == 'listarArquivos') {
     $idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '';
     if($idOS != '') {
-        $sql = "UPDATE OrdemDeServico SET dataSaida='{$dataSaida}', status='{$status}', valorTotal='{$valorTotal}', observacoes='{$observacoes}'
-                WHERE idOrdemDeServico={$idOS}";
-        echo $sql;
+        $sql = "SELECT * FROM Arquivo WHERE idOrdemDeServico={$idOS} ORDER BY nome DESC";
         $query = mysql_query($sql);
-        echo $query;
-        //header('Location: ../index.php?idOS={$idOS}');
+        echo "<div class='row'>";
+        while ($resultado = mysql_fetch_assoc($query)) {
+            echo "<div class='col s6'>";
+                echo "<div class='card'>";
+                    echo "<div class='card-content'>";
+                        echo "<span class='card-title'><b>{$resultado['nome']}</b></span>";
+                        echo "<p>Data de Criação: <b>{$resultado['data']}</b></p>";
+                    echo "</div>";
+                    echo "<div class='card-action'>";
+                        echo "<a id='editar' href='incluirArquivo.php?idArquivo={$resultado['idArquivo']}&idOS={$resultado['idOrdemDeServico']}'><i class='material-icons right'>list</i>Detalhes</a>";
+                    echo "</div>";
+                echo "</div>";
+            echo "</div>";
+        }
+            echo "<div class='col s6'>";
+                echo "<div class='card'>";
+                    echo "<div class='card-content'>";
+                        echo "<span class='card-title'><b>Arquivo</b></span>";
+                        echo "<p>Clique para cadastrar um novo arquivo</p>";
+                    echo "</div>";
+                    echo "<div class='card-action'>";
+                        echo "<a id='editar' href='incluirArquivo.php?idOS={$resultado['idOrdemDeServico']}'><i class='material-icons right'>list</i>Cadastrar</a>";
+                    echo "</div>";
+                echo "</div>";
+            echo "</div>";
+        echo "</div>";
     }
 }
 ?>

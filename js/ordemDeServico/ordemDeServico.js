@@ -97,10 +97,15 @@ $(function() {
         if(idOS === '') {
             alert("Erro ao tentar salvar as alterações. Por favor, tente novamente.");
         } else {
+            var $form = $("#formOS");
+            // Let's select and cache all the fields
+            var $inputs = $form.find("input, select, button, textarea");
+            // Serialize the data in the form
+            var serializedData = $form.serialize();
             request = $.ajax({
                 url: "control/ordemDeServico.php",
-                type: "post",
-                data: "acao=salvar&idOS="+idOS
+                type: "POST",
+                data: serializedData + "&acao=salvar"
             });
             request.done(function (response, textStatus, jqXHR) {
                 console.log(response);
@@ -116,9 +121,34 @@ $(function() {
     });
     
     $(document).on("click", "#arquivo", function(event) {
+        // var idOS = $("#idOS").val();
+        // $("#incluirArquivo").attr("href", "incluirArquivo.php?idOS=" + idOS);
+        // console.log($("#incluirArquivo").attr("href"));
+        // $("#incluirArquivo")[0].click();
+        event.preventDefault();
+        var request;
+        if (request) {
+            request.abort();
+        }
         var idOS = $("#idOS").val();
-        $("#incluirArquivo").attr("href", "incluirArquivo.php?idOS=" + idOS);
-        console.log($("#incluirArquivo").attr("href"));
-        $("#incluirArquivo")[0].click();
+        if(idOS === '') {
+            alert("Erro ao tentar salvar as alterações. Por favor, tente novamente.");
+        } else {
+            request = $.ajax({
+                url: "control/ordemDeServico.php",
+                type: "POST",
+                data: "acao=listarArquivos&idOS="+idOS
+            });
+            request.done(function (response, textStatus, jqXHR) {
+                console.log(response);
+                $("#arquivos").empty().append(response);
+            });
+            request.fail(function (jqXHR, textStatus, errorThrown){
+                console.error(
+                    "The following error occurred: "+
+                    textStatus, errorThrown
+                );
+            });
+        }
     })
 });

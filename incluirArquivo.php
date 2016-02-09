@@ -42,7 +42,7 @@ protegePagina(); // Chama a função que protege a página
 						$idArquivo = isset($_GET['idArquivo']) ? $_GET['idArquivo'] : '';
                         if($idArquivo != '') {
                             echo "<h4>Atualizar Arquivo</h4>";
-                            $sql = "select * from Arquivo where Arquivo.idArquivo=" . $idArquivo . ";";
+                            $sql = "SELECT * FROM Arquivo WHERE Arquivo.idArquivo={$idArquivo}";
                             $query = mysql_query($sql);
                             $resultado = mysql_fetch_assoc($query);
                         }
@@ -82,7 +82,7 @@ protegePagina(); // Chama a função que protege a página
                                 <label>Ordem de Serviço</label>
                             </div>
                             <div class="col s1">
-                                <a id="detalhesOS" target="_blank" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
+                                <a id="detalhesOS" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
                             </div>
                         </div>
                         <div id="arquivoMatriz">
@@ -238,9 +238,6 @@ protegePagina(); // Chama a função que protege a página
             var $input = $('.datepicker').pickadate();
             var picker = $input.pickadate('picker');
             picker.set('select', new Date());
-        </script>
-        <script>
-            $('#test').sortable({connectWith:['#test']});
         </script>
         <?php
             include 'header.php';
