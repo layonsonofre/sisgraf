@@ -332,6 +332,6 @@ else if($acao == 'inserirQuantidadeCores') {
     }
     $sql = "UPDATE TipoServico SET status='excluido' WHERE idTipoServico LIKE '{$idTS}'";
     $query = mysql_query($sql);
-    echo $sql;
+    header('Location: ../incluirTipoDeServico.php?at=ok&tipo={$tipo}');
 }
 ?>

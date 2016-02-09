@@ -86,6 +86,34 @@ $(function() {
             }
         }
     });
+
+    $(document).on("click", "#salvar", function(event) {
+        event.preventDefault();
+        var request;
+        if (request) {
+            request.abort();
+        }
+        var idOS = $("#idOS").val();
+        if(idOS === '') {
+            alert("Erro ao tentar salvar as alterações. Por favor, tente novamente.");
+        } else {
+            request = $.ajax({
+                url: "control/ordemDeServico.php",
+                type: "post",
+                data: "acao=salvar&idOS="+idOS
+            });
+            request.done(function (response, textStatus, jqXHR) {
+                console.log(response);
+                window.location.replace("incluirOS.php?idOS="+idOS);
+            });
+            request.fail(function (jqXHR, textStatus, errorThrown){
+                console.error(
+                    "The following error occurred: "+
+                    textStatus, errorThrown
+                );
+            });
+        }
+    });
     
     $(document).on("click", "#arquivo", function(event) {
         var idOS = $("#idOS").val();

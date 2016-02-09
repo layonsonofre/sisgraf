@@ -118,6 +118,7 @@ if($acao == '') {
     }
 } else if($acao == 'listarServicos') {
     $idOS = isset($_SESSION['idOS']) ? $_SESSION['idOS'] : '-1';
+    if($idOS == '-1') $idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '-1';
     if($idOS == '-1') {
         echo "<h5>É necessário adicionar um produto na Ordem de Serviço antes de listar</h5><br>";
     } else {
@@ -434,6 +435,16 @@ if($acao == '') {
 
         $sql = "UPDATE OrdemDeServico SET `status`='cancelada' WHERE `idOrdemDeServico`='{$idOS}'";
         $query = mysql_query($sql);
+    }
+} else if($acao == 'salvar') {
+    $idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '';
+    if($idOS != '') {
+        $sql = "UPDATE OrdemDeServico SET dataSaida='{$dataSaida}', status='{$status}', valorTotal='{$valorTotal}', observacoes='{$observacoes}'
+                WHERE idOrdemDeServico={$idOS}";
+        echo $sql;
+        $query = mysql_query($sql);
+        echo $query;
+        //header('Location: ../index.php?idOS={$idOS}');
     }
 }
 ?>

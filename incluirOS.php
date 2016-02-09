@@ -15,9 +15,6 @@ unset($_SESSION['idOS']);
         <link href="css/materialdesignicons.min.css" type="text/css" rel="stylesheet" media="all" />
     </head>
     <body>
-        <?php
-        include 'header.php';
-        ?>
         <div id="help" class="modal">
             <div class="modal-content">
                 <h4>Modal Header</h4>
@@ -46,15 +43,16 @@ unset($_SESSION['idOS']);
                     <div class="col s12 l10">
                         <?php
                         $idOS = isset($_SESSION['idOS']) ? $_SESSION['idOS'] : '';
+                        if($idOS == '') $idOS = isset($_GET['idOS']) ? $_GET['idOS'] : '';
                         echo "<h1>{$idOS}</h1>";
                         if ($idOS != '') {
                             //if($_GET['tipo'] == 'material') {
                             echo "<h4>Atualizar Ordem de Serviço</h4>";
                             //} else if($_GET['tipo'] == 'papel') {
                             //echo "<h4>Atualizar Papel</h4>";
-                            //$sql = "select * from Material, Papel where Material.idMaterial=" . $idMaterial . ";";
-                            //$query = mysql_query($sql);
-                            //$resultado = mysql_fetch_assoc($query);
+                            $sql = "SELECT * FROM OrdemDeServico WHERE idOrdemDeServico={$idOS}";
+                            $query = mysql_query($sql);
+                            $resultado = mysql_fetch_assoc($query);
                             //}
                         } else {
                             //if($_GET['tipo'] == 'material') {
@@ -88,24 +86,32 @@ unset($_SESSION['idOS']);
                             </div>
                             <?php
                             if ($idOS != '') {
-                                ?>
-                                <div class="input-field col s3">
-                                    <input name="dataSaida" id="dataSaida" type="date" class="validate datepicker" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['dataSaida'] . "'"; ?>>
-                                    <label for="dataSaida" class="active">Data de Saída</label>
-                                </div>
-                                <?php
+                            ?>
+                            <div class="input-field col s3">
+                                <input name="dataSaida" id="dataSaida" type="date" class="validate datepicker" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['dataSaida'] . "'"; ?>>
+                                <label for="dataSaida" class="active">Data de Saída</label>
+                            </div>
+                            <?php
                             }
                             ?>
                             <div class="input-field col s3">
-                                <input name="status" id="status" type="text" class="validate" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['status'] . "'"; ?>>
-                                <label for="status" class="active">Status</label>
-                            </div>
-                            <div class="input-field col s3">
-                                <input name="valorTotal" id="valorTotal" type="text" class="validate right-align" <?php if (isset($_GET['idMaterial'])) echo "value='" . $resultado['valorTotal'] . "'"; ?> length="10" maxlength="10">
+                                <input name="valorTotal" id="valorTotal" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['valorTotal'] . "'"; ?> length="10" maxlength="10">
                                 <label for="valorTotal" class="active">Valor Total (R$)</label>
                             </div>
+                            <div class="input-field col s3">
+                                <select id="status" name="status">
+                                    <option value="cadastro" <?php if($idOS) if($resultado['status'] == 'cadastro') echo 'selected';?>>Cadastro</option>
+                                    <option value="desenvolvimento" <?php if($idOS) if($resultado['status'] == 'desenvolvimento') echo 'selected';?>>Desenvolvimento</option>
+                                    <option value="aprovacao" <?php if($idOS) if($resultado['status'] == 'aprovacao') echo 'selected';?>>Aprovação</option>
+                                    <option value="impressao" <?php if($idOS) if($resultado['status'] == 'impressao') echo 'selected';?>>Imprimindo</option>
+                                    <option value="acabamento" <?php if($idOS) if($resultado['status'] == 'acabamento') echo 'selected';?>>Acabamento</option>
+                                    <option value="pronto" <?php if($idOS) if($resultado['status'] == 'pronto') echo 'selected';?>>Pronto</option>
+                                    <option value="entregue" <?php if($idOS) if($resultado['status'] == 'entregue') echo 'selected';?>>Entregue</option>
+                                    <option value="cancelada" <?php if($idOS) if($resultado['status'] == 'cancelada') echo 'selected';?>>Cancelada</option>
+                                </select>
+                                <label>Status</label>
+                            </div>
                         </div>
-                        <input type="hidden" name="valor" value="35">
                         <div class="row">
                             <div class="input-field col s11">
                                 <select id="selectCliente" name="selectCliente[]" multiple>
@@ -608,12 +614,8 @@ unset($_SESSION['idOS']);
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col s4">
-                                    <button class="btn waves-effect waves-light amber accent-4" name="adicionar" id="adicionar">Adicionar<i class="material-icons left">add</i></button>
-                                </div>
-                                <div class="col s4 right-align">
-                                    <a class="btn waves-effect waves-light yellow accent-4" name="mostrar" id="mostrar">Serviços<i class="material-icons left">list</i></a>
-                                </div>
+                                <div class="col s4"><button class="btn waves-effect waves-light amber accent-4" name="adicionar" id="adicionar">Adicionar<i class="material-icons left">add</i></button></div>
+                                <div class="col s4 right-align"><a class="btn waves-effect waves-light yellow accent-4" name="mostrar" id="mostrar">Serviços<i class="material-icons left">list</i></a></div>
                             </div>
                         </div>
                     </div>
@@ -624,25 +626,17 @@ unset($_SESSION['idOS']);
                         </div>
                     </div>
                     <div id="items"></div>
-                    <?php
-                    if (isset($_GET['idOS']))
-                        echo "<a class=\"btn waves-effect waves-light red accent-4\" name=\"exlcuir\" onclick=\"document.forms['excluir'].submit()\">Excluir<i class=\"material-icons right\">delete</i></a>";
-                    ?>
-                    <!-- <button class="btn waves-effect waves-light green accent-4" type="submit" name="salvar">Salvar<i class="material-icons right">send</i></button> -->
-                    <div class="row">
-                        <a type="hidden" target="_blank" id="incluirArquivo"></a>
-                        <div class="col s6 left-align"><a class="btn waves-effect waves-light blue accent-4" name="arquivo" id="arquivo">Arquivo<i class="material-icons right">description</i></a></div>
-                        <div class="col s6 right-align"><a class="btn waves-effect waves-light red accent-4" name="cancelar" id="cancelar">Cancelar O.S.<i class="material-icons right">delete</i></a></div>
-                    </div>
                     <input type="hidden" name="primeiraVez" id="primeiraVez" value="1">
-                    <input type="hidden" name="idOS" id="idOS">
+                    <input type="hidden" name="idOS" id="idOS" value="<?php echo $idOS; ?>" >
                     <input type="hidden" name="acao" id="acao" value="<?php echo isset($_GET['idOS']) ? 'atualizar' : 'inserir'; ?>" />
                     <input type="hidden" name="tipo" id="tipo">
                 </form>
-                <!-- <form role="form" method="POST" name="excluir" action="control/material.php">
-                    <input type="hidden" name="acao" value="excluir" />
-                    <input type="hidden" name="idOS" value="<?php echo $idOS; ?>" />
-                </form> -->
+                <div class="row">
+                    <a type="hidden" target="_blank" id="incluirArquivo"></a>
+                    <div class="col s4 left-align"><a class="btn waves-effect waves-light blue accent-4" name="arquivo" id="arquivo">Arquivo<i class="material-icons right">description</i></a></div>
+                    <div class="col s4 center-align"><a class="btn waves-effect waves-light green accent-4" name="salvar" id="salvar">Salvar<i class="material-icons right">send</i></a></div>
+                    <div class="col s4 right-align"><a class="btn waves-effect waves-light red accent-4" name="cancelar" id="cancelar">Cancelar O.S.<i class="material-icons right">delete</i></a></div>
+                </div>
             </div>
         </div>
     </main>
@@ -669,8 +663,44 @@ unset($_SESSION['idOS']);
                 //$("form:eq(0)").submit();
             });
         });
+        var idOS = $("#idOS").val();
+        if(idOS !== '') {
+            window.onload = function() {
+                console.log(idOS);
+                var request;
+                if (request) {
+                    request.abort();
+                }
+                var temp = $("#idOS").val();
+                if(temp === '') {
+                    temp = -1;
+                }
+                var $form = $("#formOS");
+                var $inputs = $form.find("input, select, button, textarea");
+                $inputs.prop("disabled", true);
+                request = $.ajax({
+                    url: "control/ordemDeServico.php",
+                    type: "post",
+                    data: "acao=listarServicos&idOS=" + idOS
+                });
+                request.done(function (response, textStatus, jqXHR){
+                    console.log(response);
+                    $('#items').empty().append(response);
+                });
+                request.fail(function (jqXHR, textStatus, errorThrown){
+                    console.error(
+                        "The following error occurred: "+
+                        textStatus, errorThrown
+                    );
+                });
+                request.always(function () {
+                    $inputs.prop("disabled", false);
+                });
+            };
+        }
     </script>
     <?php
+    include 'header.php';
     include 'modal/formaImpressao.php';
     include 'modal/quantidadeCores.php';
     include 'modal/modeloNotaFiscal.php';

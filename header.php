@@ -53,6 +53,7 @@
 					<div class="collapsible-body">
 						<ul>
 							<li><a href='incluirArquivo.php'>Cadastrar</a></li>
+							<li><a href='listarArquivo.php'>Buscar</a></li>
 						</ul>
 					</div>
 				</li>

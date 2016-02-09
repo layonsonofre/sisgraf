@@ -4,53 +4,263 @@ require_once("seguranca.php");
 $acao = isset($_POST['acao']) ? $_POST['acao'] : '';
 
 $idArquivo = isset($_POST['idArquivo']) ? $_POST['idArquivo'] : '';
+$nome = isset($_POST['nome']) ? $_POST['nome'] : '';
+$data = isset($_POST['data']) ? $_POST['data'] : '';
+$idOrdemDeServico = isset($_POST['selectOrdemDeServico']) ? $_POST['selectOrdemDeServico'] : '';
+
+$idArquivoMatrizAntigo = isset($_POST['idArquivoModeloAntigo']) ? $_POST['idArquivoModeloAntigo'] : array();
+$idChapaAntiga = isset($_POST['idChapaAntiga']) ? $_POST['idChapaAntiga'] : array();
+$urlMatrizAntiga = isset($_POST['urlMatrizAntiga']) ? $_POST['urlMatrizAntiga'] : array();
+$utilizacoesAntiga = isset($_POST['utilizacoesAntiga']) ? $_POST['utilizacoesAntiga'] : array();
+
+$idChapaNovo = isset($_POST['idChapaNovo']) ? $_POST['idChapaNovo'] : array();
+$urlMatrizNovo = isset($_POST['urlMatrizNovo']) ? $_POST['urlMatrizNovo'] : array();
+$utilizacoesNovo = isset($_POST['utilizacoesNovo']) ? $_POST['utilizacoesNovo'] : array();
+
+
+$idArquivoModeloAntigo = isset($_POST['idArquivoModeloAntigo']) ? $_POST['idArquivoModeloAntigo'] : array();
+$urlModeloAntigo = isset($_POST['urlModeloAntigo']) ? $_POST['urlModeloAntigo'] : array();
+$statusAntigo = isset($_POST['statusAntigo']) ? $_POST['statusAntigo'] : array();
+
+$urlModeloNovo = isset($_POST['urlModeloNovo']) ? $_POST['urlModeloNovo'] : array();
+$statusNovo = isset($_POST['statusNovo']) ? $_POST['statusNovo'] : array();
+
+//remover
 $idArquivoMatriz = isset($_POST['idArquivoMatriz']) ? $_POST['idArquivoMatriz'] : '';
 $idArquivoModelo = isset($_POST['idArquivoModelo']) ? $_POST['idArquivoModelo'] : '';
-$modelos = isset($_POST['nome']) ? $_POST['nome'] : '';
-$idChapa = isset($_POST['data']) ? $_POST['data'] : '';
-$url = isset($_POST['url']) ? $_POST['url'] : '';
-$utilizacoes = isset($_POST['idArquivo']) ? $_POST['idArquivo'] : '';
-$utilizacoes = isset($_POST['idOrdemDeServico']) ? $_POST['idOrdemDeServico'] : '';
+
 
 if($acao == '') {
-	header('Location: ../incluirArquivo.php?at=no&tipo='.$tipo);
+	header('Location: ../incluirArquivo.php?at=no');
 } else if($acao == 'inserir') {
-	$sql = "INSERT INTO `Arquivo` " .
-	"(`idArquivo`,`nome`,`data`,`idOrdemDeServico`)".
-	"VALUES (NULL,\"".$nome."\",\"".$data."\",\"".$idOrdemDeServico."\")";
+	$sql = "INSERT INTO `Arquivo` (`idArquivo`,`nome`,`data`,`idOrdemDeServico`)
+			VALUES (NULL,'{$nome}','{$data}','{$idOrdemDeServico}')";
 	$query = mysql_query($sql);
 	$idArquivoInserido = mysql_insert_id();
+	echo $sql . "<br><br>";
 
-	$sql = "INSERT INTO `ArquivoModelo` " .
-	"(`idArquivoModelo`,`url`,`idArquivo`)".
-	"VALUES (NULL,\"".$url."\",\"".$idArquivo."\")";
+	if($urlModeloNovo) {
+		$i = 0;
+		for($i = 0; $i < count($urlModeloNovo); $i++) {
+			$sql = "INSERT INTO ArquivoModelo (`idArquivoModelo`, `url`, `idArquivo`, `status`)
+					VALUES (NULL, '{$urlModeloNovo[$i]}', '{$idArquivoInserido}', '{$statusNovo[$i]}')";
+			$query = mysql_query($sql);
+			echo $sql . "<br><br>";
+		}
+	}
+	if($urlMatrizNovo) {
+		$i = 0;
+		for($i = 0; $i < count($urlMatrizNovo); $i++) {
+			$sql = "INSERT INTO ArquivoMatriz (`idArquivoMatriz`, `url`, `utilizacoes`, `idChapa`)
+					VALUES (NULL, '{$urlMatrizNovo[$i]}', '{$utilizacoesNovo[$i]}', '{$idChapaNovo[$i]}')";
+			$query = mysql_query($sql);
+			echo $sql . "<br><br>";
+			$idArquivoMatrizInserido = mysql_insert_id();
+			$sql = "INSERT INTO Arquivo_ArquivoMatriz (`idArquivo`, `idArquivoMatriz`)
+					VALUES ('{$idArquivoInserido}', '{$idArquivoMatrizInserido}')";
+			$query = mysql_query($sql);
+			echo $sql . "<br><br>";
+		}
+	}
+	header('Location: ../incluirArquivo.php?at=ok');
+} else if($acao == 'atualizar') {
+	$sql = "UPDATE Arquivo SET nome='{$nome}', idOrdemDeServico='{$idOrdemDeServico}' WHERE idArquivo = {$idArquivo}";
 	$query = mysql_query($sql);
-	$idArquivoModeloInserido = mysql_insert_id();
-	
-	header('Location: ../incluirArquivo.php?at=ok&tipo='.$tipo);
-	
-}else if($acao == 'inserirmatriz'){
-	$sql = "INSERT INTO `ArquivoMatriz` " .
-	"(`idArquivoMatriz`,`url`,`utilizacoes`,`idChapa`)".
-	"VALUES (NULL,\"".$url."\",\"".$utilizacoes."\",\"".$idChapa."\")";
-	$query = mysql_query($sql);
-	$idArquivoMatrizInserido = mysql_insert_id();
-	
-	if($ArquivoMatriz != NULL) {
-		foreach($ArquivoMatriz as $am) {
-			$sql = "INSERT INTO `Arquivo_ArquivoMatriz` (`idArquivo`,`idArquivoMatriz`) VALUES (\"".$idArquivoInserido."\",\"".$am."\")";
+
+	if($idArquivoMatrizAntigo) {
+		for($i = 0; $i < count($idArquivoMatrizAntigo); $i++) {
+			if($urlMatrizAntiga[$i] == '' || $utilizacoesAntiga[$i] == '' || $idChapaAntiga == '') continue;
+			$sql = "UPDATE ArquivoMatriz SET url='{$urlMatrizAntiga[$i]}', utilizacoes='{$utilizacoesAntiga[$i]}',
+					idChapa='{$idChapaAntiga[$i]}' WHERE idArquivoMatriz={$idArquivoMatrizAntigo[$i]}";
 			$query = mysql_query($sql);
 		}
 	}
-	header('Location: ../incluirArquivo.php?at=ok&tipo='.$tipo);
-} else if($acao == 'excluir') {
-	if($idArquivo == null) {
-		header('Location: ../incluirArquivo.php?at=ok&tipo='.$tipo);
+	if($urlMatrizNovo) {
+		for($i = 0; $i < count($urlMatrizNovo); $i++) {
+			if($urlMatrizNovo[$i] == '' || $utilizacoesNovo[$i] == '' || $idChapaNovo == '') continue;
+			$sql = "INSERT INTO ArquivoMatriz (`idArquivoMatriz`, `url`, `utilizacoes`, `idChapa`)
+					VALUES (NULL, '{$urlMatrizNovo[$i]}', '{$utilizacoesNovo[$i]}', '{$idChapaNovo[$i]}')";
+			$query = mysql_query($sql);
+			$idArquivoMatrizInserido = mysql_insert_id();
+			$sql = "INSERT INTO Arquivo_ArquivoMatriz (`idArquivo`, `idArquivoMatriz`)
+					VALUES ('{$idArquivo}', '{$idArquivoMatrizInserido}')";
+			$query = mysql_query($sql);
+		}
 	}
-	$sql = "delete * from Arquivo where idArquivo=".$idArquivo.";"
-	"delete * from Arquivo_ArquivoMatriz where idArquivo=".$idArquivo.";"
-	"delete * from ArquivoModelo where idArquivo=".$idArquivo.";";
+
+	if($idArquivoModeloAntigo) {
+		for($i = 0; $i < count($idArquivoModeloAntigo); $i++) {
+			if($urlModeloAntigo[$i] == '' || $statusAntigo[$i] == '') continue;
+			$sql = "UPDATE ArquivoModelo SET url='{$urlModeloAntigo[$i]}', status='{$statusAntigo[$i]}'
+					WHERE idArquivoModelo={$idArquivoModeloAntigo[$i]}";
+			$query = mysql_query($sql);
+		}
+	}
+	if($urlModeloNovo) {
+		$i = 0;
+		for($i = 0; $i < count($urlModeloNovo); $i++) {
+			if($urlModeloNovo[$i] == '' || $statusNovo[$i] == '') continue;
+			$sql = "INSERT INTO ArquivoModelo (`idArquivoModelo`, `url`, `idArquivo`, `status`)
+					VALUES (NULL, '{$urlModeloNovo[$i]}', '{$idArquivo}', '{$statusNovo[$i]}')";
+			$query = mysql_query($sql);
+			echo $sql . "<br><br>";
+		}
+	}
+	header('Location: ../incluirArquivo.php?at=ok&idArquivo='.$idArquivo);
+} else if($acao == 'excluirModelo'){
+	$sql = "DELETE FROM ArquivoModelo WHERE idArquivo={$idArquivo} AND idArquivoModelo={$idArquivoModelo}";
 	$query = mysql_query($sql);
+	echo $sql;
+	echo $query;
+} else if($acao == 'excluirMatriz') {
+	$sql = "DELETE FROM Arquivo_ArquivoMatriz WHERE idArquivo={$idArquivo} AND idArquivoMatriz={$idArquivoMatriz}";
+	$query = mysql_query($sql);
+	echo $sql;
+	$sql = "DELETE FROM ArquivoMatriz WHERE idArquivoMatriz={$idArquivoMatriz}";
+	$query = mysql_query($sql);
+	echo $sql;
+} else if($acao == 'excluir') {
+	// if($idArquivo == null) {
+	// 	header('Location: ../incluirArquivo.php?at=ok&tipo='.$tipo);
+	// }
+	// $sql = "delete * from Arquivo where idArquivo=".$idArquivo.";"
+	// "delete * from Arquivo_ArquivoMatriz where idArquivo=".$idArquivo.";"
+	// "delete * from ArquivoModelo where idArquivo=".$idArquivo.";";
+	// $query = mysql_query($sql);
+} else if($acao == 'listar') {
+	$busca  = mysql_real_escape_string($_POST['consulta']);
+    $opc = isset($_POST['opc']) ? $_POST['opc'] : array();
+    $por_pagina = 10;
+    if($busca != '') {
+        $condicoes = "nome LIKE '%{$busca}%' OR ArquivoModelo.url LIKE '%{$busca}%'
+        			OR ArquivoMatriz.url LIKE '%{$busca}%' OR idChapa LIKE '{$busca}'";
+    } else {
+    	$condicoes = "1";
+    }
+    foreach($opc as $o) {
+        if($o == 'aprovado') {
+            $condicoes = "{$condicoes} AND status LIKE 'aprovado'";
+        }
+    }
+    $sql = "SELECT COUNT(*) AS total FROM Arquivo
+            LEFT JOIN ArquivoModelo ON Arquivo.idArquivo = ArquivoModelo.idArquivo
+            LEFT JOIN Arquivo_ArquivoMatriz ON Arquivo.idArquivo = Arquivo_ArquivoMatriz.idArquivo
+            LEFT JOIN ArquivoMatriz ON Arquivo_ArquivoMatriz.idArquivoMatriz = ArquivoMatriz.idArquivoMatriz
+            WHERE {$condicoes}";
+    // executa a consulta
+    $query = mysql_query($sql);
+    // salva o valor da coluna 'total', do primeiro registro encontrado pela consulta
+    $total = mysql_result($query, 0, 'total');
+    // calcula o máximo de páginas
+    $paginas = (($total % $por_pagina) > 0) ? (int)($total / $por_pagina) + 1 : ($total / $por_pagina);
+
+    if(isset($_POST['pagina'])) {
+        $pagina = (int)$_POST['pagina'];
+    } else {
+        $pagina = 1;
+    }
+    $pagina = max(min($paginas, $pagina), 1);
+    $offset = ($pagina - 1) * $por_pagina;
+
+    // monta outra consulta, agora que fará a busca com paginação
+    $sql = "SELECT *
+    		FROM Arquivo
+            LEFT JOIN ArquivoModelo ON Arquivo.idArquivo = ArquivoModelo.idArquivo
+            LEFT JOIN Arquivo_ArquivoMatriz ON Arquivo.idArquivo = Arquivo_ArquivoMatriz.idArquivo
+            LEFT JOIN ArquivoMatriz ON Arquivo_ArquivoMatriz.idArquivoMatriz = ArquivoMatriz.idArquivoMatriz
+            WHERE {$condicoes} ORDER BY nome DESC LIMIT {$offset}, {$por_pagina}";
+    $query = mysql_query($sql);
+    // executa a query acima
+    
+    if($busca == '') {
+        echo "<div class='row'><div class='col s12'><p>Mostrando todos os registros salvos</p></div></div>";
+    } else {
+        echo "<div class='row'><div class='col s12'><p>Resultados ".min($total, ($offset + 1))." - ".min($total, ($offset + $por_pagina))." de ".$total." resultados encontrados para '".$_POST['consulta']."'</p></div></div>";
+    }
+    echo "<div class='row'>";
+    while ($resultado = mysql_fetch_assoc($query)) {
+        $tempId = $resultado['idArquivo'];
+        echo "<div class='col s12'>";
+            echo "<div class='card'>";
+                echo "<div class='card-content'>";
+                        echo "<span class='card-title'>{$resultado['nome']}</span>";
+                        echo "<p>Data de Criação: <b>{$resultado['data']}</b></p>";
+                        $sql2 = "SELECT * FROM ArquivoModelo WHERE idArquivo={$tempId}";
+                        $query2 = mysql_query($sql2);
+                        echo "<p>Modelos: <br>";
+                        while($temp = mysql_fetch_assoc($query2)) {
+                        	echo "<b>{$temp['url']}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status: <b>{$temp['status']}</b><br>";
+                        }
+                        echo "</p><br>";
+
+                        $sql2 = "SELECT * FROM ArquivoMatriz
+                        INNER JOIN Arquivo_ArquivoMatriz ON ArquivoMatriz.idArquivoMatriz = Arquivo_ArquivoMatriz.idArquivoMatriz
+                        WHERE Arquivo_ArquivoMatriz.idArquivo={$tempId}";
+                        $query2 = mysql_query($sql2);
+                        echo "<p>Matriz: <br>";
+                        while($temp = mysql_fetch_assoc($query2)) {
+                        	echo "Chapa: <b>{$temp['idChapa']}</b> (Local: <b>{$temp['url']}</b>)</b><br>";
+                        }
+                        echo "</p>";
+                        
+                        // echo "<p>Tamanho: <b>{$resultado['base']}</b> x <b>{$resultado['base']}</b> <i>mm</i> - Valor: </b>R$ {$resultado['valor']}</b></p>";
+                        // echo "<span class='card-title'>{$resultado['nome']}</span>";
+                        // echo "<p>{$resultado['descricao']}</p>";
+                        // echo "<p>Valor: <b>R$ {$resultado['valor']}</b></p>";
+                        // $sql2 = "SELECT * FROM Formato
+                        //         INNER JOIN TipoServico_Formato ON Formato.idFormato LIKE TipoServico_Formato.idFormato
+                        //         WHERE TipoServico_Formato.idTipoServico LIKE {$tempId}";
+                        // $query2 = mysql_query($sql2);
+                        // echo "<p>Formatos: ";
+                        // while($temp = mysql_fetch_assoc($query2)) {
+                        //     echo "<b>{$temp['formato']} ({$temp['base']} x {$temp['altura']})</b><br>";
+                        // }
+
+                        // $sql2 = "SELECT * FROM Acabamento
+                        //         INNER JOIN TipoServico_Acabamento ON Acabamento.idAcabamento LIKE TipoServico_Acabamento.idAcabamento
+                        //         WHERE TipoServico_Acabamento.idTipoServico LIKE {$tempId}";
+                        // $query2 = mysql_query($sql2);
+                        // echo "<p>Acabamentos: ";
+                        // while($temp = mysql_fetch_assoc($query2)) {
+                        //     echo "<b>{$temp['nome']} ({$temp['descricao']} - Local: {$temp['local']})</b><br>";
+                        // }
+                        // $sql2 = "SELECT Papel.tipo, GramaturaPapel.gramatura
+                        //         FROM Material_TipoServico
+                        //         INNER JOIN Material ON Material_TipoServico.idMaterial LIKE Material.idMaterial
+                        //         INNER JOIN Papel ON Material.idMaterial LIKE Papel.idMaterial
+                        //         INNER JOIN GramaturaPapel ON Papel.idGramaturaPapel LIKE GramaturaPapel.idGramaturaPapel
+                        //         WHERE Material_TipoServico.idTipoServico LIKE {$tempId}";
+                        // $query2 = mysql_query($sql2);
+                        // echo "<p>Papéis: ";
+                        // while($temp = mysql_fetch_assoc($query2)) {
+                        //     echo "<b>{$temp['tipo']} {$temp['gramatura']} g/m^2</b><br>";
+                        // }
+                        // echo "</p>";
+                echo "</div>";
+                echo "<div class='card-action'>";
+                    echo "<a id='editar' href='incluirArquivo.php?idArquivo={$tempId}'><i class='material-icons'>description</i>Editar</a>";
+                    // echo "<a id='remover' href='' idMaterial={$tempId} tipo={$tipo}><i class='material-icons'>delete</i>Excluir</a>";
+                    // echo "<a id='orcamento' href='orcamento.php?idMaterial={$tempId}&tipo={$tipo}'><i class='material-icons'>shopping_cart</i>Orçamento</a>";
+                echo "</div>";
+            echo "</div>";
+        echo "</div>";
+    }
+    echo "</div>";
+    echo "<br><ul class=\"pagination\">";
+        if($pagina > 1) {
+            echo "<li class=\"waves-effect\"><a class=\"paginacao\" href=\"#\" pagina=\"".($pagina-1)."\"><i class=\"material-icons\">chevron_left</i></a></li>";
+        }
+        for($i = 1; $i < $paginas + 1; $i++) {
+            $ativo = ($i == $pagina) ? TRUE : FALSE;
+            echo "<li class=\"";
+            if($ativo) echo "active\">";
+            else echo "waves-effect\">";
+            echo "<a class=\"paginacao\" href=\"#\" pagina=\"".$i."\">".$i."</a></li>";
+        }
+        if($pagina < $paginas) {
+            echo "<li class=\"waves-effect\"><a class=\"paginacao\" href=\"#\" pagina=\"".($pagina+1)."\"><i class=\"material-icons\">chevron_right</i></a></li>";
+        }
+    echo "</ul>";
 }
 
 ?>
