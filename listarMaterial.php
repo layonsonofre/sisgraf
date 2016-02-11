@@ -13,9 +13,6 @@ protegePagina(); // Chama a função que protege a página
         <link href="css/materialdesignicons.min.css" type="text/css" rel="stylesheet" media="all" />
     </head>
     <body>
-    	<?php
-    		include 'header.php';
-    	?>
         <div id="help" class="modal">
             <div class="modal-content">
                 <h4>Modal Header</h4>
@@ -104,5 +101,8 @@ protegePagina(); // Chama a função que protege a página
         <script src="js/jasny-bootstrap.min.js"></script>
         <script src="js/ajax/buscarMaterial.js"></script>
         <script src="js/paginacao.js"></script>
+        <?php
+        include 'header.php';
+        ?>
     </body>
 </html>

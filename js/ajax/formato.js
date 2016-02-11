@@ -1,49 +1,102 @@
-// Variable to hold request
-var request;
-$("#formFormato").submit(function(event){
-    // Abort any pending request
-    if (request) {
-        request.abort();
-    }
-    // setup some local variables
-    var $form = $(this);
-    // Let's select and cache all the fields
-    var $inputs = $form.find("input, select, button, textarea");
-    // Serialize the data in the form
-    var serializedData = $form.serialize();
-    // Let's disable the inputs for the duration of the Ajax request.
-    // Note: we disable elements AFTER the form data has been serialized.
-    // Disabled form elements will not be serialized.
-    $inputs.prop("disabled", true);
-    // Fire off the request to /form.php
-    request = $.ajax({
-        url: "control/tipoDeServico.php",
-        type: "post",
-        data: serializedData
+$(function() {
+    var request;
+    $("#formFormato").submit(function(event){
+        if (request) {request.abort();}
+        var $form = $(this);
+        var $inputs = $form.find("input, select, button, textarea");
+        var serializedData = $form.serialize();
+        $inputs.prop("disabled", true);
+        console.log(serializedData);
+        request = $.ajax({
+            url: "control/tipoDeServico.php",
+            type: "post",
+            data: serializedData
+        });
+        request.done(function (response, textStatus, jqXHR){
+            console.log(response);
+            $('#selectFormato').empty().append(response);
+            $('select').material_select();
+            $("#verFormatos")[0].click();
+            $('#modalFormato .cancelar').click();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error(
+                "The following error occurred: "+
+                textStatus, errorThrown
+            );
+        });
+        request.always(function () {
+            $inputs.prop("disabled", false);
+        });
+        event.preventDefault();
     });
-    // Callback handler that will be called on success
-    request.done(function (response, textStatus, jqXHR){
-        // Log a message to the console
-        //console.log("Hooray, it worked!");
-        console.log(response);
-        $('#selectFormato').empty().append(response);
-        $('select').material_select();
-        $('#modalFormato a').click();
+
+    $(document.body).on("click", "table td .editarFormato", function(event) {
+        if (request) {request.abort();}
+        var idFormato = $(this).attr("idFormato");
+        request = $.ajax({
+            url: "control/tipoDeServico.php",
+            type: "post",
+            dataType: "json",
+            data: "acao=getFormato&idFormatoModal="+idFormato
+        });
+        request.done(function (response, textStatus, jqXHR){
+            $("#idFormatoModal").val(response.idFormato);
+            $("#formatoModal").val(response.formato);
+            $("#baseFormatoModal").val(response.base);
+            $("#baseFormatoModal").focus();
+            $("#alturaFormatoModal").val(response.altura);
+            $("#alturaFormatoModal").focus();
+            $("#valorFormatoModal").val(response.valor);
+            $("#valorFormatoModal").focus();
+            $("#formatoModal").focus();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error(
+                "The following error occurred: "+
+                textStatus, errorThrown
+            );
+        });
+        event.preventDefault();
     });
-    // Callback handler that will be called on failure
-    request.fail(function (jqXHR, textStatus, errorThrown){
-        // Log the error to the console
-        console.error(
-            "The following error occurred: "+
-            textStatus, errorThrown
-        );
+
+    $(document.body).on("click", "table td .excluirFormato", function(event) {
+        if (request) {request.abort();}
+        if(confirm("Tem certeza que deseja excluir?")) {
+            var idFormato = $(this).attr("idFormato");
+            request = $.ajax({
+                url: "control/tipoDeServico.php",
+                type: "post",
+                data: "acao=excluirFormato&idFormatoModal="+idFormato
+            });
+            request.done(function (response, textStatus, jqXHR){
+                console.log(response);
+                $('#selectFormato').empty().append(response);
+                $('select').material_select();
+                //$('#modalFormato .cancelar').click();
+                $("#verFormatos").click();
+            });
+            request.fail(function (jqXHR, textStatus, errorThrown){
+                console.error("The following error occurred: "+textStatus, errorThrown);
+            });
+        }
+        event.preventDefault();
     });
-    // Callback handler that will be called regardless
-    // if the request failed or succeeded
-    request.always(function () {
-        // Reenable the inputs
-        $inputs.prop("disabled", false);
+
+    $("#verFormatos").click(function(event){
+        if (request) {request.abort();}
+        request = $.ajax({
+            url: "control/tipoDeServico.php",
+            type: "post",
+            data: "acao=verFormatos"
+        });
+        request.done(function (response, textStatus, jqXHR){
+            console.log(response);
+            $('#listaFormatos').empty().append(response);
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error("The following error occurred: "+textStatus, errorThrown);
+        });
+        event.preventDefault();
     });
-    // Prevent default posting of form
-    event.preventDefault();
 });

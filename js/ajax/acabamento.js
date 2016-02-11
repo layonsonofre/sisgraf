@@ -1,49 +1,94 @@
-// Variable to hold request
-var request;
-$("#formAcabamento").submit(function(event){
-    // Abort any pending request
-    if (request) {
-        request.abort();
-    }
-    // setup some local variables
-    var $form = $(this);
-    // Let's select and cache all the fields
-    var $inputs = $form.find("input, select, button, textarea");
-    // Serialize the data in the form
-    var serializedData = $form.serialize();
-    // Let's disable the inputs for the duration of the Ajax request.
-    // Note: we disable elements AFTER the form data has been serialized.
-    // Disabled form elements will not be serialized.
-    $inputs.prop("disabled", true);
-    // Fire off the request to /form.php
-    request = $.ajax({
-        url: "control/tipoDeServico.php",
-        type: "post",
-        data: serializedData
+$(function() {
+    var request;
+    $("#formAcabamento").submit(function(event){
+        if (request) {request.abort();}
+        var $form = $(this);
+        var $inputs = $form.find("input, select, button, textarea");
+        var serializedData = $form.serialize();
+        $inputs.prop("disabled", true);
+        request = $.ajax({
+            url: "control/tipoDeServico.php",
+            type: "post",
+            data: serializedData
+        });
+        request.done(function (response, textStatus, jqXHR){
+            console.log(response);
+            $('#selectAcabamento').empty().append(response);
+            $('select').material_select();
+            $("#verAcabamentos")[0].click();
+            $('#modalAcabamento .cancelar').click();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error("The following error occurred: "+textStatus, errorThrown);
+        });
+        request.always(function () {
+            $inputs.prop("disabled", false);
+        });
+        event.preventDefault();
     });
-    // Callback handler that will be called on success
-    request.done(function (response, textStatus, jqXHR){
-        // Log a message to the console
-        //console.log("Hooray, it worked!");
-        console.log(response);
-        $('#selectAcabamento').empty().append(response);
-        $('select').material_select();
-        $('#modalAcabamento a').click();
+
+    $(document.body).on("click", "table td .editarAcabamento", function(event) {
+        if (request) {request.abort();}
+        var idAcabamento = $(this).attr("idAcabamento");
+        request = $.ajax({
+            url: "control/tipoDeServico.php",
+            type: "post",
+            dataType: "json",
+            data: "acao=getAcabamento&idAcabamento="+idAcabamento
+        });
+        request.done(function (response, textStatus, jqXHR){
+            $("#idAcabamento").val(response.idAcabamento);
+            $("#nomeAcabamento").val(response.nome);
+            $("#descricaoAcabamento").val(response.descricao);
+            $("#descricaoAcabamento").focus();
+            $("#localAcabamento").val(response.local);
+            $("#localAcabamento").focus();
+            $("#valorAcabamento").val(response.valor);
+            $("#valorAcabamento").focus();
+            $("#nomeAcabamento").focus();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error("The following error occurred: "+textStatus, errorThrown);
+        });
+        event.preventDefault();
     });
-    // Callback handler that will be called on failure
-    request.fail(function (jqXHR, textStatus, errorThrown){
-        // Log the error to the console
-        console.error(
-            "The following error occurred: "+
-            textStatus, errorThrown
-        );
+
+    $(document.body).on("click", "table td .excluirAcabamento", function(event) {
+        if (request) {request.abort();}
+        if(confirm("Tem certeza que deseja excluir?")) {
+            var idAcabamento = $(this).attr("idAcabamento");
+            request = $.ajax({
+                url: "control/tipoDeServico.php",
+                type: "post",
+                data: "acao=excluirAcabamento&idAcabamento="+idAcabamento
+            });
+            request.done(function (response, textStatus, jqXHR){
+                console.log(response);
+                $('#selectAcabamento').empty().append(response);
+                $('select').material_select();
+                $("#verAcabamentos").click();
+            });
+            request.fail(function (jqXHR, textStatus, errorThrown){
+                console.error("The following error occurred: "+textStatus, errorThrown);
+            });
+        }
+        event.preventDefault();
     });
-    // Callback handler that will be called regardless
-    // if the request failed or succeeded
-    request.always(function () {
-        // Reenable the inputs
-        $inputs.prop("disabled", false);
+
+    $("#verAcabamentos").click(function(event){
+        if (request) {request.abort();}
+        request = $.ajax({
+            url: "control/tipoDeServico.php",
+            type: "post",
+            data: "acao=verAcabamentos"
+        });
+        request.done(function (response, textStatus, jqXHR){
+            console.log(response);
+            $('#listaAcabamentos').empty().append(response);
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error("The following error occurred: "+textStatus, errorThrown);
+        });
+        event.preventDefault();
     });
-    // Prevent default posting of form
-    event.preventDefault();
 });

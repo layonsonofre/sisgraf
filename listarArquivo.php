@@ -63,7 +63,7 @@ protegePagina(); // Chama a função que protege a página
                                 <button class="btn waves-effect waves-light green accent-4" type="submit" name="buscar">Buscar<i class="material-icons right">send</i></button>
                             </div>
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col s12">
                                 <label>Opções</label>
                             </div>
@@ -71,7 +71,7 @@ protegePagina(); // Chama a função que protege a página
                                 <input name="opc[]" id="excluido" type="checkbox" value="excluido">
                                 <label for="excluido">Fora de produção</label>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row">
                             <input type="hidden" id="pagina" name="pagina" value="">
                             <input type="hidden" name="acao" value="listar">

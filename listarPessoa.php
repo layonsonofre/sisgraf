@@ -13,9 +13,6 @@ protegePagina(); // Chama a função que protege a página
         <link href="css/materialdesignicons.min.css" type="text/css" rel="stylesheet" media="all" />
     </head>
     <body>
-    	<?php
-    		include 'header.php';
-    	?>
         <div id="help" class="modal">
             <div class="modal-content">
                 <h4>Modal Header</h4>
@@ -61,15 +58,21 @@ protegePagina(); // Chama a função que protege a página
                 	<form class="col s12" role="form" method="POST" action="control/pessoa.php" id="buscarPessoa">
                 		<div class="row">
 	                    	<?php
-	                        //if($_GET['tipo'] == 'cliente') {
-                            {
+	                        if($_GET['tipo'] != 'fornecedor') {
                         	?>
 	                        	<div class="input-field col s9">
 	                                <input name="consulta" id="consulta" type="text" class="validate" length="15" maxlength="15">
 	                                <label for="consulta" class="active">Pesquise, por exemplo, utilizando o nome, endereço, cidade etc.</label>
 	                            </div>
                         	<?php
-	                        }
+	                        } else {
+                                ?>
+                                <div class="input-field col s9">
+                                    <input name="consulta" id="consulta" type="text" class="validate" length="15" maxlength="15">
+                                    <label for="consulta" class="active">Pesquise utilizando o nome, endereço etc. ou pela categoria de material fornecida</label>
+                                </div>
+                                <?php
+                            }
                             ?>
 	                        <div class="col s3">
                             	<button class="btn waves-effect waves-light green accent-4" type="submit" name="buscar">Buscar<i class="material-icons right">send</i></button>
@@ -119,5 +122,6 @@ protegePagina(); // Chama a função que protege a página
         <script src="js/jasny-bootstrap.min.js"></script>
         <script src="js/ajax/buscarPessoa.js"></script>
         <script src="js/paginacao.js"></script>
+        <?phpinclude 'header.php';?>
     </body>
 </html>

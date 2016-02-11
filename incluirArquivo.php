@@ -8,8 +8,8 @@ protegePagina(); // Chama a função que protege a página
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
         <title>SISGRAF - Incluir Arquivo</title>
         <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-		<link href="css/font.css" rel="stylesheet">
         <link href="css/materialdesignicons.min.css" type="text/css" rel="stylesheet" media="all" />
+		<link href="css/font.css" rel="stylesheet">
     </head>
     <body>
         <div id="help" class="modal">
@@ -40,14 +40,19 @@ protegePagina(); // Chama a função que protege a página
                     <div class="col s12 l10">
                         <?php
 						$idArquivo = isset($_GET['idArquivo']) ? $_GET['idArquivo'] : '';
+                        $idOS = isset($_GET['idOS']) ? $_GET['idOS'] : '';
                         if($idArquivo != '') {
                             echo "<h4>Atualizar Arquivo</h4>";
                             $sql = "SELECT * FROM Arquivo WHERE Arquivo.idArquivo={$idArquivo}";
-                            $query = mysql_query($sql);
-                            $resultado = mysql_fetch_assoc($query);
                         }
                         else {
+                            if($idOS)
+                                $sql = "SELECT * FROM Arquivo WHERE idOrdemDeServico={$idOS}";
                             echo "<h4>Cadastrar Arquivo</h4>";
+                        }
+                        if($idArquivo || $idOS) {
+                            $query = mysql_query($sql);
+                            $resultado = mysql_fetch_assoc($query);
                         }
                         ?>
                     </div>
@@ -61,28 +66,34 @@ protegePagina(); // Chama a função que protege a página
                     <form class="col s12" role="form" method="POST" enctype="multipart/form-data" action="control/arquivo.php">
                         <div class="row">
                             <div class="input-field col s6">
-                                <input name="nome" id="nome" type="text" class="validate" <?php if($idArquivo) echo "value='".$resultado['nome']."'"; ?> length="64" maxlenght="64">
+                                <input name="nome" id="nome" type="text" class="validate" <?php if($idArquivo) echo "value='".$resultado['nome']."'"; ?> length="64" maxlength="64">
                                 <label for="nome" class="active">Nome</label>
                             </div>
                             <div class="input-field col s3">
-                                <input name="data" id="data" type="date" class="validate datepicker" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['data'] . "'"; ?>>
+                                <input name="data" id="data" type="date" class="validate datepicker" <?php if ($idArquivo) echo "value='{$resultado['data']}'"; ?>>
                                 <label for="data" class="active">Data</label>
                             </div>
     						<div class="input-field col s2">
                                 <select id="selectOrdemDeServico" name="selectOrdemDeServico">
-                                    <option value="" disabled>Selecione</option>
+                                    <option value="" disabled <?php if(!$idArquivo && !$idOS) echo "selected"; ?>>Selecione</option>
                                     <?php
                                     $sql = "SELECT * FROM OrdemDeServico";
                                     $query = mysql_query($sql);
-                                    while($OrdemDeServico = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                                        echo "<option value='{$OrdemDeServico['idOrdemDeServico']}'>{$OrdemDeServico['idOrdemDeServico']}</option>";
+                                    while($OrdemDeServico = mysql_fetch_assoc($query)) {
+                                        echo "<option value='{$OrdemDeServico['idOrdemDeServico']}' ";
+                                        if($idArquivo || $idOS) {
+                                            if($OrdemDeServico['idOrdemDeServico'] == $resultado['idOrdemDeServico'] || $OrdemDeServico['idOrdemDeServico'] == $idOS) {
+                                                echo "selected";
+                                            }
+                                        }
+                                        echo ">{$OrdemDeServico['idOrdemDeServico']}</option>";
                                     }
                                     ?>
                                 </select>
                                 <label>Ordem de Serviço</label>
                             </div>
                             <div class="col s1">
-                                <a id="detalhesOS" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
+                                <a id="detalhesOS" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">zoom_in</i></a>
                             </div>
                         </div>
                         <div id="arquivoMatriz">
@@ -104,7 +115,7 @@ protegePagina(); // Chama a função que protege a página
                                             echo "<label for='idChapa' class='active'>Nº da Chapa</label>";
                                         echo "</div>";
                                         echo "<div class='input-field col s6'>";
-                                            echo "<input name='urlMatrizAntiga[]' id='urlMatriz{$temp['idChapa']}' type='text' class='validate' lenght='256' maxlength='256' value='{$temp['url']}'>";
+                                            echo "<input name='urlMatrizAntiga[]' id='urlMatriz{$temp['idChapa']}' type='text' class='validate' length='256' maxlength='256' value='{$temp['url']}'>";
                                             echo "<label for='urlMatriz{$temp['idChapa']}' class='active'>Local Armazenamento</label>";
                                         echo "</div>";
                                         echo "<div class='input-field col s2'>";
@@ -125,7 +136,7 @@ protegePagina(); // Chama a função que protege a página
                                     <label for="idChapaNovo" class="active">Nº da Chapa</label>
                                 </div>
                                 <div class="input-field col s6">
-                                    <input name="urlMatrizNovo[]" id="urlMatrizNovo" type="text" class="validate" lenght="256" maxlenght="256" >
+                                    <input name="urlMatrizNovo[]" id="urlMatrizNovo" type="text" class="validate" length="256" maxlength="256" >
                                     <label for="urlMatrizNovo" class="active">Local Armazenamento</label>
                                 </div>
                                 <div class="input-field col s2">
@@ -150,7 +161,7 @@ protegePagina(); // Chama a função que protege a página
                                 while($temp = mysql_fetch_assoc($query)) {
                                     echo "<div class='row'>";
                                         echo "<div class='input-field col s8'>";
-                                            echo "<input name='urlModeloAntigo[]' id='urlModeloAntigo' type='text' class='validate' lenght='256' maxlenght='256' value='{$temp['url']}'>";
+                                            echo "<input name='urlModeloAntigo[]' id='urlModeloAntigo' type='text' class='validate' length='256' maxlength='256' value='{$temp['url']}'>";
                                             echo "<label>Local</label>";
                                         echo "</div>";
                                         echo "<div class='input-field col s3'>";
@@ -182,7 +193,7 @@ protegePagina(); // Chama a função que protege a página
                                     <label for="urlModelo" class="active">Insira o local em que o arquivo está armazenado</label> -->
                                 <!-- </div> -->
                                 <div class="input-field col s8">
-                                    <input name='urlModeloNovo[]' id='urlModeloNovo' type='text' class='validate' lenght='256' maxlenght='256'>
+                                    <input name='urlModeloNovo[]' id='urlModeloNovo' type='text' class='validate' length='256' maxlength='256'>
                                     <label for="urlModeloNovo">Local</label>
                                 </div>
                                 <div class="input-field col s3">

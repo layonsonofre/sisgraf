@@ -13,10 +13,6 @@ protegePagina(); // Chama a função que protege a página
         <link href="css/materialdesignicons.min.css" type="text/css" rel="stylesheet" media="all" />
     </head>
     <body>
-
-    	<?php
-			include 'header.php';
-		?>
 		<main>
 			<div class="container">
 				<div class="row">
@@ -29,5 +25,8 @@ protegePagina(); // Chama a função que protege a página
         <script src="js/jquery.js" type="text/javascript"></script>
         <script src="js/materialize.js" type="text/javascript"></script>
         <script src="js/init.js" type="text/javascript"></script>
+        <?php
+        include 'header.php';
+        ?>
     </body>
 </html>

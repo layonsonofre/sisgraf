@@ -49,6 +49,20 @@ $valorNota = isset($_POST['valorNota']) ? $_POST['valorNota'] : '';
 $primeiraVez = isset($_POST['primeiraVez']) ? $_POST['primeiraVez'] : '';
 $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
 
+$idModelo = isset($_POST['idModeloModal']) ? $_POST['idModeloModal'] : '';
+$modeloNota = isset($_POST['modeloNotaModal']) ? $_POST['modeloNotaModal'] : '';
+$descricaoNota = isset($_POST['descricaoNotaModal']) ? $_POST['descricaoNotaModal'] : '';
+$valorNota = isset($_POST['valorNotaModal']) ? $_POST['valorNotaModal'] : '';
+
+function listarModelos() {
+    echo "<option value='' disabled>Selecione</option>";
+    $sql = "SELECT * FROM `ModeloNotaFiscal` ORDER BY modelo;";
+    $query = mysql_query($sql);
+    while($modelo = mysql_fetch_array($query, MYSQL_ASSOC)) {
+        echo "<option value='{$modelo['idModeloNotaFiscal']}'>{$modelo['modelo']} ({$modelo['descricao']})</option>";
+    }
+}
+
 if($acao == '') {
 	//header('Location: ../incluirTipoDeServico.php?at=no&tipo='.$tipo);
 } else if($acao == 'adicionar') {
@@ -201,11 +215,6 @@ if($acao == '') {
                         $query2 = mysql_query($sql2);
                         if(mysql_num_rows($query2) > 0) {
                             echo "<p>Acabamento: ";
-                            $sql2 = "SELECT Acabamento.nome as nome FROM Acabamento
-                                    INNER JOIN Acab_OS_TS ON Acabamento.idAcabamento = Acab_OS_TS.idAcabamento
-                                    WHERE Acab_OS_TS.idTipoServico = {$resultado['idTipoServico']} AND
-                                    Acab_OS_TS.idOrdemDeServico = {$resultado['idOrdemDeServico']}";
-                            $query2 = mysql_query($sql2);
                             while($result = mysql_fetch_assoc($query2)) {
                                 echo $result['nome'] + " ";
                             }
@@ -314,17 +323,6 @@ if($acao == '') {
     $query = mysql_query($sql);
     while($paps = mysql_fetch_array($query, MYSQL_ASSOC)) {
         echo "<option value='{$paps['idMaterial']}'>{$paps['tipo']} {$paps['gramatura']} <i>g/m^2</i></option>";
-    }
-} else if($acao == 'inserirModeloNotaFiscal') {
-    $sql = "INSERT INTO `ModeloNotaFiscal` (`idModeloNotaFiscal`,`modelo`,`descricao`,`valor`) VALUES (NULL,'{$modelo}','{$descricao}','{$valor}')";
-    $query = mysql_query($sql);
-    // }
-    // atualiza o conteúdo no select
-    echo "<option value='' disabled>Selecione</option>";
-    $sql = "SELECT * FROM `ModeloNotaFiscal` ORDER BY modelo;";
-    $query = mysql_query($sql);
-    while($modelo = mysql_fetch_array($query, MYSQL_ASSOC)) {
-        echo "<option value='{$modelo['idModeloNotaFiscal']}'>{$modelo['modelo']} ({$modelo['descricao']})</option>";
     }
 } else if($acao == 'papel1_gramatura') {
     echo "<option value='' disabled>Selecione</option>";
@@ -447,6 +445,7 @@ if($acao == '') {
 } else if($acao == 'listarArquivos') {
     $idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '';
     if($idOS != '') {
+        echo "<h4>Arquivos</h4>";
         $sql = "SELECT * FROM Arquivo WHERE idOrdemDeServico={$idOS} ORDER BY nome DESC";
         $query = mysql_query($sql);
         echo "<div class='row'>";
@@ -466,15 +465,208 @@ if($acao == '') {
             echo "<div class='col s6'>";
                 echo "<div class='card'>";
                     echo "<div class='card-content'>";
-                        echo "<span class='card-title'><b>Arquivo</b></span>";
+                        echo "<span class='card-title'><b>Novo Arquivo</b></span>";
                         echo "<p>Clique para cadastrar um novo arquivo</p>";
                     echo "</div>";
                     echo "<div class='card-action'>";
-                        echo "<a id='editar' href='incluirArquivo.php?idOS={$resultado['idOrdemDeServico']}'><i class='material-icons right'>list</i>Cadastrar</a>";
+                        echo "<a id='editar' href='incluirArquivo.php?idOS={$idOS}'><i class='material-icons right'>list</i>Cadastrar</a>";
                     echo "</div>";
                 echo "</div>";
             echo "</div>";
         echo "</div>";
     }
-}
+} else if($acao == 'listar') {
+    $busca  = mysql_real_escape_string($_POST['consulta']);
+    $opc = isset($_POST['opc']) ? $_POST['opc'] : array();
+    $status2 = isset($_POST['status']) ? $_POST['status'] : array();
+    $mes = isset($_POST['mes']) ? $_POST['mes'] : '';
+    $ano = isset($_POST['ano']) ? $_POST['ano'] : '';
+    $por_pagina = 10;
+    if($busca != '') {
+        $condicoes = "dataEntrada LIKE '%{$busca}%' OR dataSaida LIKE '%{$busca}%'
+                    OR valorTotal LIKE '%{$busca}%' OR observacoes LIKE '%{$busca}%'";
+    } else {
+        $condicoes = "1";
+    }
+    foreach($status2 as $s) {
+        if($s == 'cadastro') {
+            $condicoes = "{$condicoes} AND status LIKE 'cadastro'";
+        }
+        if($s == 'desenvolvimento') {
+            $condicoes = "{$condicoes} AND status LIKE 'desenvolvimento'";
+        }
+        if($s == 'aprovacao') {
+            $condicoes = "{$condicoes} AND status LIKE 'aprovacao'";
+        }
+        if($s == 'aprovacao') {
+            $condicoes = "{$condicoes} AND status LIKE 'aprovacao'";
+        }
+        if($s == 'impressao') {
+            $condicoes = "{$condicoes} AND status LIKE 'impressao'";
+        }
+        if($s == 'acabamento') {
+            $condicoes = "{$condicoes} AND status LIKE 'acabamento'";
+        }
+        if($s == 'pronto') {
+            $condicoes = "{$condicoes} AND status LIKE 'pronto'";
+        }
+        if($s == 'entregue') {
+            $condicoes = "{$condicoes} AND status LIKE 'entregue'";
+        }
+        if($s == 'cancelada') {
+            $condicoes = "{$condicoes} AND status LIKE 'cancelada'";
+        }
+    }
+    if($mes != 'Todos') {
+        $condicoes = "{$condicoes} AND dataEntrada LIKE '%/{$mes}/%'";
+    }
+    if($ano != 'Todos') {
+        $condicoes = "{$condicoes} AND dataEntrada LIKE '%{$ano}'";
+    }
+    foreach($opc as $o) {
+        if($o == 'decrescente') {
+            $condicoes = "{$condicoes} ORDER BY dataEntrada DESC";
+        } else if($o == 'crescente') {
+            $condicoes = "{$condicoes} ORDER BY dataEntrada ASC";
+        }
+    }
+    $sql = "SELECT COUNT(*) AS total FROM OrdemDeServico
+            WHERE {$condicoes}";
+    // executa a consulta
+    $query = mysql_query($sql);
+    // salva o valor da coluna 'total', do primeiro registro encontrado pela consulta
+    $total = mysql_result($query, 0, 'total');
+    // calcula o máximo de páginas
+    $paginas = (($total % $por_pagina) > 0) ? (int)($total / $por_pagina) + 1 : ($total / $por_pagina);
+
+    if(isset($_POST['pagina'])) {
+        $pagina = (int)$_POST['pagina'];
+    } else {
+        $pagina = 1;
+    }
+    $pagina = max(min($paginas, $pagina), 1);
+    $offset = ($pagina - 1) * $por_pagina;
+
+    // monta outra consulta, agora que fará a busca com paginação
+    $sql = "SELECT *
+            FROM OrdemDeServico
+            WHERE {$condicoes} LIMIT {$offset}, {$por_pagina}";
+    $query = mysql_query($sql);
+    // executa a query acima
+    
+    if($busca == '') {
+        echo "<div class='row'><div class='col s12'><p>Mostrando todos os registros salvos</p></div></div>";
+    } else {
+        echo "<div class='row'><div class='col s12'><p>Resultados ".min($total, ($offset + 1))." - ".min($total, ($offset + $por_pagina))." de ".$total." resultados encontrados para '".$_POST['consulta']."'</p></div></div>";
+    }
+    echo "<div class='row'>";
+    while ($resultado = mysql_fetch_assoc($query)) {
+        $tempId = $resultado['idOrdemDeServico'];
+        echo "<div class='col s12'>";
+            echo "<div class='card'>";
+                echo "<div class='card-content'>";
+                        echo "<span class='card-title'>ID: {$resultado['idOrdemDeServico']}&nbsp;&nbsp;&nbsp;Status: ".strtoupper($resultado['status'])."</span>";
+                        $sql2 = "SELECT * FROM Pessoa
+                                INNER JOIN Pessoa_OrdemDeServico ON Pessoa_OrdemDeServico.idPessoa = Pessoa.idPessoa
+                                WHERE Pessoa_OrdemDeServico.idOrdemDeServico = {$tempId}";
+                        $query2 = mysql_query($sql2);
+                        echo "<p>Cliente: ";
+                        while($temp = mysql_fetch_assoc($query2)) {
+                            if($temp['isPessoaFisica'] == '1') {
+                                echo "<b>{$temp['nome']}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                            } else {
+                                echo "<b>{$temp['nomeFantasia']} ({$temp['razaoSocial']})</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                            }
+                        }
+                        echo "</p>";
+                        $sql2 = "SELECT OrdemDeServico_TipoServico.quantidade as qtde, TipoServico.nome as servico,
+                                OrdemDeServico_TipoServico.valor as valor
+                                FROM OrdemDeServico_TipoServico
+                                INNER JOIN TipoServico ON OrdemDeServico_TipoServico.idTipoServico = TipoServico.idTipoServico
+                                WHERE OrdemDeServico_TipoServico.idOrdemDeServico = {$tempId}";
+                        $query2 = mysql_query($sql2);
+                        echo "<p>Serviços: <br>";
+                        while($temp = mysql_fetch_assoc($query2)) {
+                            echo "> Tipo: <b>{$temp['servico']}</b> - Quantidade: <b>{$temp['qtde']}</b> - Valor: <b>R$ {$temp['valor']}</b><br>";
+                        }
+                        echo "</p><br>";
+                        echo "<p>Entrada: <b>{$resultado['dataEntrada']}</b>&nbsp;&nbsp;&nbsp;";
+                        echo "Saída: <b>{$resultado['dataSaida']}</b>&nbsp;&nbsp;&nbsp;";
+                        echo "Valor: <b> " . "R$ " . strtoupper($resultado['valorTotal']) . "</b></p>";
+                        echo "<p>Observações: {$resultado['observacoes']}</p>";
+                echo "</div>";
+                echo "<div class='card-action'>";
+                    echo "<a id='editar' href='incluirOS.php?idOS={$tempId}'><i class='material-icons'>description</i>Editar</a>";
+                    // echo "<a id='remover' href='' idMaterial={$tempId} tipo={$tipo}><i class='material-icons'>delete</i>Excluir</a>";
+                    // echo "<a id='orcamento' href='orcamento.php?idMaterial={$tempId}&tipo={$tipo}'><i class='material-icons'>shopping_cart</i>Orçamento</a>";
+                echo "</div>";
+            echo "</div>";
+        echo "</div>";
+    }
+    echo "</div>";
+    echo "<br><ul class=\"pagination\">";
+        if($pagina > 1) {
+            echo "<li class=\"waves-effect\"><a class=\"paginacao\" href=\"#\" pagina=\"".($pagina-1)."\"><i class=\"material-icons\">chevron_left</i></a></li>";
+        }
+        for($i = 1; $i < $paginas + 1; $i++) {
+            $ativo = ($i == $pagina) ? TRUE : FALSE;
+            echo "<li class=\"";
+            if($ativo) echo "active\">";
+            else echo "waves-effect\">";
+            echo "<a class=\"paginacao\" href=\"#\" pagina=\"".$i."\">".$i."</a></li>";
+        }
+        if($pagina < $paginas) {
+            echo "<li class=\"waves-effect\"><a class=\"paginacao\" href=\"#\" pagina=\"".($pagina+1)."\"><i class=\"material-icons\">chevron_right</i></a></li>";
+        }
+    echo "</ul>";
+} else if($acao == 'inserirModeloNotaFiscal') {
+    if($idModelo == '') {
+        $sql = "INSERT INTO `ModeloNotaFiscal` (`idModeloNotaFiscal`,`modelo`,`descricao`,`valor`) VALUES
+                (NULL,'{$modeloNota}','{$descricaoNota}','{$valorNota}')";
+    } else {
+        $sql = "UPDATE ModeloNotaFiscal set modelo='{$modeloNota}', descricao='{$descricaoNota}',
+                valor='{$valorNota}' WHERE idModeloNotaFiscal={$idModelo}";
+    }
+    $query = mysql_query($sql);
+    listarModelos();
+} else if($acao == 'excluirModelo') {
+    if($idModelo != '') {
+        $sql = "DELETE FROM ModeloNotaFiscal WHERE idModeloNotaFiscal='{$idModelo}'";
+        $query = mysql_query($sql);
+    }
+    listarModelos();
+} else if($acao == 'verModelos') {
+    $sql = "SELECT * FROM ModeloNotaFiscal";
+    $query = mysql_query($sql);
+    echo "<table class='responsive-table highlight'>";
+        echo "<thead><tr>";
+            echo "<th data-field='modelo'>Modelo</th>";
+            echo "<th data-field='descricao'>Descrição</th>";
+            echo "<th data-field='valor'>Valor (R$)</th>";
+            echo "<th>Editar</th>";
+            echo "<th>Excluir</th>";
+        echo "</tr></thead>";
+        echo "<tbody>";
+    while($temp = mysql_fetch_assoc($query)) {
+        echo "<tr>";
+            echo "<td>{$temp['modelo']}</td>";
+            echo "<td>{$temp['descricao']}</td>";
+            echo "<td>{$temp['valor']}</td>";
+            echo "<td><a href='#' class='editarModelo waves-effect waves-light' idModelo='{$temp['idModeloNotaFiscal']}'><i class='material-icons right'>settings</i></a></td>";
+            echo "<td><a href='#' class='excluirModelo waves-effect waves-light' idModelo='{$temp['idModeloNotaFiscal']}'><i class='material-icons right'>delete</i></a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else if($acao == 'getModelo') {
+    $sql = "SELECT * FROM ModeloNotaFiscal WHERE idModeloNotaFiscal = {$idModelo}";
+    $query = mysql_query($sql);
+    $return = array();
+    if($temp = mysql_fetch_assoc($query)) {
+        $return["idModelo"] = $temp['idModeloNotaFiscal'];
+        $return["modeloNota"] = $temp['modelo'];
+        $return["descricaoNota"] = $temp['descricao'];
+        $return["valorNota"] = $temp['valor'];
+    }
+    echo json_encode($return);
+} 
 ?>

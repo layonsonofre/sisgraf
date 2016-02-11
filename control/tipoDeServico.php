@@ -21,15 +21,101 @@ $baseCarimbo = isset($_POST['baseCarimbo']) ? $_POST['baseCarimbo'] : '';
 $alturaCarimbo = isset($_POST['alturaCarimbo']) ? $_POST['alturaCarimbo'] : '';
 $baseFormato = isset($_POST['baseFormato']) ? $_POST['baseFormato'] : '';
 $alturaFormato = isset($_POST['alturaFormato']) ? $_POST['alturaFormato'] : '';
+$valorFormato = isset($_POST['valorFormato']) ? $_POST['valorFormato'] : '';
+$idFormato = isset($_POST['idFormatoModal']) ? $_POST['idFormatoModal'] : '';
 $nomeAcabamento = isset($_POST['nomeAcabamento']) ? $_POST['nomeAcabamento'] : '';
 $descricaoAcabamento = isset($_POST['localAcabamento']) ? $_POST['descricaoAcabamento'] : '';
 $valorAcabamento = isset($_POST['valorAcabamento']) ? $_POST['valorAcabamento'] : '';
 $localAcabamento = isset($_POST['localAcabamento']) ? $_POST['localAcabamento'] : '';
 $idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '';
+$idFormato = isset($_POST['idFormatoModal']) ? $_POST['idFormatoModal'] : '';
+$idAcabamento = isset($_POST['idAcabamento']) ? $_POST['idAcabamento'] : '';
 
 $papel = isset($_POST['selectPapel']) ? $_POST['selectPapel'] : '';
 $valorPapel = isset($_POST['valorPapel']) ? $_POST['valorPapel'] : '';
 
+$idQC = isset($_POST['idQC']) ? $_POST['idQC'] : '';
+$descricaoQC = isset($_POST['descricaoQC']) ? $_POST['descricaoQC'] : '';
+$valorQC = isset($_POST['valorQC']) ? $_POST['valorQC'] : '';
+
+$idFI = isset($_POST['idFI']) ? $_POST['idFI'] : '';
+$nomeFI = isset($_POST['nomeFI']) ? $_POST['nomeFI'] : '';
+$descricaoFI = isset($_POST['descricaoFI']) ? $_POST['descricaoFI'] : '';
+$valorFI = isset($_POST['valorFI']) ? $_POST['valorFI'] : '';
+
+function listarFormato() {
+    // atualiza o conteúdo no select
+    echo "<option value='' disabled>Selecione os formatos que esse serviço pode ser feito</option>";
+    $sql = "SELECT * FROM Formato ORDER BY formato ASC";
+    $query = mysql_query($sql);
+    global $idTS;
+    while($forms = mysql_fetch_array($query, MYSQL_ASSOC)) {
+        echo "<option value='".$forms['idFormato']."' ";
+        if($idTS != '') {
+            $sql2 = "select * from TipoServico_Formato where idFormato=".$forms['idFormato']." and idTipoServico=".$idTS.";";
+            $query2 = mysql_query($sql2);
+            if( mysql_num_rows($query2) == 1) {
+                echo "selected";
+            }
+        }
+        echo ">" . $forms['formato'] . " (".$forms['base']." x ".$forms['altura']." <i>mm</i>)</option>";
+    }
+}
+
+function listarAcabamento() {
+    // atualiza o conteúdo no select
+    echo "<option value='' disabled>Selecione os acabamentos disponíveis para o serviço</option>";
+    $sql = "SELECT * FROM `Acabamento`;";
+    $query = mysql_query($sql);
+    global $idTS;
+    while($acabs = mysql_fetch_array($query, MYSQL_ASSOC)) {
+        echo "<option value='".$acabs['idAcabamento']."' ";
+        if($idTS != '') {
+            $sql2 = "select * from TipoServico_Acabamento where idAcabamento=".$acabs['idAcabamento']." and idTipoServico=".$idTS.";";
+            $query2 = mysql_query($sql2);
+            if( mysql_num_rows($query2) == 1) {
+                echo "selected";
+            }
+        }
+        echo ">".$acabs['nome']." (" .$acabs['descricao']." - Local: " .$acabs['local'].")</option>";
+    }
+}
+
+function listarQuantidadeCores() {
+    echo "<option value='' disabled>Selecione</option>";
+    $sql = "SELECT * FROM `QuantidadeCores`;";
+    $query = mysql_query($sql);
+    global $idTS, $idOS;
+    while($quantidadeCores = mysql_fetch_array($query, MYSQL_ASSOC)) {
+        echo "<option value='".$quantidadeCores['idQuantidadeCores']."' ";
+        if($idTS != '' && $idOS != '') {
+            $sql2 = "select * from OrdemDeServico_TipoServico where idQuantidadeCores=".$quantidadeCores['idQuantidadeCores']." and idTipoServico=".$idTS." and idOrdemDeServico={$idOS};";
+            $query2 = mysql_query($sql2);
+            if( mysql_num_rows($query2) == 1) {
+                echo "selected";
+            }
+        }
+        echo ">{$quantidadeCores['descricao']}</option>";
+    }
+}
+
+function listarFormaImpressao() {
+    echo "<option value='' disabled>Selecione as formas de impressão do serviço</option>";
+    $sql = "SELECT * FROM `FormaImpressao`;";
+    $query = mysql_query($sql);
+    global $idTS, $idOS;
+    while($forms = mysql_fetch_array($query, MYSQL_ASSOC)) {
+        echo "<option value='".$forms['idFormaImpressao']."' ";
+        if($idTS != '' && $idOS != '') {
+            $sql2 = "select * from OrdemDeServico_TipoServico where idFormaImpressao=".$forms['idFormaImpressao']." and idTipoServico=".$idTS." and idOrdemDeServico={$idOS};";
+            $query2 = mysql_query($sql2);
+            if( mysql_num_rows($query2) == 1) {
+                echo "selected";
+            }
+        }
+        echo ">{$forms['nome']} ({$forms['descricao']})</option>";
+    }
+}
 if($acao == '') {
 	header('Location: ../incluirTipoDeServico.php?at=no&tipo='.$tipo);
 } else if($acao == 'inserir') {
@@ -58,88 +144,180 @@ if($acao == '') {
     }
 	header('Location: ../incluirTipoDeServico.php?at=ok&tipo='.$tipo);
 } else if($acao == 'inserirFormato') {
-	// if($descricao != null || $nome != null) {
-		// header('Location: ../incluirMaterial.php');
-		// insere os campos no banco
+    if($idFormato == '') { 
 		$sql = "INSERT INTO `Formato` (`idFormato`,`formato`,`valor`,`base`,`altura`) VALUES (NULL,\"".$formato."\",\"".$valorFormato."\",\"".$baseFormato."\",\"".$alturaFormato."\");";
 		$query = mysql_query($sql);
-	// }
-	// atualiza o conteúdo no select
-	echo "<option value='' disabled>Selecione os formatos que esse serviço pode ser feito</option>";
-    $sql = "SELECT * FROM `Formato`;";
-    $query = mysql_query($sql);
-    while($forms = mysql_fetch_array($query, MYSQL_ASSOC)) {
-        echo "<option value='".$forms['idFormato']."' ";
-        if($idTS != '') {
-            $sql2 = "select * from TipoServico_Formato where idFormato=".$forms['idFormato']." and idTipoServico=".$idTS.";";
-            $query2 = mysql_query($sql2);
-            if( mysql_num_rows($query2) == 1) {
-                echo "selected";
-            }
-        }
-        echo ">" . $forms['formato'] . " (".$forms['base']." x ".$forms['altura']." <i>mm</i>)</option>";
+	} else {
+        $sql = "UPDATE Formato SET formato='{$formato}', valor='{$valorFormato}', base='{$baseFormato}', altura='{$alturaFormato}'
+                WHERE idFormato={$idFormato}";
+        $query = mysql_query($sql);
     }
-	// header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
+    listarFormato();
+} else if($acao == 'excluirFormato') {
+    if($idFormato != '') {
+        $sql = "DELETE FROM Formato WHERE idFormato='{$idFormato}'";
+        $query = mysql_query($sql);
+    }
+    listarFormato();
+} else if($acao == 'verFormatos') {
+    $sql = "SELECT * FROM Formato ORDER BY formato ASC";
+    $query = mysql_query($sql);
+    echo "<table class='responsive-table highlight'>";
+        echo "<thead><tr>";
+            echo "<th data-field='formato'>Formato</th>";
+            echo "<th data-field='base'>Base (mm)</th>";
+            echo "<th data-field='altura'>Altura (mm)</th>";
+            echo "<th data-field='valor'>Valor (R$)</th>";
+            echo "<th>Editar</th>";
+            echo "<th>Excluir</th>";
+        echo "</tr></thead>";
+        echo "<tbody>";
+    while($temp = mysql_fetch_assoc($query)) {
+        echo "<tr>";
+            echo "<td>{$temp['formato']}</td>";
+            echo "<td>{$temp['base']}</td>";
+            echo "<td>{$temp['altura']}</td>";
+            echo "<td>{$temp['valor']}</td>";
+            echo "<td><a href='#' class='editarFormato waves-effect waves-light' idFormato='{$temp['idFormato']}'><i class='material-icons right'>settings</i></a></td>";
+            echo "<td><a href='#' class='excluirFormato waves-effect waves-light' idFormato='{$temp['idFormato']}'><i class='material-icons right'>delete</i></a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
 } else if($acao == 'inserirAcabamento') {
-	// if($descricao != null || $nome != null) {
-		// header('Location: ../incluirMaterial.php');
-		// insere os campos no banco
-		$sql = "INSERT INTO `Acabamento` (`idAcabamento`,`nome`,`descricao`,`valor`,`local`) VALUES (NULL,\"".$nomeAcabamento."\",\"".$descricaoAcabamento."\",\"".$valorAcabamento."\",\"".$localAcabamento."\");";
+	if($idAcabamento == '') {
+		$sql = "INSERT INTO `Acabamento` (`idAcabamento`,`nome`,`descricao`,`valor`,`local`)
+                VALUES (NULL,'{$nomeAcabamento}','{$descricaoAcabamento}','{$valorAcabamento}','{$localAcabamento}');";
 		$query = mysql_query($sql);
-	// }
-	// atualiza o conteúdo no select
-	echo "<option value='' disabled>Selecione os acabamentos disponíveis para o serviço</option>";
-    $sql = "SELECT * FROM `Acabamento`;";
-    $query = mysql_query($sql);
-    while($acabs = mysql_fetch_array($query, MYSQL_ASSOC)) {
-        echo "<option value='".$acabs['idAcabamento']."' ";
-        if($idTS != '') {
-            $sql2 = "select * from TipoServico_Acabamento where idAcabamento=".$acabs['idAcabamento']." and idTipoServico=".$idTS.";";
-            $query2 = mysql_query($sql2);
-            if( mysql_num_rows($query2) == 1) {
-                echo "selected";
-            }
-        }
-        echo ">".$acabs['nome']." (" .$acabs['descricao']." - Local: " .$acabs['local'].")</option>";
+	} else {
+        $sql = "UPDATE Acabamento SET nome='{$nomeAcabamento}', descricao='{$descricaoAcabamento}',
+                valor='{$valorAcabamento}', local='{$localAcabamento}'
+                WHERE idAcabamento={$idAcabamento}";
+        $query = mysql_query($sql);
     }
-	// header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
+    listarAcabamento();
+} else if($acao == 'excluirAcabamento') {
+    if($idAcabamento != '') {
+        $sql = "DELETE FROM Acabamento WHERE idAcabamento='{$idAcabamento}'";
+        $query = mysql_query($sql);
+    }
+    listarAcabamento();
+} else if($acao == 'verAcabamentos') {
+    $sql = "SELECT * FROM Acabamento ORDER BY nome ASC";
+    $query = mysql_query($sql);
+    echo "<table class='responsive-table highlight'>";
+        echo "<thead><tr>";
+            echo "<th data-field='nome'>Nome</th>";
+            echo "<th data-field='descricao'>Descrição</th>";
+            echo "<th data-field='local'>Local</th>";
+            echo "<th data-field='valor'>Valor (R$)</th>";
+            echo "<th>Editar</th>";
+            echo "<th>Excluir</th>";
+        echo "</tr></thead>";
+        echo "<tbody>";
+    while($temp = mysql_fetch_assoc($query)) {
+        echo "<tr>";
+            echo "<td>{$temp['nome']}</td>";
+            echo "<td>{$temp['descricao']}</td>";
+            echo "<td>{$temp['local']}</td>";
+            echo "<td>{$temp['valor']}</td>";
+            echo "<td><a href='#' class='editarAcabamento waves-effect waves-light' idAcabamento='{$temp['idAcabamento']}'><i class='material-icons right'>settings</i></a></td>";
+            echo "<td><a href='#' class='excluirAcabamento waves-effect waves-light' idAcabamento='{$temp['idAcabamento']}'><i class='material-icons right'>delete</i></a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
 } else if($acao == 'inserirFormaImpressao') {
-	$sql = "INSERT INTO `FormaImpressao` (`idFormaImpressao`,`nome`,`descricao`,`valor`) VALUES (NULL,\"{$nome}\",\"{$descricao}\",\"{$valor}\");";
-	$query = mysql_query($sql);
-
-	echo "<option value='' disabled>Selecione as formas de impressão do serviço</option>";
-    $sql = "SELECT * FROM `FormaImpressao`;";
-    $query = mysql_query($sql);
-    while($forms = mysql_fetch_array($query, MYSQL_ASSOC)) {
-        echo "<option value='".$forms['idFormaImpressao']."' ";
-        if($idTS != '' && $idOS != '') {
-            $sql2 = "select * from OrdemDeServico_TipoServico where idFormaImpressao=".$forms['idFormaImpressao']." and idTipoServico=".$idTS." and idOrdemDeServico={$idOS};";
-            $query2 = mysql_query($sql2);
-            if( mysql_num_rows($query2) == 1) {
-                echo "selected";
-            }
-        }
-        echo ">{$forms['nome']} ({$forms['descricao']})</option>";
+    if($idFI == '') {
+	   $sql = "INSERT INTO `FormaImpressao` (`idFormaImpressao`,`nome`,`descricao`,`valor`)
+                VALUES (NULL,'{$nomeFI}','{$descricaoFI}','{$valorFI}')";
+    } else {
+        $sql = "UPDATE FormaImpressao SET nome='{$nomeFI}', descricao='{$descricaoFI}', valor='{$valorFI}'
+                WHERE idFormaImpressao={$idFI}";
     }
-}
-else if($acao == 'inserirQuantidadeCores') {
-	$sql = "INSERT INTO `QuantidadeCores` (`idQuantidadeCores`,`descricao`,`valor`) VALUES (NULL,\"{$descricao}\",\"{$valor}\");";
 	$query = mysql_query($sql);
-
-	echo "<option value='' disabled>Selecione</option>";
-    $sql = "SELECT * FROM `QuantidadeCores`;";
-    $query = mysql_query($sql);
-    while($quantidadeCores = mysql_fetch_array($query, MYSQL_ASSOC)) {
-        echo "<option value='".$quantidadeCores['idQuantidadeCores']."' ";
-        if($idTS != '' && $idOS != '') {
-            $sql2 = "select * from OrdemDeServico_TipoServico where idQuantidadeCores=".$quantidadeCores['idQuantidadeCores']." and idTipoServico=".$idTS." and idOrdemDeServico={$idOS};";
-            $query2 = mysql_query($sql2);
-            if( mysql_num_rows($query2) == 1) {
-                echo "selected";
-            }
-        }
-        echo ">{$quantidadeCores['descricao']}</option>";
+    listarFormaImpressao();
+} else if($acao == 'excluirFI') {
+    if($idFI != '') {
+        $sql = "DELETE FROM FormaImpressao WHERE idFormaImpressao='{$idFI}'";
+        $query = mysql_query($sql);
     }
+    listarFormaImpressao();
+} else if($acao == 'verFI') {
+    $sql = "SELECT * FROM FormaImpressao";
+    $query = mysql_query($sql);
+    echo "<table class='responsive-table highlight'>";
+        echo "<thead><tr>";
+            echo "<th data-field='nome'>Nome</th>";
+            echo "<th data-field='descricao'>Descrição</th>";
+            echo "<th data-field='valor'>Valor (R$)</th>";
+            echo "<th>Editar</th>";
+            echo "<th>Excluir</th>";
+        echo "</tr></thead>";
+        echo "<tbody>";
+    while($temp = mysql_fetch_assoc($query)) {
+        echo "<tr>";
+            echo "<td>{$temp['nome']}</td>";
+            echo "<td>{$temp['descricao']}</td>";
+            echo "<td>{$temp['valor']}</td>";
+            echo "<td><a href='#' class='editarFI waves-effect waves-light' idFI='{$temp['idFormaImpressao']}'><i class='material-icons right'>settings</i></a></td>";
+            echo "<td><a href='#' class='excluirFI waves-effect waves-light' idFI='{$temp['idFormaImpressao']}'><i class='material-icons right'>delete</i></a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else if($acao == 'getFI') {
+    $sql = "SELECT * FROM FormaImpressao WHERE idFormaImpressao = {$idFI}";
+    $query = mysql_query($sql);
+    $return = array();
+    if($temp = mysql_fetch_assoc($query)) {
+        $return["idFI"] = $temp['idFormaImpressao'];
+        $return["nomeFI"] = $temp['nome'];
+        $return["descricaoFI"] = $temp['descricao'];
+        $return["valorFI"] = $temp['valor'];
+    }
+    echo json_encode($return);
+} else if($acao == 'inserirQuantidadeCores') {
+    if($idQC == '') {
+	   $sql = "INSERT INTO `QuantidadeCores` (`idQuantidadeCores`,`descricao`,`valor`) VALUES (NULL,'{$descricao}','{$valor}')";
+    } else {
+        $sql = "UPDATE QuantidadeCores SET descricao='{$descricaoQC}', valor='{$valorQC}' WHERE idQuantidadeCores={$idQC}";
+    }
+	$query = mysql_query($sql);
+    listarQuantidadeCores();
+} else if($acao == 'excluirQC') {
+    if($idQC != '') {
+        $sql = "DELETE FROM QuantidadeCores WHERE idQuantidadeCores='{$idQC}'";
+        $query = mysql_query($sql);
+    }
+    listarQuantidadeCores();
+} else if($acao == 'verQC') {
+    $sql = "SELECT * FROM QuantidadeCores";
+    $query = mysql_query($sql);
+    echo "<table class='responsive-table highlight'>";
+        echo "<thead><tr>";
+            echo "<th data-field='descricao'>Descrição</th>";
+            echo "<th data-field='valor'>Valor (R$)</th>";
+            echo "<th>Editar</th>";
+            echo "<th>Excluir</th>";
+        echo "</tr></thead>";
+        echo "<tbody>";
+    while($temp = mysql_fetch_assoc($query)) {
+        echo "<tr>";
+            echo "<td>{$temp['descricao']}</td>";
+            echo "<td>{$temp['valor']}</td>";
+            echo "<td><a href='#' class='editarQC waves-effect waves-light' idQC='{$temp['idQuantidadeCores']}'><i class='material-icons right'>settings</i></a></td>";
+            echo "<td><a href='#' class='excluirQC waves-effect waves-light' idQC='{$temp['idQuantidadeCores']}'><i class='material-icons right'>delete</i></a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else if($acao == 'getQC') {
+    $sql = "SELECT * FROM QuantidadeCores WHERE idQuantidadeCores = {$idQC}";
+    $query = mysql_query($sql);
+    $return = array();
+    if($temp = mysql_fetch_assoc($query)) {
+        $return["idQC"] = $temp['idQuantidadeCores'];
+        $return["descricaoQC"] = $temp['descricao'];
+        $return["valorQC"] = $temp['valor'];
+    }
+    echo json_encode($return);
 } else if($acao == 'listar') {
     $busca  = mysql_real_escape_string($_POST['consulta']);
     $opc = isset($_POST['opc']) ? $_POST['opc'] : array();
@@ -169,7 +347,6 @@ else if($acao == 'inserirQuantidadeCores') {
     if($flag) {
         $condicoes = "{$condicoes} AND TipoServico.status like 'ativo'";
     }
-    echo $condicoes . "<br>";
     if($tipo == 'carimbo') {
         $sql = "SELECT COUNT(*) AS total FROM TipoServico
                 INNER JOIN Carimbo ON Carimbo.idTipoServico = TipoServico.idTipoServico
@@ -178,7 +355,6 @@ else if($acao == 'inserirQuantidadeCores') {
         $sql = "SELECT COUNT(*) AS total FROM TipoServico
                 WHERE {$condicoes}";
     }
-    echo $sql . "<br>";
     // executa a consulta
     $query = mysql_query($sql);
     // salva o valor da coluna 'total', do primeiro registro encontrado pela consulta
@@ -208,7 +384,6 @@ else if($acao == 'inserirQuantidadeCores') {
                 ORDER BY nome DESC LIMIT {$offset}, {$por_pagina}";
         $query = mysql_query($sql);
     }
-    echo $sql . "<br>";
     // executa a query acima
     
     if($busca == '') {
@@ -224,7 +399,7 @@ else if($acao == 'inserirQuantidadeCores') {
                 echo "<div class='card-content'>";
                     if($tipo == 'carimbo') {
                         echo "<span class='card-title'>{$resultado['nomeCarimbo']}</span>";
-                        echo "<p>Tamanho: <b>{$resultado['base']}</b> x <b>{$resultado['base']}</b> <i>mm</i> - Valor: </b>R$ {$resultado['valor']}</b></p>";
+                        echo "<p>Tamanho: <b>{$resultado['base']}</b> x <b>{$resultado['altura']}</b> <i>mm</i> - Valor: </b>R$ {$resultado['valor']}</b></p>";
                     } else {
                         echo "<span class='card-title'>{$resultado['nome']}</span>";
                         echo "<p>{$resultado['descricao']}</p>";
@@ -333,5 +508,29 @@ else if($acao == 'inserirQuantidadeCores') {
     $sql = "UPDATE TipoServico SET status='excluido' WHERE idTipoServico LIKE '{$idTS}'";
     $query = mysql_query($sql);
     header('Location: ../incluirTipoDeServico.php?at=ok&tipo={$tipo}');
+} else if($acao == 'getFormato') {
+    $sql = "SELECT * FROM Formato WHERE idFormato = {$idFormato}";
+    $query = mysql_query($sql);
+    $return = array();
+    if($temp = mysql_fetch_assoc($query)) {
+        $return["idFormato"] = $temp['idFormato'];
+        $return["formato"] = $temp['formato'];
+        $return["base"] = $temp['base'];
+        $return["altura"] = $temp['altura'];
+        $return["valor"] = $temp['valor'];
+    }
+    echo json_encode($return);
+} else if($acao == 'getAcabamento') {
+    $sql = "SELECT * FROM Acabamento WHERE idAcabamento = {$idAcabamento}";
+    $query = mysql_query($sql);
+    $return = array();
+    if($temp = mysql_fetch_assoc($query)) {
+        $return["idAcabamento"] = $temp['idAcabamento'];
+        $return["nome"] = $temp['nome'];
+        $return["descricao"] = $temp['descricao'];
+        $return["local"] = $temp['local'];
+        $return["valor"] = $temp['valor'];
+    }
+    echo json_encode($return);
 }
 ?>

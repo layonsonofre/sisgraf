@@ -244,5 +244,11 @@ if(isset($_GET['logout'])) {
         include 'modal/acabamento.php';
         include 'modal/formato.php';
         ?>
+
+        <script>
+            $(document.body).on("hidden.modal", function() {
+                $("#modal").removeData(".modal");
+            });
+        </script>
     </body>
 </html>

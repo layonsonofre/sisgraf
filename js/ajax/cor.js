@@ -1,49 +1,95 @@
-// Variable to hold request
-var request;
-$("#formCor").submit(function(event){
-    // Abort any pending request
-    if (request) {
-        request.abort();
-    }
-    // setup some local variables
-    var $form = $(this);
-    // Let's select and cache all the fields
-    var $inputs = $form.find("input, select, button, textarea");
-    // Serialize the data in the form
-    var serializedData = $form.serialize();
-    // Let's disable the inputs for the duration of the Ajax request.
-    // Note: we disable elements AFTER the form data has been serialized.
-    // Disabled form elements will not be serialized.
-    $inputs.prop("disabled", true);
-    // Fire off the request to /form.php
-    request = $.ajax({
-        url: "control/material.php",
-        type: "post",
-        data: serializedData
+$(function() {
+    var request;
+    $("#formCor").submit(function(event){
+        if (request) {request.abort();}
+        var $form = $(this);
+        var $inputs = $form.find("input, select, button, textarea");
+        var serializedData = $form.serialize();
+        $inputs.prop("disabled", true);
+        request = $.ajax({
+            url: "control/material.php",
+            type: "post",
+            data: serializedData
+        });
+        console.log(serializedData);
+        request.done(function (response, textStatus, jqXHR){
+            console.log(response);
+            $('#selectCor').empty().append(response);
+            $('select').material_select();
+            $("#verCores")[0].click();
+            $('#modalCor .cancelar').click();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error("The following error occurred: "+textStatus, errorThrown);
+        });
+        request.always(function () {
+            $inputs.prop("disabled", false);
+        });
+        event.preventDefault();
     });
-    // Callback handler that will be called on success
-    request.done(function (response, textStatus, jqXHR){
-        // Log a message to the console
-        //console.log("Hooray, it worked!");
-        console.log(response);
-        $('#selectCor').empty().append(response);
-        $('select').material_select();
-        $('#modalCor a').click();
+
+    $(document.body).on("click", "table td .editarCor", function(event) {
+        if (request) {
+            request.abort();
+        }
+        var idCor = $(this).attr("idCor");
+        request = $.ajax({
+            url: "control/material.php",
+            type: "post",
+            dataType: "json",
+            data: "acao=getCor&idCor="+idCor
+        });
+        request.done(function (response, textStatus, jqXHR){
+            $("#idCor").val(response.idCor);
+            $("#cor").val(response.nome);
+            $("#cor").focus();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error("The following error occurred: "+textStatus, errorThrown);
+        });
+        event.preventDefault();
     });
-    // Callback handler that will be called on failure
-    request.fail(function (jqXHR, textStatus, errorThrown){
-        // Log the error to the console
-        console.error(
-            "The following error occurred: "+
-            textStatus, errorThrown
-        );
+
+    $(document.body).on("click", "table td .excluirCor", function(event) {
+        if (request) {
+            request.abort();
+        }
+        if(confirm("Tem certeza que deseja excluir?")) {
+            var idCor = $(this).attr("idCor");
+            request = $.ajax({
+                url: "control/material.php",
+                type: "post",
+                data: "acao=excluirCor&idCor="+idCor
+            });
+            request.done(function (response, textStatus, jqXHR){
+                console.log(response);
+                $('#selectCor').empty().append(response);
+                $('select').material_select();
+                $("#verUnidades")[0].click();
+            });
+            request.fail(function (jqXHR, textStatus, errorThrown){
+                console.error("The following error occurred: "+textStatus, errorThrown);
+            });
+        }
+        event.preventDefault();
     });
-    // Callback handler that will be called regardless
-    // if the request failed or succeeded
-    request.always(function () {
-        // Reenable the inputs
-        $inputs.prop("disabled", false);
+
+    $("#verCores").click(function(event){
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+            url: "control/material.php",
+            type: "post",
+            data: "acao=verCores"
+        });
+        request.done(function (response, textStatus, jqXHR){
+            console.log(response);
+            $('#listaCores').empty().append(response);
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error("The following error occurred: "+textStatus, errorThrown);
+        });
+        event.preventDefault();
     });
-    // Prevent default posting of form
-    event.preventDefault();
 });

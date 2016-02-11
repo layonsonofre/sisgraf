@@ -171,7 +171,7 @@ unset($_SESSION['idOS']);
                                 </div>
                                 <div class="row">
                                     <div class="input-field col s3">
-                                        <input name="quantidade" id="quantidade" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['quantidade'] . "'"; ?>>
+                                        <input name="quantidade" id="quantidade" type="text" class="validate right-align">
                                         <label for="quantidade" class="active">Quantidade</label>
                                     </div>
                                     <div class="input-field col s5">
@@ -191,31 +191,32 @@ unset($_SESSION['idOS']);
                                         <a href="#modalModeloNotaFiscal" id="addModeloNota" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
                                     </div>
                                     <div class="input-field col s3">
-                                        <input name="aidf" id="aidf" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['AIDF'] . "'"; ?> data-mask="9?999">
+                                        <input name="aidf" id="aidf" type="text" class="validate right-align" data-mask="9?999">
                                         <label for="aidf" class="active">AIDF</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-field col s3">
-                                        <input name="numeracaoInicial" id="numeracaoInicial" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['AIDF'] . "'"; ?> data-mask="9?999">
+                                        <input name="numeracaoInicial" id="numeracaoInicial" type="text" class="validate right-align" data-mask="9?999">
                                         <label for="numeracaoInicial" class="active">Num. Inicial</label>
                                     </div>
                                     <div class="input-field col s3">
-                                        <input name="numeracaoFinal" id="numeracaoFinal" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['AIDF'] . "'"; ?> data-mask="9?999">
+                                        <input name="numeracaoFinal" id="numeracaoFinal" type="text" class="validate right-align" data-mask="9?999">
                                         <label for="numeracaoFinal" class="active">Num. Final</label>
                                     </div>
                                     <div class="input-field col s3">
-                                        <input name="numeroTalao" id="numeroTalao" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['AIDF'] . "'"; ?> data-mask="9?999">
+                                        <input name="numeroTalao" id="numeroTalao" type="text" class="validate right-align" data-mask="9?999">
                                         <label for="numeroTalao" class="active">Num. Talão</label>
                                     </div>
                                     <div class="input-field col s3">
-                                        <input name="folhasBloco" id="folhasBloco" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['AIDF'] . "'"; ?> data-mask="9?999">
+                                        <input name="folhasBloco" id="folhasBloco" type="text" class="validate right-align" data-mask="9?999">
                                         <label for="folhasBloco" class="active">Folhas por Bloco</label>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="input-field col s5">
-                                        <select id="selectFormato" name="selectFormato[]" multiple>
+                                    <div class="col s5">
+                                        <label>Formato</label>
+                                        <select id="selectFormato" name="selectFormato[]" multiple class="browser-default">
                                             <?php
                                             echo "<option value='' disabled>Selecione os formatos que este serviço pode ser feito</option>";
                                             $sql = "SELECT * FROM `Formato`;";
@@ -225,7 +226,6 @@ unset($_SESSION['idOS']);
                                             }
                                             ?>
                                         </select>
-                                        <label>Formato</label>
                                     </div>
                                     <div class="col s1">
                                         <a href="#modalFormato" id="addFormato" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
@@ -430,11 +430,11 @@ unset($_SESSION['idOS']);
                                         <a href="incluirTipoDeServico.php?tipo=outro" target="_blank" id="addTipoDeServico" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
                                     </div>
                                     <div class="input-field col s3">
-                                        <input name="quantidade" id="quantidade" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['quantidade'] . "'"; ?>>
+                                        <input name="quantidade" id="quantidade" type="text" class="validate right-align" >
                                         <label for="quantidade" class="active">Quantidade</label>
                                     </div>
                                     <div class="input-field col s2">
-                                        <input name="valor" id="valor" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['valorTotal'] . "'"; ?>>
+                                        <input name="valor" id="valor" type="text" class="validate right-align">
                                         <label for="valor" class="active">Valor (R$)</label>
                                     </div>
                                 </div>

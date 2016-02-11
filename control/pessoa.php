@@ -164,11 +164,20 @@ if($acao == '') {
 	$por_pagina = 10;
 	// monta a consulta sql para saber quantos registros serão encontrados
 	if($busca != '') {
-		$condicoes = "Pessoa.nome LIKE '%{$busca}%' OR Pessoa.cpf LIKE '%{$busca}%' OR
-					Pessoa.rg LIKE '%{$busca}%' OR Pessoa.cnpj LIKE '%{$busca}%' OR
-					Pessoa.inscricaoEstadual LIKE '%{$busca}%' OR Pessoa.inscricaoMunicipal LIKE '%{$busca}%' OR
-					Pessoa.razaoSocial LIKE '%{$busca}%' OR Pessoa.nomeFantasia LIKE '%{$busca}%' OR
-					Pessoa.cep LIKE '%{$busca}%' OR Pessoa.cidade LIKE '%{$busca}%' OR Pessoa.estado LIKE '%{$busca}%'";
+		if($tipo != 'fornecedor') {
+			$condicoes = "Pessoa.nome LIKE '%{$busca}%' OR Pessoa.cpf LIKE '%{$busca}%' OR
+						Pessoa.rg LIKE '%{$busca}%' OR Pessoa.cnpj LIKE '%{$busca}%' OR
+						Pessoa.inscricaoEstadual LIKE '%{$busca}%' OR Pessoa.inscricaoMunicipal LIKE '%{$busca}%' OR
+						Pessoa.razaoSocial LIKE '%{$busca}%' OR Pessoa.nomeFantasia LIKE '%{$busca}%' OR
+						Pessoa.cep LIKE '%{$busca}%' OR Pessoa.cidade LIKE '%{$busca}%' OR Pessoa.estado LIKE '%{$busca}%'";
+		} else {
+			$condicoes = "Pessoa.nome LIKE '%{$busca}%' OR Pessoa.cpf LIKE '%{$busca}%' OR
+						Pessoa.rg LIKE '%{$busca}%' OR Pessoa.cnpj LIKE '%{$busca}%' OR
+						Pessoa.inscricaoEstadual LIKE '%{$busca}%' OR Pessoa.inscricaoMunicipal LIKE '%{$busca}%' OR
+						Pessoa.razaoSocial LIKE '%{$busca}%' OR Pessoa.nomeFantasia LIKE '%{$busca}%' OR
+						Pessoa.cep LIKE '%{$busca}%' OR Pessoa.cidade LIKE '%{$busca}%' OR Pessoa.estado LIKE '%{$busca}%'
+						OR Categoria.nome LIKE '%{$busca}%' OR Categoria.descricao LIKE '%{$busca}%'";
+		}
 	} else {
 		$condicoes = "1";
 	}
@@ -191,6 +200,12 @@ if($acao == '') {
 	}
 	$sql = "SELECT COUNT(*) AS total FROM Pessoa
 			WHERE {$condicoes}";
+	if($tipo == 'fornecedor') {
+		$sql = "SELECT COUNT(*) AS total FROM Pessoa
+				INNER JOIN Fornecedor_Categoria ON Pessoa.idPessoa = Fornecedor_Categoria.idPessoa
+				INNER JOIN Categoria ON Fornecedor_Categoria.idCategoria = Categoria.idCategoria
+				WHERE {$condicoes}";
+	} 
 	// executa a consulta
 	$query = mysql_query($sql);
 	// salva o valor da coluna 'total', do primeiro registro encontrado pela consulta
@@ -207,11 +222,16 @@ if($acao == '') {
 	$offset = ($pagina - 1) * $por_pagina;
 
 	// monta outra consulta, agora que fará a busca com paginação
-	// if($tipo == 'cliente') {
+	$sql = "SELECT Pessoa.* FROM Pessoa
+		  	WHERE {$condicoes} ORDER BY Pessoa.nome, Pessoa.nomeFantasia DESC LIMIT {$offset}, {$por_pagina}";
+
+  	if($tipo == 'fornecedor') {
 		$sql = "SELECT Pessoa.* FROM Pessoa
-			  	WHERE {$condicoes} ORDER BY Pessoa.nome, Pessoa.nomeFantasia DESC LIMIT {$offset}, {$por_pagina}";
-		$query = mysql_query($sql);
-	// }
+				INNER JOIN Fornecedor_Categoria ON Pessoa.idPessoa = Fornecedor_Categoria.idPessoa
+				INNER JOIN Categoria ON Fornecedor_Categoria.idCategoria = Categoria.idCategoria
+				WHERE {$condicoes}";
+	} 
+	$query = mysql_query($sql);
 	// executa a query acima
 	
 	if($busca == '') {

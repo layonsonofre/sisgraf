@@ -1,49 +1,98 @@
-// Variable to hold request
-var request;
-$("#formFormaImpressao").submit(function(event){
-    // Abort any pending request
-    if (request) {
-        request.abort();
-    }
-    // setup some local variables
-    var $form = $(this);
-    // Let's select and cache all the fields
-    var $inputs = $form.find("input, select, button, textarea");
-    // Serialize the data in the form
-    var serializedData = $form.serialize();
-    // Let's disable the inputs for the duration of the Ajax request.
-    // Note: we disable elements AFTER the form data has been serialized.
-    // Disabled form elements will not be serialized.
-    $inputs.prop("disabled", true);
-    // Fire off the request to /form.php
-    request = $.ajax({
-        url: "control/tipoDeServico.php",
-        type: "post",
-        data: serializedData
+$(function() {
+    var request;
+    $("#formFormaImpressao").submit(function(event){
+        event.preventDefault();
+        if (request) {request.abort();}
+        var $form = $(this);
+        var $inputs = $form.find("input, select, button, textarea");
+        var serializedData = $form.serialize();
+        $inputs.prop("disabled", true);
+        console.log(serializedData);
+        alert(serializedData);
+        request = $.ajax({
+            url: "control/tipoDeServico.php",
+            type: "post",
+            data: serializedData
+        });
+        request.done(function (response, textStatus, jqXHR){
+            console.log(response);
+            $('#selectFormaImpressao').empty().append(response);
+            $('select').material_select();
+            $("#verFI")[0].click();
+            $('#modalFormaImpressao .cancelar').click();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error(
+                "The following error occurred: "+
+                textStatus, errorThrown
+            );
+        });
+        request.always(function () {
+            $inputs.prop("disabled", false);
+        });
     });
-    // Callback handler that will be called on success
-    request.done(function (response, textStatus, jqXHR){
-        // Log a message to the console
-        //console.log("Hooray, it worked!");
-        console.log(response);
-        $('#selectFormaImpressao').empty().append(response);
-        $('select').material_select();
-        $('#modalFormaImpressao a').click();
+
+    $(document.body).on("click", "table td .editarFI", function(event) {
+        if (request) {request.abort();}
+        var idFI = $(this).attr("idFI");
+        request = $.ajax({
+            url: "control/tipoDeServico.php",
+            type: "post",
+            dataType: "json",
+            data: "acao=getFI&idFI="+idFI
+        });
+        request.done(function (response, textStatus, jqXHR){
+            $("#idFI").val(response.idFI);
+            $("#nomeFI").val(response.nomeFI);
+            $("#descricaoFI").val(response.descricaoFI);
+            $("#descricaoFI").focus();
+            $("#valorFI").val(response.valorFI);
+            $("#valorFI").focus();
+            $("#nomeFI").focus();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error("The following error occurred: "+textStatus, errorThrown);
+        });
+        event.preventDefault();
     });
-    // Callback handler that will be called on failure
-    request.fail(function (jqXHR, textStatus, errorThrown){
-        // Log the error to the console
-        console.error(
-            "The following error occurred: "+
-            textStatus, errorThrown
-        );
+
+    $(document.body).on("click", "table td .excluirFI", function(event) {
+        if (request) {request.abort();}
+        if(confirm("Tem certeza que deseja excluir?")) {
+            var idFI = $(this).attr("idFI");
+            request = $.ajax({
+                url: "control/tipoDeServico.php",
+                type: "post",
+                data: "acao=excluirFI&idFI="+idFI
+            });
+            request.done(function (response, textStatus, jqXHR){
+                console.log(response);
+                $('#selectFormaImpressao').empty().append(response);
+                $('select').material_select();
+                //$('#modalFormato .cancelar').click();
+                $("#verFI").click();
+            });
+            request.fail(function (jqXHR, textStatus, errorThrown){
+                console.error("The following error occurred: "+textStatus, errorThrown);
+            });
+        }
+        event.preventDefault();
     });
-    // Callback handler that will be called regardless
-    // if the request failed or succeeded
-    request.always(function () {
-        // Reenable the inputs
-        $inputs.prop("disabled", false);
+
+    $("#verFI").click(function(event){
+        if (request) {request.abort();}
+        request = $.ajax({
+            url: "control/tipoDeServico.php",
+            type: "post",
+            data: "acao=verFI"
+        });
+        request.done(function (response, textStatus, jqXHR){
+            console.log(response);
+            $('#listaFI').empty().append(response);
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error("The following error occurred: "+textStatus, errorThrown);
+        });
+        event.preventDefault();
     });
-    // Prevent default posting of form
-    event.preventDefault();
 });

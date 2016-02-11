@@ -151,7 +151,7 @@ protegePagina(); // Chama a função que protege a página
                                 <select id="selectCor" name="selectCor[]" multiple class="browser-default">
                                     <option value="" disabled>Selecione as cores do material</option>
                                     <?php
-                                    $sql = "select * from Cor;";
+                                    $sql = "SELECT * FROM Cor ORDER BY nome";
                                     $query = mysql_query($sql);
                                     while($cores = mysql_fetch_array($query, MYSQL_ASSOC)) {
                                         echo "<option value='{$cores['idCor']}' ";
@@ -171,36 +171,34 @@ protegePagina(); // Chama a função que protege a página
                                 <a id="incluirCor" href="#modalCor" class="waves-effect modal-trigger waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
                             </div>
                         </div>
-                        <div id="categorias">
-                            <div class="row">
-                                <div class="col s11">
-                                    <label>Categorias</label>
-                                    <select id="selectCategoria" name="selectCategoria[]" multiple class="browser-default">
-                                        <option value="" disabled>Selecione as categorias que o material pertence</option>
-                                    <?php
-                                    $sql = "select * from Categoria order by nome;";
-                                    $query = mysql_query($sql);
-                                    $cat = [];
-                                    $cat[] = "<p>";
-                                    while($categorias = mysql_fetch_assoc($query)) {
-                                        echo "<option value='{$categorias['idCategoria']}' ";
-                                        if($idMaterial != '') {
-                                            $sql2 = "SELECT * FROM Categoria_Material WHERE idCategoria='{$categorias['idCategoria']}' AND idMaterial='{$idMaterial}'";
-                                            $query2 = mysql_query($sql2);
-                                            if( mysql_num_rows($query2) == 1) {
-                                                echo "selected";
-                                                $cat[] = "{$categorias['nome']} ({$categorias['descricao']})<br>";
-                                            }
+                        <div class="row">
+                            <div class="col s11">
+                                <label>Categorias</label>
+                                <select id="selectCategoria" name="selectCategoria[]" multiple class="browser-default">
+                                    <option value="" disabled>Selecione as categorias que o material pertence</option>
+                                <?php
+                                $sql = "select * from Categoria order by nome;";
+                                $query = mysql_query($sql);
+                                $cat = [];
+                                $cat[] = "<p>";
+                                while($categorias = mysql_fetch_assoc($query)) {
+                                    echo "<option value='{$categorias['idCategoria']}' ";
+                                    if($idMaterial != '') {
+                                        $sql2 = "SELECT * FROM Categoria_Material WHERE idCategoria='{$categorias['idCategoria']}' AND idMaterial='{$idMaterial}'";
+                                        $query2 = mysql_query($sql2);
+                                        if( mysql_num_rows($query2) == 1) {
+                                            echo "selected";
+                                            $cat[] = "{$categorias['nome']} ({$categorias['descricao']})<br>";
                                         }
-                                        echo ">{$categorias['nome']} ({$categorias['descricao']})</option>";
                                     }
-                                    $cat[] = "</p>"
-                                    ?>
-                                    </select>
-                                </div>
-                                <div class="col s1">
-                                    <a id="incluirCategoria" href="#modalCategoria" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
-                                </div>
+                                    echo ">{$categorias['nome']} ({$categorias['descricao']})</option>";
+                                }
+                                $cat[] = "</p>"
+                                ?>
+                                </select>
+                            </div>
+                            <div class="col s1">
+                                <a id="incluirCategoria" href="#modalCategoria" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
                             </div>
                         </div>
                         <?php

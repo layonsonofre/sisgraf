@@ -18,6 +18,66 @@ $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
 $nome = isset($_POST['nome']) ? $_POST['nome'] : '';
 $categoria = isset($_POST['selectCategoria']) ? $_POST['selectCategoria'] : '';
 
+$idCategoria = isset($_POST['idCategoria']) ? $_POST['idCategoria'] : '';
+$nomeCategoria = isset($_POST['nomeCategoria']) ? $_POST['nomeCategoria'] : '';
+$descricaoCategoria = isset($_POST['descricaoCategoria']) ? $_POST['descricaoCategoria'] : '';
+
+$idCor = isset($_POST['idCor']) ? $_POST['idCor'] : '';
+$nomeCor = isset($_POST['cor']) ? $_POST['cor'] : '';
+
+$idMaterialUnidade = isset($_POST['idUnidade']) ? $_POST['idUnidade'] : '';
+$descricaoUnidade = isset($_POST['descricaoUnidade']) ? $_POST['descricaoUnidade'] : '';
+
+$idGramatura = isset($_POST['idGramatura']) ? $_POST['idGramatura'] : '';
+$gramatura2 = isset($_POST['gramatura']) ? $_POST['gramatura'] : '';
+
+function listarCategoria() {
+	// atualiza o conteúdo no select
+	echo "<option value='' disabled>Selecione as categorias que o material pertence</option>";
+    $sql = "select * from Categoria;";
+    $query = mysql_query($sql);
+    global $idMaterial;
+    while($categorias = mysql_fetch_array($query, MYSQL_ASSOC)) {
+        echo "<option value='".$categorias['idCategoria']."' ";
+        if($idMaterial != NULL) {
+            $sql2 = "select * from Categoria_Material where idCategoria=".$categorias['idCategoria']." and idMaterial=".$idMaterial.";";
+            $query2 = mysql_query($sql2);
+            if( mysql_num_rows($query2) == 1) {
+                echo "selected";
+            }
+        }
+        echo ">".$categorias['nome']." (" .$categorias['descricao'].")</option>";
+    }
+}
+
+function listarCor() {
+	// atualiza os campos no select
+    $sql = "SELECT * FROM Cor ORDER BY nome";
+    $query = mysql_query($sql);
+    echo "<option value='' disabled>Selecione as cores do material</option>";
+    while($cores = mysql_fetch_assoc($query)) {
+        echo "<option value='{$cores['idCor']}'>{$cores['nome']}</option>";
+    }
+}
+function listarUnidade() {
+	// atualiza o conteúdo no select
+	$sql = "select * from MaterialUnidade;";
+    $query = mysql_query($sql);
+    echo "<option value='' disabled>Selecione</option>";
+    while($materialUnidade = mysql_fetch_array($query, MYSQL_ASSOC)) {
+        echo "<option value='" . $materialUnidade['idMaterialUnidade'] . "'>" . $materialUnidade['descricao'] . "</option>";
+    }
+}
+
+function listarGramatura() {
+	$sql = "SELECT * FROM `GramaturaPapel`;";
+    $query = mysql_query($sql);
+    echo "<option value='' disabled>Selecione</option>";
+    while($gramatura = mysql_fetch_array($query, MYSQL_ASSOC)) {
+        echo "<option value='" . $gramatura['idGramaturaPapel'] . "'>" . $gramatura['gramatura'] . " <i>(g/m<sup>2</sup>)</i></option>";
+    }
+}
+
 if($acao == '') {
 	header('Location: ../incluirMaterial.php?at=no&tipo='.$tipo);
 } else if($acao == 'inserir') {
@@ -87,10 +147,6 @@ if($acao == '') {
 			INNER JOIN Cor_Material ON Material.idMaterial = Cor_Material.idMaterial
 			INNER JOIN Categoria_Material ON Material.idMaterial = Categoria_Material.idMaterial
 			WHERE Material.idMaterial LIKE {$idMaterial}";
-	// $sql = "delete * from Papel where idMaterial=".$idMaterial.";" .
-	// "delete * from Cor_Material where idMaterial=".$idMaterial.";" .
-	// "delete * from Material where idMaterial=".$idMaterial.";" .
-	// "delete * from Fornecedor_Categoria where idMaterial=".$idMaterial.";";
 	$query = mysql_query($sql);
 	if($query) {
 		header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
@@ -98,74 +154,177 @@ if($acao == '') {
 		header('Location: ../incluirMaterial.php?idMaterial={$idMaterial}&at=no&tipo='.$tipo);
 	}
 } else if($acao == 'inserirCor') {
-	$cor = isset($_POST['cor']) ? $_POST['cor'] : NULL;
-	if($cor != null) {
-		// header('Location: ../incluirMaterial.php');
-		// insere os campos no banco
-		$sql = "INSERT INTO `Cor` (`idCor`,`nome`) VALUES (NULL,'{$cor}');";
+	if($idCor == '') {
+		$sql = "INSERT INTO `Cor` (`idCor`,`nome`) VALUES (NULL,'{$cor}')";
+		$query = mysql_query($sql);
+	} else {
+		$sql = "UPDATE Cor SET nome='{$nomeCor}' WHERE idCor={$idCor}";
 		$query = mysql_query($sql);
 	}
-	// atualiza os campos no select
-    $sql = "SELECT * FROM `Cor`;";
-    $query = mysql_query($sql);
-    echo "<option value='' disabled>Selecione as cores do material</option>";
-    while($cores = mysql_fetch_assoc($query)) {
-        echo "<option value='{$cores['idCor']}'>{$cores['nome']}</option>";
+	listarCor();
+} else if($acao == 'excluirCor') {
+    if($idCategoria != '') {
+        $sql = "DELETE FROM Cor WHERE idCor='{$idCor}'";
+        $query = mysql_query($sql);
     }
-	//header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
+    listarCor();
+} else if($acao == 'verCores') {
+    $sql = "SELECT * FROM Cor ORDER BY nome ASC";
+    $query = mysql_query($sql);
+    echo "<table class='responsive-table highlight'>";
+        echo "<thead><tr>";
+            echo "<th data-field='nome'>Cor</th>";
+            echo "<th>Editar</th>";
+            echo "<th>Excluir</th>";
+        echo "</tr></thead>";
+        echo "<tbody>";
+    while($temp = mysql_fetch_assoc($query)) {
+        echo "<tr>";
+            echo "<td>{$temp['nome']}</td>";
+            echo "<td><a href='#' class='editarCor waves-effect waves-light' idCor='{$temp['idCor']}'><i class='material-icons right'>settings</i></a></td>";
+            echo "<td><a href='#' class='excluirCor waves-effect waves-light' idCor='{$temp['idCor']}'><i class='material-icons right'>delete</i></a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else if($acao == 'getCor') {
+	$sql = "SELECT * FROM Cor WHERE idCor = {$idCor}";
+    $query = mysql_query($sql);
+    $return = array();
+    if($temp = mysql_fetch_assoc($query)) {
+        $return["idCor"] = $temp['idCor'];
+        $return["nome"] = $temp['nome'];
+    }
+    echo json_encode($return);
 } else if($acao == 'inserirGramatura') {
-	if($gramatura != null) {
-		// header('Location: ../incluirMaterial.php');
-		// insere os campos no banco
+	if($idGramatura == '') {
 		$sql = "INSERT INTO `GramaturaPapel` (`idGramaturaPapel`,`gramatura`) VALUES (NULL,\"".$gramatura."\");";
-		$query = mysql_query($sql);
+	} else {
+		$sql = "UPDATE GramaturaPapel SET gramatura='{$gramatura2}' WHERE idGramaturaPapel={$idGramatura}";
 	}
-	// atualiza o conteúdo no select
-	$sql = "SELECT * FROM `GramaturaPapel`;";
-    $query = mysql_query($sql);
-    echo "<option value='' disabled>Selecione</option>";
-    while($gramatura = mysql_fetch_array($query, MYSQL_ASSOC)) {
-        echo "<option value='" . $gramatura['idGramaturaPapel'] . "'>" . $gramatura['gramatura'] . " <i>(g/m<sup>2</sup>)</i></option>";
+	$query = mysql_query($sql);
+	listarGramatura();
+
+} else if($acao == 'excluirGramatura') {
+    if($idMaterialUnidade != '') {
+        $sql = "DELETE FROM GramaturaPapel WHERE idGramaturaPapel='{$idGramatura}'";
+        $query = mysql_query($sql);
     }
-	//header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
+    listarGramatura();
+} else if($acao == 'verGramaturas') {
+    $sql = "SELECT * FROM GramaturaPapel ORDER BY gramatura ASC";
+    $query = mysql_query($sql);
+    echo "<table class='responsive-table highlight'>";
+        echo "<thead><tr>";
+            echo "<th data-field='gramatura'>Gramatura</th>";
+            echo "<th>Editar</th>";
+            echo "<th>Excluir</th>";
+        echo "</tr></thead>";
+        echo "<tbody>";
+    while($temp = mysql_fetch_assoc($query)) {
+        echo "<tr>";
+            echo "<td>{$temp['gramatura']}</td>";
+            echo "<td><a href='#' class='editarGramatura waves-effect waves-light' idGramatura='{$temp['idGramaturaPapel']}'><i class='material-icons right'>settings</i></a></td>";
+            echo "<td><a href='#' class='excluirGramatura waves-effect waves-light' idGramatura='{$temp['idGramaturaPapel']}'><i class='material-icons right'>delete</i></a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else if($acao == 'getGramatura') {
+	$sql = "SELECT * FROM GramaturaPapel WHERE idGramaturaPapel = {$idGramatura}";
+    $query = mysql_query($sql);
+    $return = array();
+    if($temp = mysql_fetch_assoc($query)) {
+        $return["idGramatura"] = $temp['idGramaturaPapel'];
+        $return["gramatura"] = $temp['gramatura'];
+    }
+    echo json_encode($return);
 } else if($acao == 'inserirUnidadeDeMedida') {
-	if($descricao != null) {
-		// header('Location: ../incluirMaterial.php');
-		// insere os campos no banco
-		$sql = "INSERT INTO `MaterialUnidade` (`idMaterialUnidade`,`descricao`) VALUES (NULL,\"".$descricao."\");";
-		$query = mysql_query($sql);
+	if($idMaterialUnidade == '') {
+		$sql = "INSERT INTO `MaterialUnidade` (`idMaterialUnidade`,`descricao`) VALUES (NULL,'{$descricaoUnidade}');";
+	} else {
+		$sql = "UPDATE MaterialUnidade SET descricao='{$descricaoUnidade}' WHERE idMaterialUnidade={$idMaterialUnidade}";
 	}
-	// atualiza o conteúdo no select
-	$sql = "select * from MaterialUnidade;";
-    $query = mysql_query($sql);
-    echo "<option value='' disabled>Selecione</option>";
-    while($materialUnidade = mysql_fetch_array($query, MYSQL_ASSOC)) {
-        echo "<option value='" . $materialUnidade['idMaterialUnidade'] . "'>" . $materialUnidade['descricao'] . "</option>";
+	$query = mysql_query($sql);
+	listarUnidade();
+} else if($acao == 'excluirUnidade') {
+    if($idMaterialUnidade != '') {
+        $sql = "DELETE FROM MaterialUnidade WHERE idMaterialUnidade='{$idMaterialUnidade}'";
+        $query = mysql_query($sql);
     }
-	//header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
+    listarUnidade();
+} else if($acao == 'verUnidades') {
+    $sql = "SELECT * FROM MaterialUnidade ORDER BY descricao ASC";
+    $query = mysql_query($sql);
+    echo "<table class='responsive-table highlight'>";
+        echo "<thead><tr>";
+            echo "<th data-field='descricao'>Descrição</th>";
+            echo "<th>Editar</th>";
+            echo "<th>Excluir</th>";
+        echo "</tr></thead>";
+        echo "<tbody>";
+    while($temp = mysql_fetch_assoc($query)) {
+        echo "<tr>";
+            echo "<td>{$temp['descricao']}</td>";
+            echo "<td><a href='#' class='editarUnidade waves-effect waves-light' idUnidade='{$temp['idMaterialUnidade']}'><i class='material-icons right'>settings</i></a></td>";
+            echo "<td><a href='#' class='excluirUnidade waves-effect waves-light' idUnidade='{$temp['idMaterialUnidade']}'><i class='material-icons right'>delete</i></a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else if($acao == 'getUnidade') {
+	$sql = "SELECT * FROM MaterialUnidade WHERE idMaterialUnidade = {$idMaterialUnidade}";
+    $query = mysql_query($sql);
+    $return = array();
+    if($temp = mysql_fetch_assoc($query)) {
+        $return["idUnidade"] = $temp['idMaterialUnidade'];
+        $return["descricao"] = $temp['descricao'];
+    }
+    echo json_encode($return);
 } else if($acao == 'inserirCategoria') {
-	if($descricao != null || $nome != null) {
-		// header('Location: ../incluirMaterial.php');
-		// insere os campos no banco
-		$sql = "INSERT INTO `Categoria` (`idCategoria`,`nome`,`descricao`) VALUES (NULL,\"".$nome."\",\"".$descricao."\");";
+	if($idCategoria == '') {
+		$sql = "INSERT INTO `Categoria` (`idCategoria`,`nome`,`descricao`) VALUES
+				(NULL,'{$nomeCategoria}','{$descricaoCategoria}'";
+		$query = mysql_query($sql);
+	} else {
+		$sql = "UPDATE Categoria SET nome='{$nomeCategoria}', descricao='{$descricaoCategoria}'
+				WHERE idCategoria='{$idCategoria}'";
 		$query = mysql_query($sql);
 	}
-	// atualiza o conteúdo no select
-	echo "<option value='' disabled>Selecione as categorias que o material pertence</option>";
-    $sql = "select * from Categoria;";
-    $query = mysql_query($sql);
-    while($categorias = mysql_fetch_array($query, MYSQL_ASSOC)) {
-        echo "<option value='".$categorias['idCategoria']."' ";
-        if($idMaterial != NULL) {
-            $sql2 = "select * from Categoria_Material where idCategoria=".$categorias['idCategoria']." and idMaterial=".$idMaterial.";";
-            $query2 = mysql_query($sql2);
-            if( mysql_num_rows($query2) == 1) {
-                echo "selected";
-            }
-        }
-        echo ">".$categorias['nome']." (" .$categorias['descricao'].")</option>";
+	listarCategoria();
+} else if($acao == 'excluirCategoria') {
+    if($idCategoria != '') {
+        $sql = "DELETE FROM Categoria WHERE idCategoria='{$idCategoria}'";
+        $query = mysql_query($sql);
     }
-	// header('Location: ../incluirMaterial.php?at=ok&tipo='.$tipo);
+    listarCategoria();
+} else if($acao == 'verCategorias') {
+    $sql = "SELECT * FROM Categoria ORDER BY nome ASC";
+    $query = mysql_query($sql);
+    echo "<table class='responsive-table highlight'>";
+        echo "<thead><tr>";
+            echo "<th data-field='nome'>Nome</th>";
+            echo "<th data-field='descricao'>Descricao</th>";
+            echo "<th>Editar</th>";
+            echo "<th>Excluir</th>";
+        echo "</tr></thead>";
+        echo "<tbody>";
+    while($temp = mysql_fetch_assoc($query)) {
+        echo "<tr>";
+            echo "<td>{$temp['nome']}</td>";
+            echo "<td>{$temp['descricao']}</td>";
+            echo "<td><a href='#' class='editarCategoria waves-effect waves-light' idCategoria='{$temp['idCategoria']}'><i class='material-icons right'>settings</i></a></td>";
+            echo "<td><a href='#' class='excluirCategoria waves-effect waves-light' idCategoria='{$temp['idCategoria']}'><i class='material-icons right'>delete</i></a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else if($acao == 'getCategoria') {
+	$sql = "SELECT * FROM Categoria WHERE idCategoria = {$idCategoria}";
+    $query = mysql_query($sql);
+    $return = array();
+    if($temp = mysql_fetch_assoc($query)) {
+        $return["idCategoria"] = $temp['idCategoria'];
+        $return["nome"] = $temp['nome'];
+        $return["descricao"] = $temp['descricao'];
+    }
+    echo json_encode($return);
 } else if($acao == 'listar') {
 	$busca  = mysql_real_escape_string($_POST['consulta']);
 	$opc = isset($_POST['opc']) ? $_POST['opc'] : array();

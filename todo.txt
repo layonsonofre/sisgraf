@@ -1,10 +1,10 @@
 + Pesquisar 'Pessoa' com status='%ativo'
 - Centralizar card do login.php
-+- Listagem/Pesquisas (Falta consertar a paginação)
-- Centralizar Campos Modal
-- No mesmo modal (cor, gramatura, unidade de medida) permitir alteração/exclusão
++ Listagem/Pesquisas (Falta consertar a paginação)
++ Centralizar Campos Modal
++- No mesmo modal (cor, gramatura, unidade de medida) permitir alteração/exclusão
 - Buscar por CEP
-- Unir Arquivos e interligar o arquivo com a O.S.
++- Unir Arquivos e interligar o arquivo com a O.S.
 	- Modelo: mais campos com thumbnail
 	- Matriz: mais campos
 - Elaborar e implementar relatórios

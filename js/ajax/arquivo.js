@@ -8,7 +8,7 @@ $(function() {
         $(wrapperModelo).append('' +
         	'<div class="row">' +
                 '<div class="input-field col s8">' +
-                    '<input name="urlModeloNovo[]" id="urlModeloNovo'+xModelo+'" type="text" class="validate" lenght="256" maxlenght="256">' +
+                    '<input name="urlModeloNovo[]" id="urlModeloNovo'+xModelo+'" type="text" class="validate" length="256" maxlength="256">' +
                     '<label for="urlModeloNovo'+xModelo+'">Local</label>' +
                 '</div>' +
                 '<div class="input-field col s3">' +
@@ -58,7 +58,7 @@ $(function() {
                     "<label for='idChapa' class='active'>Nº da Chapa</label>" +
                 "</div>" +
                 "<div class='input-field col s6'>" +
-                    "<input name='urlMatrizAntiga[]' id='urlMatriz"+xMatriz+"' type='text' class='validate' lenght='256' maxlength='256'>" +
+                    "<input name='urlMatrizAntiga[]' id='urlMatriz"+xMatriz+"' type='text' class='validate' length='256' maxlength='256'>" +
                     "<label for='urlMatriz{$temp['idChapa']}' class='active'>Local Armazenamento</label>" +
                 "</div>" +
                 "<div class='input-field col s2'>" +
@@ -91,7 +91,12 @@ $(function() {
 
     $("#detalhesOS").click(function(e) {
     	var idOS = $("#selectOrdemDeServico").val();
-    	$(this).attr("href", "incluirOS.php?idOS=" + idOS);
+        if(idOS === null) {
+    	   $(this).attr("href", "incluirOS.php");
+        }
+        else {
+            $(this).attr("href", "incluirOS.php?idOS=" + idOS);
+        }
     });
 
 	function readURL(input) {

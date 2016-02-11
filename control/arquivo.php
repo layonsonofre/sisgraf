@@ -120,13 +120,24 @@ if($acao == '') {
 	$query = mysql_query($sql);
 	echo $sql;
 } else if($acao == 'excluir') {
-	// if($idArquivo == null) {
-	// 	header('Location: ../incluirArquivo.php?at=ok&tipo='.$tipo);
-	// }
-	// $sql = "delete * from Arquivo where idArquivo=".$idArquivo.";"
-	// "delete * from Arquivo_ArquivoMatriz where idArquivo=".$idArquivo.";"
-	// "delete * from ArquivoModelo where idArquivo=".$idArquivo.";";
-	// $query = mysql_query($sql);
+	if($idArquivo == null) {
+	   header('Location: ../incluirArquivo.php?at=no');
+	}
+	$sql = "DELETE Arquivo_ArquivoMatriz, ArquivoMatriz FROM Arquivo_ArquivoMatriz
+            INNER JOIN ArquivoMatriz ON ArquivoMatriz.idArquivoMatriz = Arquivo_ArquivoMatriz.idArquivoMatriz
+            WHERE Arquivo_ArquivoMatriz.idArquivo = {$idArquivo}";
+    $query = mysql_query($sql);
+    echo $sql;
+    echo $query;
+	$sql = "DELETE FROM ArquivoModelo WHERE idArquivo={$idArquivo}";
+    $query = mysql_query($sql);
+    echo $sql;
+    echo $query;
+    $sql = "DELETE FROM Arquivo WHERE idArquivo={$idArquivo}";
+	$query = mysql_query($sql);
+    echo $sql;
+    echo $query;
+    header('Location: ../incluirArquivo.php?at=ok');
 } else if($acao == 'listar') {
 	$busca  = mysql_real_escape_string($_POST['consulta']);
     $opc = isset($_POST['opc']) ? $_POST['opc'] : array();
@@ -163,12 +174,12 @@ if($acao == '') {
     $offset = ($pagina - 1) * $por_pagina;
 
     // monta outra consulta, agora que fará a busca com paginação
-    $sql = "SELECT *
+    $sql = "SELECT *, Arquivo.idArquivo as idArquivo
     		FROM Arquivo
             LEFT JOIN ArquivoModelo ON Arquivo.idArquivo = ArquivoModelo.idArquivo
             LEFT JOIN Arquivo_ArquivoMatriz ON Arquivo.idArquivo = Arquivo_ArquivoMatriz.idArquivo
             LEFT JOIN ArquivoMatriz ON Arquivo_ArquivoMatriz.idArquivoMatriz = ArquivoMatriz.idArquivoMatriz
-            WHERE {$condicoes} ORDER BY nome DESC LIMIT {$offset}, {$por_pagina}";
+            WHERE {$condicoes} ORDER BY Arquivo.idArquivo DESC LIMIT {$offset}, {$por_pagina}";
     $query = mysql_query($sql);
     // executa a query acima
     
@@ -189,7 +200,8 @@ if($acao == '') {
                         $query2 = mysql_query($sql2);
                         echo "<p>Modelos: <br>";
                         while($temp = mysql_fetch_assoc($query2)) {
-                        	echo "<b>{$temp['url']}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status: <b>{$temp['status']}</b><br>";
+                        	echo "<b>{$temp['url']}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                            echo "Status: <b>" . strtoupper($temp['status']) ."</b><br>";
                         }
                         echo "</p><br>";
 
@@ -201,41 +213,21 @@ if($acao == '') {
                         while($temp = mysql_fetch_assoc($query2)) {
                         	echo "Chapa: <b>{$temp['idChapa']}</b> (Local: <b>{$temp['url']}</b>)</b><br>";
                         }
-                        echo "</p>";
-                        
-                        // echo "<p>Tamanho: <b>{$resultado['base']}</b> x <b>{$resultado['base']}</b> <i>mm</i> - Valor: </b>R$ {$resultado['valor']}</b></p>";
-                        // echo "<span class='card-title'>{$resultado['nome']}</span>";
-                        // echo "<p>{$resultado['descricao']}</p>";
-                        // echo "<p>Valor: <b>R$ {$resultado['valor']}</b></p>";
-                        // $sql2 = "SELECT * FROM Formato
-                        //         INNER JOIN TipoServico_Formato ON Formato.idFormato LIKE TipoServico_Formato.idFormato
-                        //         WHERE TipoServico_Formato.idTipoServico LIKE {$tempId}";
-                        // $query2 = mysql_query($sql2);
-                        // echo "<p>Formatos: ";
-                        // while($temp = mysql_fetch_assoc($query2)) {
-                        //     echo "<b>{$temp['formato']} ({$temp['base']} x {$temp['altura']})</b><br>";
-                        // }
+                        echo "</p><br>";
 
-                        // $sql2 = "SELECT * FROM Acabamento
-                        //         INNER JOIN TipoServico_Acabamento ON Acabamento.idAcabamento LIKE TipoServico_Acabamento.idAcabamento
-                        //         WHERE TipoServico_Acabamento.idTipoServico LIKE {$tempId}";
-                        // $query2 = mysql_query($sql2);
-                        // echo "<p>Acabamentos: ";
-                        // while($temp = mysql_fetch_assoc($query2)) {
-                        //     echo "<b>{$temp['nome']} ({$temp['descricao']} - Local: {$temp['local']})</b><br>";
-                        // }
-                        // $sql2 = "SELECT Papel.tipo, GramaturaPapel.gramatura
-                        //         FROM Material_TipoServico
-                        //         INNER JOIN Material ON Material_TipoServico.idMaterial LIKE Material.idMaterial
-                        //         INNER JOIN Papel ON Material.idMaterial LIKE Papel.idMaterial
-                        //         INNER JOIN GramaturaPapel ON Papel.idGramaturaPapel LIKE GramaturaPapel.idGramaturaPapel
-                        //         WHERE Material_TipoServico.idTipoServico LIKE {$tempId}";
-                        // $query2 = mysql_query($sql2);
-                        // echo "<p>Papéis: ";
-                        // while($temp = mysql_fetch_assoc($query2)) {
-                        //     echo "<b>{$temp['tipo']} {$temp['gramatura']} g/m^2</b><br>";
-                        // }
-                        // echo "</p>";
+                        $sql2 = "SELECT OrdemDeServico.dataEntrada as data, OrdemDeServico.idOrdemDeServico as id,
+                        OrdemDeServico_TipoServico.quantidade as qtde, TipoServico.nome as servico
+                        FROM OrdemDeServico
+                        INNER JOIN OrdemDeServico_TipoServico ON OrdemDeServico.idOrdemDeServico = OrdemDeServico_TipoServico.idOrdemDeServico
+                        INNER JOIN TipoServico ON OrdemDeServico_TipoServico.idTipoServico = TipoServico.idTipoServico
+                        INNER JOIN Arquivo ON Arquivo.idOrdemDeServico = OrdemDeServico.idOrdemDeServico
+                        WHERE Arquivo.idOrdemDeServico = {$tempId}";
+                        $query2 = mysql_query($sql2);
+                        echo "<p>Ordem de Serviço: <br>";
+                        while($temp = mysql_fetch_assoc($query2)) {
+                            echo "Data: <b>{$temp['data']}</b> - Tipo: <b>{$temp['servico']}</b> - Quantidade: <b>{$temp['qtde']}</b> - Valor: <b>R$ {$temp['valor']}</b><br>";
+                        }
+                        echo "</p>";
                 echo "</div>";
                 echo "<div class='card-action'>";
                     echo "<a id='editar' href='incluirArquivo.php?idArquivo={$tempId}'><i class='material-icons'>description</i>Editar</a>";
