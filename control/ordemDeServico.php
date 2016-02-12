@@ -498,9 +498,6 @@ if($acao == '') {
         if($s == 'aprovacao') {
             $condicoes = "{$condicoes} AND status LIKE 'aprovacao'";
         }
-        if($s == 'aprovacao') {
-            $condicoes = "{$condicoes} AND status LIKE 'aprovacao'";
-        }
         if($s == 'impressao') {
             $condicoes = "{$condicoes} AND status LIKE 'impressao'";
         }
@@ -668,5 +665,5 @@ if($acao == '') {
         $return["valorNota"] = $temp['valor'];
     }
     echo json_encode($return);
-} 
+}
 ?>

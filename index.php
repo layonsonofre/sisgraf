@@ -15,16 +15,325 @@ protegePagina(); // Chama a função que protege a página
     <body>
 		<main>
 			<div class="container">
-				<div class="row">
-					<div class="col s12">
-						
-					</div>
-				</div>
+                <div class="row">
+                    <div class="col s12">
+                        <h3>Visão Geral</h3>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="row">
+                        <div class="col s12">
+                            <?php
+                                $now = new \Datetime('now');
+                                $month = $now->format('m');
+                                $year = $now->format('Y');
+                                $sql = "SELECT COUNT(*) as total FROM OrdemDeServico WHERE dataEntrada LIKE '%/{$month}/{$year}'";
+                                $query = mysql_query($sql);
+                                $result = mysql_fetch_assoc($query);
+                            ?>
+                            <div class="icon-block">
+                                <h2 class="center"><i class="material-icons">shopping</i></h2>
+                                <h4 class="center"><?php echo $result['total']; ?></h4>
+                                <p class="light center">Ordens de serviço neste mês</p>
+                                <p class="light right-align"><a href="listarOS.php">Ver Mais</a></p>
+                            </div>
+                            <br><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <?php
+                            $sql = "SELECT COUNT(*) as total FROM OrdemDeServico WHERE dataEntrada LIKE '%/{$month}/{$year}' AND status LIKE 'cadastro'";
+                            $query = mysql_query($sql);
+                            $cadastro = mysql_fetch_assoc($query);
+
+                            $sql = "SELECT COUNT(*) as total FROM OrdemDeServico WHERE dataEntrada LIKE '%/{$month}/{$year}' AND status LIKE 'desenvolvimento'";
+                            $query = mysql_query($sql);
+                            $desenvolvimento = mysql_fetch_assoc($query);
+
+                            $sql = "SELECT COUNT(*) as total FROM OrdemDeServico WHERE dataEntrada LIKE '%/{$month}/{$year}' AND status LIKE 'aprovacao'";
+                            $query = mysql_query($sql);
+                            $aprovacao = mysql_fetch_assoc($query);
+
+                            $sql = "SELECT COUNT(*) as total FROM OrdemDeServico WHERE dataEntrada LIKE '%/{$month}/{$year}' AND status LIKE 'impressao'";
+                            $query = mysql_query($sql);
+                            $impressao = mysql_fetch_assoc($query);
+
+                            $sql = "SELECT COUNT(*) as total FROM OrdemDeServico WHERE dataEntrada LIKE '%/{$month}/{$year}' AND status LIKE 'acabamento'";
+                            $query = mysql_query($sql);
+                            $acabamento = mysql_fetch_assoc($query);
+
+                            $sql = "SELECT COUNT(*) as total FROM OrdemDeServico WHERE dataEntrada LIKE '%/{$month}/{$year}' AND status LIKE 'pronto'";
+                            $query = mysql_query($sql);
+                            $pronto = mysql_fetch_assoc($query);
+
+                            $sql = "SELECT COUNT(*) as total FROM OrdemDeServico WHERE dataEntrada LIKE '%/{$month}/{$year}' AND status LIKE 'entregue'";
+                            $query = mysql_query($sql);
+                            $entregue = mysql_fetch_assoc($query);
+
+                            $sql = "SELECT COUNT(*) as total FROM OrdemDeServico WHERE dataEntrada LIKE '%/{$month}/{$year}' AND status LIKE 'cancelada'";
+                            $query = mysql_query($sql);
+                            $cancelada = mysql_fetch_assoc($query);
+                            ?>
+                            <label>Serviços por status</label>
+                            <table class="responsive-table highlight">
+                                <thead>
+                                    <tr>
+                                        <th data-field="status">Status</th>
+                                        <th data-field="total">Quantidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Cadastro</td><td><b><?php echo $cadastro['total']; ?></b></td></tr>
+                                    <tr><td>Desenvolvimento</td><td><b><?php echo $desenvolvimento['total']; ?></b></td></tr>
+                                    <tr><td>Aprovação</td><td><b><?php echo $aprovacao['total']; ?></b></td></tr>
+                                    <tr><td>Impressão</td><td><b><?php echo $impressao['total']; ?></b></td></tr>
+                                    <tr><td>Acabamento</td><td><b><?php echo $acabamento['total']; ?></b></td></tr>
+                                    <tr><td>Pronto</td><td><b><?php echo $pronto['total']; ?></b></td></tr>
+                                    <tr><td>Entregue</td><td><b><?php echo $entregue['total']; ?></b></td></tr>
+                                    <tr><td>Cancelada</td><td><b><?php echo $cancelada['total']; ?></b></td></tr>
+                                </tbody>
+                            </table>
+                            <p class="light right-align"><a href="listarOS.php">Ver Mais</a></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s6">
+                            <label>Serviços Prontos</label>
+                            <?php
+                            $sql = "SELECT * FROM OrdemDeServico WHERE status LIKE 'pronto'
+                                    ORDER BY idOrdemDeServico DESC";
+                            $query = mysql_query($sql);
+                            echo "<ul class='collection'>";
+                            while ($resultado = mysql_fetch_assoc($query)) {
+                                $tempId = $resultado['idOrdemDeServico'];
+                                echo "<li class='collection-item'>";
+                                    $sql2 = "SELECT * FROM Pessoa
+                                            INNER JOIN Pessoa_OrdemDeServico ON Pessoa_OrdemDeServico.idPessoa = Pessoa.idPessoa
+                                            WHERE Pessoa_OrdemDeServico.idOrdemDeServico = {$tempId}";
+                                    $query2 = mysql_query($sql2);
+                                    echo "<p>Cliente: ";
+                                    while($temp = mysql_fetch_assoc($query2)) {
+                                        if($temp['isPessoaFisica'] == '1') {
+                                            echo "<b>{$temp['nome']}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        } else {
+                                            echo "<b>{$temp['nomeFantasia']} ({$temp['razaoSocial']})</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        }
+                                    }
+                                    echo "</p>";
+                                    $sql2 = "SELECT OrdemDeServico_TipoServico.quantidade as qtde, TipoServico.nome as servico,
+                                            OrdemDeServico_TipoServico.valor as valor
+                                            FROM OrdemDeServico_TipoServico
+                                            INNER JOIN TipoServico ON OrdemDeServico_TipoServico.idTipoServico = TipoServico.idTipoServico
+                                            WHERE OrdemDeServico_TipoServico.idOrdemDeServico = {$tempId}";
+                                    $query2 = mysql_query($sql2);
+                                    echo "<p>Serviços: <br>";
+                                    while($temp = mysql_fetch_assoc($query2)) {
+                                        echo "> Tipo: <b>{$temp['servico']}</b> - Quantidade: <b>{$temp['qtde']}</b> - Valor: <b>R$ {$temp['valor']}</b><br>";
+                                    }
+                                    echo "</p>";
+                                    echo "<p>Entrada: <b>{$resultado['dataEntrada']}</b>&nbsp;&nbsp;&nbsp;";
+                                    echo "Saída: <b>{$resultado['dataSaida']}</b>&nbsp;&nbsp;&nbsp;";
+                                    echo "Valor: <b> " . "R$ " . strtoupper($resultado['valorTotal']) . "</b></p>";
+                                    echo "<p>Observações: {$resultado['observacoes']}</p>";
+                                    echo "<a id='editar' href='incluirOS.php?idOS={$tempId}'><i class='material-icons'>description</i>Editar</a>";
+                                echo "</li>";
+                            }
+                            echo "</ul>";
+                            ?>
+                            <p class="light right-align"><a href="listarOS.php">Ver Mais</a></p>
+                        </div>
+                        <div class="col s6">
+                            <label>Serviços em Acabamento</label>
+                            <?php
+                            $sql = "SELECT * FROM OrdemDeServico WHERE status LIKE 'acabamento'
+                                    ORDER BY idOrdemDeServico DESC";
+                            $query = mysql_query($sql);
+                            echo "<ul class='collection'>";
+                            while ($resultado = mysql_fetch_assoc($query)) {
+                                $tempId = $resultado['idOrdemDeServico'];
+                                echo "<li class='collection-item'>";
+                                    $sql2 = "SELECT * FROM Pessoa
+                                            INNER JOIN Pessoa_OrdemDeServico ON Pessoa_OrdemDeServico.idPessoa = Pessoa.idPessoa
+                                            WHERE Pessoa_OrdemDeServico.idOrdemDeServico = {$tempId}";
+                                    $query2 = mysql_query($sql2);
+                                    echo "<p>Cliente: ";
+                                    while($temp = mysql_fetch_assoc($query2)) {
+                                        if($temp['isPessoaFisica'] == '1') {
+                                            echo "<b>{$temp['nome']}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        } else {
+                                            echo "<b>{$temp['nomeFantasia']} ({$temp['razaoSocial']})</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        }
+                                    }
+                                    echo "</p>";
+                                    $sql2 = "SELECT OrdemDeServico_TipoServico.quantidade as qtde, TipoServico.nome as servico,
+                                            OrdemDeServico_TipoServico.valor as valor
+                                            FROM OrdemDeServico_TipoServico
+                                            INNER JOIN TipoServico ON OrdemDeServico_TipoServico.idTipoServico = TipoServico.idTipoServico
+                                            WHERE OrdemDeServico_TipoServico.idOrdemDeServico = {$tempId}";
+                                    $query2 = mysql_query($sql2);
+                                    echo "<p>Serviços: <br>";
+                                    while($temp = mysql_fetch_assoc($query2)) {
+                                        echo "> Tipo: <b>{$temp['servico']}</b> - Quantidade: <b>{$temp['qtde']}</b> - Valor: <b>R$ {$temp['valor']}</b><br>";
+                                    }
+                                    echo "</p>";
+                                    echo "<p>Entrada: <b>{$resultado['dataEntrada']}</b>&nbsp;&nbsp;&nbsp;";
+                                    echo "Saída: <b>{$resultado['dataSaida']}</b>&nbsp;&nbsp;&nbsp;";
+                                    echo "Valor: <b> " . "R$ " . strtoupper($resultado['valorTotal']) . "</b></p>";
+                                    echo "<p>Observações: {$resultado['observacoes']}</p>";
+                                    echo "<a id='editar' href='incluirOS.php?idOS={$tempId}'><i class='material-icons'>description</i>Editar</a>";
+                                echo "</li>";
+                            }
+                            echo "</ul>";
+                            ?>
+                            <p class="light right-align"><a href="listarOS.php">Ver Mais</a></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s6">
+                            <label>Serviços em Impressão</label>
+                            <?php
+                            $sql = "SELECT * FROM OrdemDeServico WHERE status LIKE 'impressao'
+                                    ORDER BY idOrdemDeServico DESC";
+                            $query = mysql_query($sql);
+                            echo "<ul class='collection'>";
+                            while ($resultado = mysql_fetch_assoc($query)) {
+                                $tempId = $resultado['idOrdemDeServico'];
+                                echo "<li class='collection-item'>";
+                                    $sql2 = "SELECT * FROM Pessoa
+                                            INNER JOIN Pessoa_OrdemDeServico ON Pessoa_OrdemDeServico.idPessoa = Pessoa.idPessoa
+                                            WHERE Pessoa_OrdemDeServico.idOrdemDeServico = {$tempId}";
+                                    $query2 = mysql_query($sql2);
+                                    echo "<p>Cliente: ";
+                                    while($temp = mysql_fetch_assoc($query2)) {
+                                        if($temp['isPessoaFisica'] == '1') {
+                                            echo "<b>{$temp['nome']}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        } else {
+                                            echo "<b>{$temp['nomeFantasia']} ({$temp['razaoSocial']})</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        }
+                                    }
+                                    echo "</p>";
+                                    $sql2 = "SELECT OrdemDeServico_TipoServico.quantidade as qtde, TipoServico.nome as servico,
+                                            OrdemDeServico_TipoServico.valor as valor
+                                            FROM OrdemDeServico_TipoServico
+                                            INNER JOIN TipoServico ON OrdemDeServico_TipoServico.idTipoServico = TipoServico.idTipoServico
+                                            WHERE OrdemDeServico_TipoServico.idOrdemDeServico = {$tempId}";
+                                    $query2 = mysql_query($sql2);
+                                    echo "<p>Serviços: <br>";
+                                    while($temp = mysql_fetch_assoc($query2)) {
+                                        echo "> Tipo: <b>{$temp['servico']}</b> - Quantidade: <b>{$temp['qtde']}</b> - Valor: <b>R$ {$temp['valor']}</b><br>";
+                                    }
+                                    echo "</p>";
+                                    echo "<p>Entrada: <b>{$resultado['dataEntrada']}</b>&nbsp;&nbsp;&nbsp;";
+                                    echo "Saída: <b>{$resultado['dataSaida']}</b>&nbsp;&nbsp;&nbsp;";
+                                    echo "Valor: <b> " . "R$ " . strtoupper($resultado['valorTotal']) . "</b></p>";
+                                    echo "<p>Observações: {$resultado['observacoes']}</p>";
+                                    echo "<a id='editar' href='incluirOS.php?idOS={$tempId}'><i class='material-icons'>description</i>Editar</a>";
+                                echo "</li>";
+                            }
+                            echo "</ul>";
+                            ?>
+                            <p class="light right-align"><a href="listarOS.php">Ver Mais</a></p>
+                        </div>
+                        <div class="col s6">
+                            <label>Serviços em Aprovação</label>
+                            <?php
+                            $sql = "SELECT * FROM OrdemDeServico WHERE status LIKE 'aprovacao'
+                                    ORDER BY idOrdemDeServico DESC";
+                            $query = mysql_query($sql);
+                            echo "<ul class='collection'>";
+                            while ($resultado = mysql_fetch_assoc($query)) {
+                                $tempId = $resultado['idOrdemDeServico'];
+                                echo "<li class='collection-item'>";
+                                    $sql2 = "SELECT * FROM Pessoa
+                                            INNER JOIN Pessoa_OrdemDeServico ON Pessoa_OrdemDeServico.idPessoa = Pessoa.idPessoa
+                                            WHERE Pessoa_OrdemDeServico.idOrdemDeServico = {$tempId}";
+                                    $query2 = mysql_query($sql2);
+                                    echo "<p>Cliente: ";
+                                    while($temp = mysql_fetch_assoc($query2)) {
+                                        if($temp['isPessoaFisica'] == '1') {
+                                            echo "<b>{$temp['nome']}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        } else {
+                                            echo "<b>{$temp['nomeFantasia']} ({$temp['razaoSocial']})</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        }
+                                    }
+                                    echo "</p>";
+                                    $sql2 = "SELECT OrdemDeServico_TipoServico.quantidade as qtde, TipoServico.nome as servico,
+                                            OrdemDeServico_TipoServico.valor as valor
+                                            FROM OrdemDeServico_TipoServico
+                                            INNER JOIN TipoServico ON OrdemDeServico_TipoServico.idTipoServico = TipoServico.idTipoServico
+                                            WHERE OrdemDeServico_TipoServico.idOrdemDeServico = {$tempId}";
+                                    $query2 = mysql_query($sql2);
+                                    echo "<p>Serviços: <br>";
+                                    while($temp = mysql_fetch_assoc($query2)) {
+                                        echo "> Tipo: <b>{$temp['servico']}</b> - Quantidade: <b>{$temp['qtde']}</b> - Valor: <b>R$ {$temp['valor']}</b><br>";
+                                    }
+                                    echo "</p>";
+                                    echo "<p>Entrada: <b>{$resultado['dataEntrada']}</b>&nbsp;&nbsp;&nbsp;";
+                                    echo "Saída: <b>{$resultado['dataSaida']}</b>&nbsp;&nbsp;&nbsp;";
+                                    echo "Valor: <b> " . "R$ " . strtoupper($resultado['valorTotal']) . "</b></p>";
+                                    echo "<p>Observações: {$resultado['observacoes']}</p>";
+                                    echo "<a id='editar' href='incluirOS.php?idOS={$tempId}'><i class='material-icons'>description</i>Editar</a>";
+                                echo "</li>";
+                            }
+                            echo "</ul>";
+                            ?>
+                            <p class="light right-align"><a href="listarOS.php">Ver Mais</a></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s6">
+                            <label>Serviços em Desenvolvimento</label>
+                            <?php
+                            $sql = "SELECT * FROM OrdemDeServico WHERE status LIKE 'desenvolvimento'
+                                    ORDER BY idOrdemDeServico DESC";
+                            $query = mysql_query($sql);
+                            echo "<ul class='collection'>";
+                            while ($resultado = mysql_fetch_assoc($query)) {
+                                $tempId = $resultado['idOrdemDeServico'];
+                                echo "<li class='collection-item'>";
+                                    $sql2 = "SELECT * FROM Pessoa
+                                            INNER JOIN Pessoa_OrdemDeServico ON Pessoa_OrdemDeServico.idPessoa = Pessoa.idPessoa
+                                            WHERE Pessoa_OrdemDeServico.idOrdemDeServico = {$tempId}";
+                                    $query2 = mysql_query($sql2);
+                                    echo "<p>Cliente: ";
+                                    while($temp = mysql_fetch_assoc($query2)) {
+                                        if($temp['isPessoaFisica'] == '1') {
+                                            echo "<b>{$temp['nome']}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        } else {
+                                            echo "<b>{$temp['nomeFantasia']} ({$temp['razaoSocial']})</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                        }
+                                    }
+                                    echo "</p>";
+                                    $sql2 = "SELECT OrdemDeServico_TipoServico.quantidade as qtde, TipoServico.nome as servico,
+                                            OrdemDeServico_TipoServico.valor as valor
+                                            FROM OrdemDeServico_TipoServico
+                                            INNER JOIN TipoServico ON OrdemDeServico_TipoServico.idTipoServico = TipoServico.idTipoServico
+                                            WHERE OrdemDeServico_TipoServico.idOrdemDeServico = {$tempId}";
+                                    $query2 = mysql_query($sql2);
+                                    echo "<p>Serviços: <br>";
+                                    while($temp = mysql_fetch_assoc($query2)) {
+                                        echo "> Tipo: <b>{$temp['servico']}</b> - Quantidade: <b>{$temp['qtde']}</b> - Valor: <b>R$ {$temp['valor']}</b><br>";
+                                    }
+                                    echo "</p>";
+                                    echo "<p>Entrada: <b>{$resultado['dataEntrada']}</b>&nbsp;&nbsp;&nbsp;";
+                                    echo "Saída: <b>{$resultado['dataSaida']}</b>&nbsp;&nbsp;&nbsp;";
+                                    echo "Valor: <b> " . "R$ " . strtoupper($resultado['valorTotal']) . "</b></p>";
+                                    echo "<p>Observações: {$resultado['observacoes']}</p>";
+                                    echo "<a id='editar' href='incluirOS.php?idOS={$tempId}'><i class='material-icons'>description</i>Editar</a>";
+                                echo "</li>";
+                            }
+                            echo "</ul>";
+                            ?>
+                            <p class="light right-align"><a href="listarOS.php">Ver Mais</a></p>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</main>
-        <script src="js/jquery.js" type="text/javascript"></script>
-        <script src="js/materialize.js" type="text/javascript"></script>
-        <script src="js/init.js" type="text/javascript"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/materialize.js"></script>
+        <script src="js/init.js"></script>
         <?php
         include 'header.php';
         ?>
