@@ -132,7 +132,7 @@ $(function() {
         }
         var idOS = $("#idOS").val();
         if(idOS === '') {
-            alert("Erro ao tentar salvar as alterações. Por favor, tente novamente.");
+            alert("Para criar um arquivo é necessário cadastrar algum produto na Ordem de Serviço.");
         } else {
             request = $.ajax({
                 url: "control/ordemDeServico.php",

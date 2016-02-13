@@ -19,8 +19,9 @@ if(isset($_GET['logout'])) {
     <body>
         <div id="help" class="modal">
             <div class="modal-content">
-                <h4>Modal Header</h4>
-                <p>A bunch of text</p>
+                <h4>Atualizar Pessoa</h4>
+                <p>Insira todos os campos necessários para atualizar uma pessoa no sistema.</p>
+                <p>Clique no botão com o ícone do telefone para adicionar ou remover um número, e no botão contendo um envelope para adicionar ou remover um endereço de email.</p>
             </div>
             <div class="modal-footer">
                 <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Entendi</a>
@@ -79,7 +80,7 @@ if(isset($_GET['logout'])) {
                 <?php
                 ?>
                 <div class="row">
-                    <form class="col s12" role="form" method="POST" action="control/pessoa.php">
+                    <form class="col s12" role="form" method="POST" action="control/pessoa.php" id="formPessoa">
                         <?php
                         if($tipo != 'funcionario') {
                         ?>

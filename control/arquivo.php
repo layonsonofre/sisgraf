@@ -12,7 +12,6 @@ $idArquivoMatrizAntigo = isset($_POST['idArquivoModeloAntigo']) ? $_POST['idArqu
 $idChapaAntiga = isset($_POST['idChapaAntiga']) ? $_POST['idChapaAntiga'] : array();
 $urlMatrizAntiga = isset($_POST['urlMatrizAntiga']) ? $_POST['urlMatrizAntiga'] : array();
 $utilizacoesAntiga = isset($_POST['utilizacoesAntiga']) ? $_POST['utilizacoesAntiga'] : array();
-
 $idChapaNovo = isset($_POST['idChapaNovo']) ? $_POST['idChapaNovo'] : array();
 $urlMatrizNovo = isset($_POST['urlMatrizNovo']) ? $_POST['urlMatrizNovo'] : array();
 $utilizacoesNovo = isset($_POST['utilizacoesNovo']) ? $_POST['utilizacoesNovo'] : array();
@@ -21,7 +20,6 @@ $utilizacoesNovo = isset($_POST['utilizacoesNovo']) ? $_POST['utilizacoesNovo'] 
 $idArquivoModeloAntigo = isset($_POST['idArquivoModeloAntigo']) ? $_POST['idArquivoModeloAntigo'] : array();
 $urlModeloAntigo = isset($_POST['urlModeloAntigo']) ? $_POST['urlModeloAntigo'] : array();
 $statusAntigo = isset($_POST['statusAntigo']) ? $_POST['statusAntigo'] : array();
-
 $urlModeloNovo = isset($_POST['urlModeloNovo']) ? $_POST['urlModeloNovo'] : array();
 $statusNovo = isset($_POST['statusNovo']) ? $_POST['statusNovo'] : array();
 
@@ -69,7 +67,7 @@ if($acao == '') {
 
 	if($idArquivoMatrizAntigo) {
 		for($i = 0; $i < count($idArquivoMatrizAntigo); $i++) {
-			if($urlMatrizAntiga[$i] == '' || $utilizacoesAntiga[$i] == '' || $idChapaAntiga == '') continue;
+			if($urlMatrizAntiga[$i] == '' || $utilizacoesAntiga[$i] == '' || $idChapaAntiga[$i] == '') continue;
 			$sql = "UPDATE ArquivoMatriz SET url='{$urlMatrizAntiga[$i]}', utilizacoes='{$utilizacoesAntiga[$i]}',
 					idChapa='{$idChapaAntiga[$i]}' WHERE idArquivoMatriz={$idArquivoMatrizAntigo[$i]}";
 			$query = mysql_query($sql);
@@ -77,7 +75,7 @@ if($acao == '') {
 	}
 	if($urlMatrizNovo) {
 		for($i = 0; $i < count($urlMatrizNovo); $i++) {
-			if($urlMatrizNovo[$i] == '' || $utilizacoesNovo[$i] == '' || $idChapaNovo == '') continue;
+			if($urlMatrizNovo[$i] == '' || $utilizacoesNovo[$i] == '' || $idChapaNovo[$i] == '') continue;
 			$sql = "INSERT INTO ArquivoMatriz (`idArquivoMatriz`, `url`, `utilizacoes`, `idChapa`)
 					VALUES (NULL, '{$urlMatrizNovo[$i]}', '{$utilizacoesNovo[$i]}', '{$idChapaNovo[$i]}')";
 			$query = mysql_query($sql);
@@ -194,7 +192,8 @@ if($acao == '') {
         echo "<div class='col s12'>";
             echo "<div class='card'>";
                 echo "<div class='card-content'>";
-                        echo "<span class='card-title'>{$resultado['nome']}</span>";
+                        $nome = strtoupper($resultado['nome']);
+                        echo "<span class='card-title'>{$nome}</span>";
                         echo "<p>Data de Criação: <b>{$resultado['data']}</b></p>";
                         $sql2 = "SELECT * FROM ArquivoModelo WHERE idArquivo={$tempId}";
                         $query2 = mysql_query($sql2);

@@ -329,6 +329,42 @@ protegePagina(); // Chama a função que protege a página
                         </div>
                     </div>
                 </div>
+                <div class="section">
+                    <div class="row">
+                        <div class="col s12">
+                            <label>Materiais em Falta</label>
+                            <?php
+                            $sql = "SELECT Material.idMaterial as idMaterial, Material.descricao as descricao, Material.quantidade as quantidade,
+                                    Material.quantidadeMinima as quantidadeMinima, Papel.tipo as tipo, Papel.base as base, Papel.altura as altura,
+                                    GramaturaPapel.gramatura as gramatura, MaterialUnidade.descricao as unidade
+                                    FROM Material
+                                    LEFT JOIN Papel ON Material.idMaterial = Papel.idMaterial
+                                    LEFT JOIN GramaturaPapel ON Papel.idGramaturaPapel = GramaturaPapel.idGramaturaPapel
+                                    INNER JOIN MaterialUnidade ON Material.idMaterialUnidade = MaterialUnidade.idMaterialUnidade
+                                    WHERE quantidade < quantidadeMinima";
+                            $query = mysql_query($sql);
+                            echo "<ul class='collection'>";
+                            while ($resultado = mysql_fetch_assoc($query)) {
+                                $tempId = $resultado['idMaterial'];
+                                echo "<li class='collection-item'>";
+                                    echo "<p>Material: <b>{$resultado['descricao']}</b> - Quantidade: <b>{$resultado['quantidade']}</b> - Quantidade Mínima: <b>{$resultado['quantidadeMinima']}</b> - Unidade de Medida: <b>{$resultado['unidade']}</b><br>";
+                                    if($resultado['tipo'] != '' || $resultado['gramatura'] != '') echo "Papel: <b>{$resultado['tipo']} {$resultado['gramatura']} g/m2</b>";
+                                    echo "</p>";
+                                    if($resultado['tipo'] != '' || $resultado['gramatura'] != ''){
+                                        echo "<a id='editar' href='incluirMaterial.php?idMaterial={$tempId}&tipo=papel'><i class='material-icons'>description</i>Editar</a>";
+                                    }
+                                    else {
+                                        echo "<a id='editar' href='incluirMaterial.php?idMaterial={$tempId}'><i class='material-icons'>description</i>Editar</a>";
+                                    }
+
+                                echo "</li>";
+                            }
+                            echo "</ul>";
+                            ?>
+                            <p class="light right-align"><a href="listarArquivo.php">Ver Mais</a></p>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</main>
         <script src="js/jquery.js"></script>

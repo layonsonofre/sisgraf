@@ -17,7 +17,7 @@
                     <label class="active" for="alturaFormato">Altura (mm)</label>
                 </div>
                 <div class="input-field col s2">
-                    <input name="valorFormato" id="valorFormatoModal" type="text" class="validate" length="10" maxlength="10" required>
+                    <input name="valorFormato" id="valorFormatoModal" type="text" class="valor validate" length="10" maxlength="10" required>
                     <label class="active" for="valorFormato">Valor (R$)</label>
                 </div>
             </div>
@@ -34,3 +34,5 @@
     </form>
 </div>
 <script src="js/ajax/formato.js"></script>
+<script src="js/autoNumeric-min.js"></script>
+<script src="js/valor.js"></script>

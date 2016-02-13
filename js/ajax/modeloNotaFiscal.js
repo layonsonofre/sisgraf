@@ -31,7 +31,6 @@ $(function() {
     $(document.body).on("click", "table td .editarModelo", function(event) {
         if (request) {request.abort();}
         var idModelo = $(this).attr("idModelo");
-        alert(idModelo);
         request = $.ajax({
             url: "control/ordemDeServico.php",
             type: "post",

@@ -6,6 +6,7 @@ $acao = isset($_POST['acao']) ? $_POST['acao'] : '';
 $idTS = isset($_POST['idTS']) ? $_POST['idTS'] : '';
 $nome = isset($_POST['nome']) ? $_POST['nome'] : '';
 $descricao = isset($_POST['descricao']) ? $_POST['descricao'] : '';
+$status = isset($_POST['status']) ? $_POST['status'] : 'excluido';
 $valorUnitario = isset($_POST['valorUnitario']) ? $_POST['valorUnitario'] : '';
 $valor = isset($_POST['valor']) ? $_POST['valor'] : '';
 $formatos = isset($_POST['selectFormato']) ? $_POST['selectFormato'] : '';
@@ -119,7 +120,7 @@ function listarFormaImpressao() {
 if($acao == '') {
 	header('Location: ../incluirTipoDeServico.php?at=no&tipo='.$tipo);
 } else if($acao == 'inserir') {
-	$sql = "INSERT INTO `TipoServico` (`idTipoServico`,`nome`,`descricao`,`valor`, `status`) VALUES (NULL,\"".$nome."\",\"".$descricao."\",\"".$valor."\", \"ativo\");";
+	$sql = "INSERT INTO `TipoServico` (`idTipoServico`,`nome`,`descricao`,`valor`, `status`) VALUES (NULL,\"".$nome."\",\"".$descricao."\",\"".$valor."\", '{$status}');";
 	$query = mysql_query($sql);
 	$idTSInserido = mysql_insert_id();
 	if($tipo == 'carimbo') {
@@ -142,7 +143,7 @@ if($acao == '') {
         $sql = "INSERT INTO `Material_TipoServico` (`idTipoServico`,`idMaterial`,`valor`) VALUES ('{$idTSInserido}', '{$papel}', '{$valorPapel}')";
         $query = mysql_query($sql);
     }
-	header('Location: ../incluirTipoDeServico.php?at=ok&tipo='.$tipo);
+	//header('Location: ../incluirTipoDeServico.php?at=ok&tipo='.$tipo);
 } else if($acao == 'inserirFormato') {
     if($idFormato == '') { 
 		$sql = "INSERT INTO `Formato` (`idFormato`,`formato`,`valor`,`base`,`altura`) VALUES (NULL,\"".$formato."\",\"".$valorFormato."\",\"".$baseFormato."\",\"".$alturaFormato."\");";
@@ -419,7 +420,8 @@ if($acao == '') {
                         $query2 = mysql_query($sql2);
                         echo "<p>Acabamentos: ";
                         while($temp = mysql_fetch_assoc($query2)) {
-                            echo "<b>{$temp['nome']} ({$temp['descricao']} - Local: {$temp['local']})</b><br>";
+                            //echo "<b>{$temp['nome']} ({$temp['descricao']} - Local: {$temp['local']})</b><br>";
+                            echo "<b>{$temp['nome']}&nbsp;&nbsp;&nbsp;</b>";
                         }
                         $sql2 = "SELECT Papel.tipo, GramaturaPapel.gramatura
                                 FROM Material_TipoServico
@@ -461,7 +463,7 @@ if($acao == '') {
     echo "</ul>";
 } else if($acao == 'atualizar') {
     $sql = "UPDATE `TipoServico`
-            SET `nome`='{$nome}', `descricao`='{$descricao}',`valor`='{$valorUnitario}'
+            SET `nome`='{$nome}', `descricao`='{$descricao}',`valor`='{$valorUnitario}', `status`='{$status}'
             WHERE `idTipoServico`='{$idTS}'";
     echo $sql . "<br>";
     $query = mysql_query($sql);
@@ -507,7 +509,7 @@ if($acao == '') {
     }
     $sql = "UPDATE TipoServico SET status='excluido' WHERE idTipoServico LIKE '{$idTS}'";
     $query = mysql_query($sql);
-    header('Location: ../incluirTipoDeServico.php?at=ok&tipo={$tipo}');
+    header('Location: ../incluirTipoDeServico.php?at=ok&tipo='.$tipo);
 } else if($acao == 'getFormato') {
     $sql = "SELECT * FROM Formato WHERE idFormato = {$idFormato}";
     $query = mysql_query($sql);

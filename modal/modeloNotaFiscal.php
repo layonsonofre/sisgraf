@@ -15,7 +15,7 @@
             </div>
             <div class="row">
                 <div class="input-field col s5">
-                    <input name="valorNotaModal" id="valorNotaModal" type="text" class="validate" length="10" maxlength="10" required>
+                    <input name="valorNotaModal" id="valorNotaModal" type="text" class="valor validate" length="10" maxlength="10" required>
                     <label for="valorNotaModal">Valor (R$)</label>
                 </div>
             </div>
@@ -32,3 +32,5 @@
     </form>
 </div>
 <script src="js/ajax/modeloNotaFiscal.js"></script>
+<script src="js/autoNumeric-min.js"></script>
+<script src="js/valor.js"></script>

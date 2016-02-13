@@ -15,8 +15,12 @@ protegePagina(); // Chama a função que protege a página
     <body>
         <div id="help" class="modal">
             <div class="modal-content">
-                <h4>Modal Header</h4>
-                <p>A bunch of text</p>
+                <h4>Buscar Pessoa</h4>
+                <p>Insira os parâmetros de pesquisa e clique no botão "Buscar" para realizar a busca.</p>
+                <p>Caso o campo de busca esteja em branco, ao clicar no botão "Buscar" todos os campos registrados serão mostrados.</p>
+                <p>Selecionando as opções abaixo do campo de parâmetros e clicando no botão "Buscar" na sequência, os resultados serão filtrados utilizando as opções selecionadas.</p>
+                <p>Cada registro encontrado tem um link para realizar alterações ou ver mais detalhes do registro em questão.</p>
+                <p>Mais abaixo encontram-se os botões de paginação para ver mais detalhes.</p>
             </div>
             <div class="modal-footer">
                 <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Entendi</a>
@@ -122,6 +126,8 @@ protegePagina(); // Chama a função que protege a página
         <script src="js/jasny-bootstrap.min.js"></script>
         <script src="js/ajax/buscarPessoa.js"></script>
         <script src="js/paginacao.js"></script>
-        <?phpinclude 'header.php';?>
+        <?php
+        include 'header.php';
+        ?>
     </body>
 </html>

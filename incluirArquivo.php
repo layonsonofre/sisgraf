@@ -6,7 +6,7 @@ protegePagina(); // Chama a função que protege a página
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-        <title>SISGRAF - Incluir Arquivo</title>
+        <title>SISGRAF - Atualizar Arquivo</title>
         <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/materialdesignicons.min.css" type="text/css" rel="stylesheet" media="all" />
 		<link href="css/font.css" rel="stylesheet">
@@ -16,6 +16,10 @@ protegePagina(); // Chama a função que protege a página
             <div class="modal-content">
                 <h4>Incluir Arquivo</h4>
                 <p>Página para cadastro de arquivos referentes à serviços em execução ou já executados.</p>
+                <p>Insira o nome base do arquivo, a data de criação e a ordem de serviço à que ele se refere. Clique no botão com uma lupa para ver detalhes da Ordem de Serviço.</p>
+                <p>O arquivo pode estar presente em várias matrizes, registre-as nos campos abaixos do título "Matriz". No "Local de Armazenamento" insira o local em que a matriz está guardada.</p>
+                <p>Para cadastrar um modelo insira no campo específico o diretório e o nome do arquivo com a extensão. Por exemplo: D:/Arquivos/Gráfica/Mercado/Modelos/modelo panfleto fevereiro 2016.png</p>
+                <p>Clique no botão "+" para adicionar mais um campo de interesse. Clique no botão "-" para remover um campo adicionado.</p>
             </div>
             <div class="modal-footer">
                 <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Entendi</a>
@@ -119,7 +123,7 @@ protegePagina(); // Chama a função que protege a página
                                             echo "<label for='urlMatriz{$temp['idChapa']}' class='active'>Local Armazenamento</label>";
                                         echo "</div>";
                                         echo "<div class='input-field col s2'>";
-                                            echo "<input name='utilizacoesAntiga[]' id='utilizacoes{$temp['idChapa']}'' type='text' class='validate right-align' data-mask='9?999999' value='{$temp['utilizacoes']}'>";
+                                            echo "<input name='utilizacoesAntiga[]' id='utilizacoes{$temp['idChapa']}' type='text' class='validate right-align' data-mask='9?999999' value='{$temp['utilizacoes']}'>";
                                             echo "<label for='utilizacoes{$temp['idChapa']}' class='active'>Utilizações</label>";
                                         echo "</div>";
                                         echo "<div class='col s1'>";
@@ -166,9 +170,12 @@ protegePagina(); // Chama a função que protege a página
                                         echo "</div>";
                                         echo "<div class='input-field col s3'>";
                                             echo "<select name='statusAntigo[]' id='status'>";
-                                                echo "<option value='desenvolvimento' selected>Em Desenvolvimento</option>";
-                                                echo "<option value='aguardando'>Aguardando Cliente</option>";
-                                                echo "<option value='aprovado'>Aprovado</option>";
+                                                if($temp['status'] == 'desenvolvimento') echo "<option value='desenvolvimento' selected>Em Desenvolvimento</option>";
+                                                else echo "<option value='desenvolvimento'>Em Desenvolvimento</option>";
+                                                if($temp['status'] == 'aguardando') echo "<option value='aguardando' selected>Aguardando Cliente</option>";
+                                                else echo "<option value='aguardando'>Aguardando Cliente</option>";
+                                                if($temp['status'] == 'aprovado') echo "<option value='aprovado' selected>Aprovado</option>";
+                                                else echo "<option value='aprovado'>Aprovado</option>";
                                             echo "</select>";
                                             echo "<label>Status</label>";
                                         echo "</div>";
@@ -240,10 +247,10 @@ protegePagina(); // Chama a função que protege a página
                 </div>
             </div>
         </main>
-        <script src="js/jquery.js" type="text/javascript"></script>
-        <script src="js/materialize.js" type="text/javascript"></script>
-        <script src="js/init.js" type="text/javascript"></script>
-        <script src="js/cadastro.js" type="text/javascript"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/materialize.js"></script>
+        <script src="js/init.js"></script>
+        <script src="js/cadastro.js"></script>
         <script src="js/ajax/arquivo.js"></script>
         <script>
             var $input = $('.datepicker').pickadate();
@@ -252,7 +259,6 @@ protegePagina(); // Chama a função que protege a página
         </script>
         <?php
             include 'header.php';
-            include 'modal/arquivomatriz.php';
         ?>
     </body>
 </html>

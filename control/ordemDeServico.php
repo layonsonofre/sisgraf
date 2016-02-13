@@ -140,7 +140,7 @@ if($acao == '') {
     }
 } else if($acao == 'listarServicos') {
     $idOS = isset($_SESSION['idOS']) ? $_SESSION['idOS'] : '-1';
-    if($idOS == '-1') $idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '-1';
+    if($idOS == '-1') { $idOS = isset($_POST['idOS']) ? $_POST['idOS'] : '-1'; }
     if($idOS == '-1') {
         echo "<h5>É necessário adicionar um produto na Ordem de Serviço antes de listar</h5><br>";
     } else {
@@ -201,9 +201,9 @@ if($acao == '') {
                             $query2 = mysql_query($sql2);
                             while($result = mysql_fetch_assoc($query2)) {
                                 if($result['isFrente'] == '1') {
-                                    echo $result['nome'] . " (F) ";
+                                    echo "{$result['nome']} (F) ";
                                 } else {
-                                    echo $result['nome'] . " (V) ";
+                                    echo "{$result['nome']} (V) ";
                                 }
                             }
                             echo "</b></p>";
@@ -214,9 +214,9 @@ if($acao == '') {
                                 Acab_OS_TS.idOrdemDeServico = {$resultado['idOrdemDeServico']}";
                         $query2 = mysql_query($sql2);
                         if(mysql_num_rows($query2) > 0) {
-                            echo "<p>Acabamento: ";
-                            while($result = mysql_fetch_assoc($query2)) {
-                                echo $result['nome'] + " ";
+                            echo "<p>Acabamentos: ";
+                            while($resultAcab = mysql_fetch_assoc($query2)) {
+                                echo "{$resultAcab['nome']}&nbsp;&nbsp;&nbsp;";
                             }
                             echo "</p>";
                         }
@@ -522,9 +522,9 @@ if($acao == '') {
     }
     foreach($opc as $o) {
         if($o == 'decrescente') {
-            $condicoes = "{$condicoes} ORDER BY dataEntrada DESC";
+            $condicoes = "{$condicoes} ORDER BY dataEntrada DESC, idOrdemDeServico DESC";
         } else if($o == 'crescente') {
-            $condicoes = "{$condicoes} ORDER BY dataEntrada ASC";
+            $condicoes = "{$condicoes} ORDER BY dataEntrada ASC, idOrdemDeServico ASC";
         }
     }
     $sql = "SELECT COUNT(*) AS total FROM OrdemDeServico
@@ -563,6 +563,13 @@ if($acao == '') {
             echo "<div class='card'>";
                 echo "<div class='card-content'>";
                         echo "<span class='card-title'>ID: {$resultado['idOrdemDeServico']}&nbsp;&nbsp;&nbsp;Status: ".strtoupper($resultado['status'])."</span>";
+                        echo "<p>Arquivos: <br>";
+                        $sql2 = "SELECT * FROM Arquivo WHERE idOrdemDeServico={$tempId} ORDER BY nome DESC";
+                        $query2 = mysql_query($sql2);
+                        while($temp = mysql_fetch_assoc($query2)) {
+                            echo "> <b>" . strtoupper($temp['nome']) . "</b> (Criação: {$temp['data']})<br>";
+                        }
+                        echo "</p><br>";
                         $sql2 = "SELECT * FROM Pessoa
                                 INNER JOIN Pessoa_OrdemDeServico ON Pessoa_OrdemDeServico.idPessoa = Pessoa.idPessoa
                                 WHERE Pessoa_OrdemDeServico.idOrdemDeServico = {$tempId}";

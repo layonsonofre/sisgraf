@@ -15,7 +15,7 @@ $(function() {
 		request = $.ajax({
 			url: "control/ordemDeServico.php",
 			type: "post",
-			data: "acao=listarServicos"
+			data: "acao=listarServicos&idOS="+temp
 		});
 		request.done(function (response, textStatus, jqXHR){
 			console.log(response);

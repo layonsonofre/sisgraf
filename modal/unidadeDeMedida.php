@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="input-field col s6">
                     <input type="hidden" name="idUnidade" id="idUnidade">
-                    <input name="descricaoUnidade" id="descricaoUnidade" type="text" class="validate" length="10" maxlength="10" required>
+                    <input name="descricaoUnidade" id="descricaoUnidade" type="text" class="valor validate" length="10" maxlength="10" required>
                     <label for="descricaoUnidade">Descrição</label>
                 </div>
             </div>
@@ -22,3 +22,5 @@
     </form>
 </div>
 <script src="js/ajax/unidadeDeMedida.js"></script>
+<script src="js/autoNumeric-min.js"></script>
+<script src="js/valor.js"></script>

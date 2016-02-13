@@ -37,7 +37,41 @@ $emailNovo = isset($_POST['emailNovo']) ? $_POST['emailNovo'] : '';
 
 $categoria = isset($_POST['categoria']) ? $_POST['categoria'] : '';
 
-$tipo = $_POST['tipo'];
+$tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
+
+function validaCPF($cpf){
+	$d1 = 0;
+	$d2 = 0;
+	$cpf = preg_replace("/[^0-9]/", "", $cpf);
+	$ignore_list = array(
+		'00000000000',
+		'01234567890',
+		'11111111111',
+		'22222222222',
+		'33333333333',
+		'44444444444',
+		'55555555555',
+		'66666666666',
+		'77777777777',
+		'88888888888',
+		'99999999999'
+	);
+	if(strlen($cpf) != 11 || in_array($cpf, $ignore_list)){
+		return false;
+	} else {
+		for($i = 0; $i < 9; $i++){
+			$d1 += $cpf[$i] * (10 - $i);
+		}
+		$r1 = $d1 % 11;
+		$d1 = ($r1 > 1) ? (11 - $r1) : 0;
+		for($i = 0; $i < 9; $i++) {
+			$d2 += $cpf[$i] * (11 - $i);
+		}
+		$r2 = ($d2 + ($d1 * 2)) % 11;
+		$d2 = ($r2 > 1) ? (11 - $r2) : 0;
+		return (substr($cpf, -2) == $d1 . $d2) ? true : false;
+	}
+}
 
 if($acao == '') {
 	header('Location: ../incluirPessoa.php?at=no&tipo='.$tipo);
@@ -48,6 +82,10 @@ if($acao == '') {
 		$inscricaoMunicipal = NULL;
 		$razaoSocial = NULL;
 		$nomeFantasia = NULL;
+
+		if(!validaCPF($cpf)) {
+			header('Location: ../incluirPessoa.php?at=no&tipo='.$tipo);
+		}
 	} else {
 		$cpf = NULL;
 		$rg = NULL;
@@ -97,6 +135,11 @@ if($acao == '') {
 } else if($acao == 'atualizar') {
 	if($idPessoa == null ) {
 		header('Location: ../incluirPessoa.php?at=no&tipo='.$tipo);
+	}
+	if($isPessoaFisica == '1') {
+		if(!validaCPF($cpf)) {
+			header('Location: ../incluirPessoa.php?at=no&tipo='.$tipo);
+		}
 	}
 	$sql = "UPDATE `Pessoa` SET `nome`='". $nome."',`status`='".$status."',`isPessoaFisica`='".$isPessoaFisica."',`cpf`='".$cpf.
 	"',`rg`='".$rg."',`cnpj`='".$cnpj."',`inscricaoEstadual`='".$inscricaoEstadual."',`inscricaoMunicipal`='".$inscricaoMunicipal.
@@ -152,10 +195,13 @@ if($acao == '') {
 	}
 	header('Location: ../incluirPessoa.php?idPessoa='.$idPessoa.'&at=ok&tipo='.$tipo);
 } else if($acao == 'excluirTelefone') {
-	$sql = "DELETE FROM `Telefone` WHERE `idTelefone`=".$idTelefone." AND `idPessoa`=".$idPessoa.";";
+	$idTelefone = isset($_POST['idTelefone']) ? $_POST['idTelefone'] : '';
+	$sql = "DELETE FROM `Telefone` WHERE `idTelefone`={$idTelefone} AND `idPessoa`={$idPessoa}";
 	$query = mysql_query($sql);
+	echo $sql . " " . $query;
 } else if($acao == 'excluirEmail') {
-	$sql = "DELETE FROM `Email` WHERE `idEmail`=".$idEmail." AND `idPessoa`=".$idPessoa.";";
+	$idEmail = isset($_POST['idEmail']) ? $_POST['idEmail'] : '';
+	$sql = "DELETE FROM `Email` WHERE `idEmail`={$idEmail} AND `idPessoa`={$idPessoa}";
 	$query = mysql_query($sql);
 } else if($acao == 'listar') {
 	$busca  = mysql_real_escape_string($_POST['consulta']);

@@ -19,7 +19,7 @@
                     <label for="localAcabamento">Local de Aplicação</label>
                 </div>
                 <div class="input-field col s5">
-                    <input name="valorAcabamento" id="valorAcabamento" type="text" class="validate" length="10" maxlength="10" required>
+                    <input name="valorAcabamento" id="valorAcabamento" type="text" class="valor validate right-align" length="10" maxlength="10" required>
                     <label for="valorAcabamento">Valor (R$)</label>
                 </div>
             </div>
@@ -36,3 +36,5 @@
     </form>
 </div>
 <script src="js/ajax/acabamento.js"></script>
+<script src="js/autoNumeric-min.js"></script>
+<script src="js/valor.js"></script>

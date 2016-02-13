@@ -8,7 +8,6 @@ $(function() {
         var serializedData = $form.serialize();
         $inputs.prop("disabled", true);
         console.log(serializedData);
-        alert(serializedData);
         request = $.ajax({
             url: "control/tipoDeServico.php",
             type: "post",

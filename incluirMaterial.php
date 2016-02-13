@@ -18,8 +18,12 @@ protegePagina(); // Chama a função que protege a página
     	?>
         <div id="help" class="modal">
             <div class="modal-content">
-                <h4>Modal Header</h4>
-                <p>A bunch of text</p>
+                <h4>Incluir Material</h4>
+                <p>Aqui é onde você atualiza um material no sistema. Insira uma descrição, valor pago, a quantidade em estoque atual e uma quantidade mínima deste material.</p>
+                <p>Caso a unidade de medida não esteja cadastrada, clique no botão "+" ao lado para cadastrar.</p>
+                <p>Selecione também as cores disponíveis desse material, para cadastrar mais de um campo selecione segurando o botão do teclado "Control".</p>
+                <p>Selecione as categorias que este material pertence, se não estiver cadastrado clique no "+" ao lado para incluir.</p>
+                <p>Clique no botão "+" para adicionar mais um campo de interesse. Clique no botão "-" para remover um campo adicionado.</p>
             </div>
             <div class="modal-footer">
                 <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Entendi</a>
@@ -47,12 +51,16 @@ protegePagina(); // Chama a função que protege a página
                         if($idMaterial != '') {
                             if($_GET['tipo'] == 'material') {
                                 echo "<h4>Atualizar Material</h4>";
+                                $sql = "SELECT * FROM Material
+                                        WHERE Material.idMaterial={$idMaterial}";
                             } else if($_GET['tipo'] == 'papel') {
                                 echo "<h4>Atualizar Papel</h4>";
-                            $sql = "select * from Material, Papel where Material.idMaterial=" . $idMaterial . ";";
+                                $sql = "SELECT * FROM Material
+                                        INNER JOIN Papel ON Material.idMaterial = Papel.idMaterial
+                                        WHERE Material.idMaterial={$idMaterial}";
+                            }
                             $query = mysql_query($sql);
                             $resultado = mysql_fetch_assoc($query);
-                            }
                         }
                         else {
                             if($_GET['tipo'] == 'material') {
@@ -75,7 +83,7 @@ protegePagina(); // Chama a função que protege a página
                                 <label for="descricao" class="active">Descrição</label>
                             </div>
                             <div class="input-field col s4">
-                                <input name="valorUnitario" id="valorUnitario" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['valorUnitario']."'"; ?> length="10" maxlength="10">
+                                <input name="valorUnitario" id="valorUnitario" type="text" class="valor validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['valorUnitario']."'"; ?> length="10" maxlength="10">
                                 <label for="valorUnitario" class="active">Valor Unitário (R$)</label>
                             </div>
                         </div>
@@ -224,6 +232,8 @@ protegePagina(); // Chama a função que protege a página
         <script src="js/init.js"></script>
         <script src="js/cadastro.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
+        <script src="js/autoNumeric-min.js"></script>
+        <script src="js/valor.js"></script>
         <?php
         include 'modal/unidadeDeMedida.php';
         include 'modal/cor.php';

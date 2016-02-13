@@ -25,7 +25,7 @@ $(function(){
         xTel++;
         $(wrapperTel).append('<div>'+
             '<div class=\"input-field col s5\">'+
-            '<input name=\"telefoneNovo[]\" id=\"telefoneNovo' + xTel + '\" type=\"text\" class=\"validate\">'+
+            '<input name=\"telefoneNovo[]\" id=\"telefoneNovo' + xTel + '\" type=\"text\" class=\"validate\" data-mask=\"(99) 9999-9999?9\">'+
             '<label for=\"telefoneNovo' + xTel + '\">Telefone #' + xTel + '</label>'+
             '</div>'+
             '<div class=\"col s1\">'+
@@ -40,17 +40,17 @@ $(function(){
         var idTelefone = $(this).attr('idtelefone');
         var idPessoa = $(this).attr('idpessoa');
         var tipo = $(this).attr('tipo');
-        $.ajax({
-            type: 'POST',
-            url: 'control/pessoa.php',
-            data: 'idTelefone='+idTelefone+"&idPessoa="+idPessoa+"&acao=excluirTelefone&tipo="+tipo,
-            success: function(data) {
-                if(data) {
-                    console.log('Falha removendo o telefone');
-                } else {
-                    console.log(idTelefone + " " + idPessoa + " " + tipo);
-                }
-            }
+        var request;
+        request = $.ajax({
+            url: "control/pessoa.php",
+            type: "post",
+            data: "idTelefone="+idTelefone+"&idPessoa="+idPessoa+"&acao=excluirTelefone"
+        });
+        request.done(function (response, textStatus, jqXHR){
+            console.log(response);
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error("The following error occurred: "+textStatus, errorThrown);
         });
     });
 
@@ -77,17 +77,17 @@ $(function(){
         var idEmail = $(this).attr('idemail');
         var idPessoa = $(this).attr('idpessoa');
         var tipo = $(this).attr('tipo');
-        $.ajax({
-            type: 'POST',
-            url: 'control/pessoa.php',
-            data: 'idEmail='+idEmail+"&idPessoa="+idPessoa+"&acao=excluirEmail&tipo="+tipo,
-            success: function(data) {
-                if(data) {
-                    console.log('Falha removendo o telefone');
-                } else {
-                    console.log(idEmail + " " + idPessoa + " " + tipo);
-                }
-            }
+        var request;
+        request = $.ajax({
+            url: "control/pessoa.php",
+            type: "post",
+            data: "idEmail="+idEmail+"&idPessoa="+idPessoa+"&acao=excluirEmail"
+        });
+        request.done(function (response, textStatus, jqXHR){
+            console.log(response);
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            console.error("The following error occurred: "+textStatus, errorThrown);
         });
     });
 

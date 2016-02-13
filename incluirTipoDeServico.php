@@ -1,10 +1,6 @@
 <?php
 include("control/seguranca.php"); // Inclui o arquivo com o sistema de segurança
 protegePagina(); // Chama a função que protege a página
-if(isset($_GET['logout'])) {
-    unset($_SESSION['usuarioID'], $_SESSION['usuarioNome'], $_SESSION['usuarioLogin'], $_SESSION['usuarioSenha']);
-    header("Location: login.php");
-}
 ?>
 <!DOCTYPE php>
 <html>
@@ -19,8 +15,10 @@ if(isset($_GET['logout'])) {
     <body>
         <div id="help" class="modal">
             <div class="modal-content">
-                <h4>Modal Header</h4>
-                <p>A bunch of text</p>
+                <h4>Atualizar Tipo de Serviço</h4>
+                <p>Insira o nome, descrição e valor do tipo de serviço. Selecione também o papel que este serviço pode ser feito.</p>
+                <p>Segure o botão "Control" para selecionar vários campos.</p>
+                <p>Clique no botão "+" para adicionar mais um campo de interesse. Clique no botão "-" para remover um campo adicionado.</p>
             </div>
             <div class="modal-footer">
                 <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Entendi</a>
@@ -76,13 +74,17 @@ if(isset($_GET['logout'])) {
                                 <input name="nome" id="nome" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['nome']."'"; if($_GET['tipo'] == 'carimbo') echo "value='Carimbo' readonly"; if($_GET['tipo'] == 'nota') echo "value='Nota Fiscal' readonly"; ?> length="24" maxlength="24">
                                 <label for="nome" class="active">Nome</label>
                             </div>
-                            <div class="input-field col s7">
+                            <div class="input-field col s6">
                                 <input name="descricao" id="descricao" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['descricao']."'"; if($_GET['tipo'] == 'carimbo') echo "value='Material auxiliar de uso diverso' readonly"; if($_GET['tipo'] == 'nota') echo "value='Tipo de impresso usado como documento fiscal' readonly"; ?> length="64" maxlength="64">
                                 <label for="descricao" class="active">Descrição</label>
                             </div>
                             <div class="input-field col s2">
-                                <input name="valorUnitario" id="valorUnitario" type="text" class="validate right-align" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['valor']."'"; ?> length="10" maxlength="10">
+                                <input name="valorUnitario" id="valorUnitario" type="text" class="valor validate right-align" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['valor']."'"; ?> length="10" maxlength="10">
                                 <label for="valorUnitario" class="active">Valor (R$)</label>
+                            </div>
+                            <div class="input-field col s1">
+                                <input name="status" id="status" type="checkbox" value="ativo" <?php if($idTS)  { if($resultado['status'] == 'ativo') echo "checked"; } else echo "checked"; ?>>
+                                <label for="status">Ativo</label>
                             </div>
                         </div>
                         <?php
@@ -157,7 +159,7 @@ if(isset($_GET['logout'])) {
                                     <label>Papel</label>
                                 </div>
                                 <div class="input-field col s4">
-                                    <input name="valorPapel" id="valorPapel" type="text" class="validate right-align" value="<?php echo $valorPapel; ?>" length="10" maxlength="10">
+                                    <input name="valorPapel" id="valorPapel" type="text" class="valor validate right-align" value="<?php echo $valorPapel; ?>" length="10" maxlength="10">
                                     <label for="valorPapel" class="active">Valor (R$)</label>
                                 </div>
                             </div>

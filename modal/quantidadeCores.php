@@ -9,7 +9,7 @@
                     <label for="descricaoQC">Quantidade (Ex.: 4x4)</label>
                 </div>
                 <div class="input-field col s3">
-                    <input name="valorQC" id="valorQC" type="text" class="validate" length="10" maxlength="10" required>
+                    <input name="valorQC" id="valorQC" type="text" class="valor validate" length="10" maxlength="10" required>
                     <label for="valorQC">Valor (R$)</label>
                 </div>
             </div>
@@ -26,3 +26,5 @@
     </form>
 </div>
 <script src="js/ajax/quantidadeCores.js"></script>
+<script src="js/autoNumeric-min.js"></script>
+<script src="js/valor.js"></script>

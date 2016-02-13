@@ -155,7 +155,7 @@ if($acao == '') {
 	}
 } else if($acao == 'inserirCor') {
 	if($idCor == '') {
-		$sql = "INSERT INTO `Cor` (`idCor`,`nome`) VALUES (NULL,'{$cor}')";
+		$sql = "INSERT INTO `Cor` (`idCor`,`nome`) VALUES (NULL,'{$nomeCor}')";
 		$query = mysql_query($sql);
 	} else {
 		$sql = "UPDATE Cor SET nome='{$nomeCor}' WHERE idCor={$idCor}";
@@ -197,7 +197,7 @@ if($acao == '') {
     echo json_encode($return);
 } else if($acao == 'inserirGramatura') {
 	if($idGramatura == '') {
-		$sql = "INSERT INTO `GramaturaPapel` (`idGramaturaPapel`,`gramatura`) VALUES (NULL,\"".$gramatura."\");";
+		$sql = "INSERT INTO `GramaturaPapel` (`idGramaturaPapel`,`gramatura`) VALUES (NULL,'{$gramatura2}')";
 	} else {
 		$sql = "UPDATE GramaturaPapel SET gramatura='{$gramatura2}' WHERE idGramaturaPapel={$idGramatura}";
 	}
@@ -205,7 +205,7 @@ if($acao == '') {
 	listarGramatura();
 
 } else if($acao == 'excluirGramatura') {
-    if($idMaterialUnidade != '') {
+    if($idGramatura != '') {
         $sql = "DELETE FROM GramaturaPapel WHERE idGramaturaPapel='{$idGramatura}'";
         $query = mysql_query($sql);
     }
@@ -239,7 +239,7 @@ if($acao == '') {
     echo json_encode($return);
 } else if($acao == 'inserirUnidadeDeMedida') {
 	if($idMaterialUnidade == '') {
-		$sql = "INSERT INTO `MaterialUnidade` (`idMaterialUnidade`,`descricao`) VALUES (NULL,'{$descricaoUnidade}');";
+		$sql = "INSERT INTO `MaterialUnidade` (`idMaterialUnidade`,`descricao`) VALUES (NULL,'{$descricaoUnidade}')";
 	} else {
 		$sql = "UPDATE MaterialUnidade SET descricao='{$descricaoUnidade}' WHERE idMaterialUnidade={$idMaterialUnidade}";
 	}
@@ -280,8 +280,8 @@ if($acao == '') {
     echo json_encode($return);
 } else if($acao == 'inserirCategoria') {
 	if($idCategoria == '') {
-		$sql = "INSERT INTO `Categoria` (`idCategoria`,`nome`,`descricao`) VALUES
-				(NULL,'{$nomeCategoria}','{$descricaoCategoria}'";
+		$sql = "INSERT INTO Categoria (`idCategoria`,`nome`,`descricao`) VALUES
+				(NULL,'{$nomeCategoria}','{$descricaoCategoria}')";
 		$query = mysql_query($sql);
 	} else {
 		$sql = "UPDATE Categoria SET nome='{$nomeCategoria}', descricao='{$descricaoCategoria}'

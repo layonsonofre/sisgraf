@@ -17,8 +17,14 @@ unset($_SESSION['idOS']);
     <body>
         <div id="help" class="modal">
             <div class="modal-content">
-                <h4>Modal Header</h4>
-                <p>A bunch of text</p>
+                <h4>Incluir Ordem de Serviço</h4>
+                <p>Insira as datas referentes, observações necessárias para realização do serviço e o valor total.</p>
+                <p>Selecione os clientes da Ordem de Serviço, segurando o botão "Control" para selecionar vários.</p>
+                <p>Selecione o tipo de serviço que deseja incluir clicando nos botões, onde campos específicos vão ser mostrados. Insira todos os campos conforme pedido.</p>
+                <p>Quando preencher os campos, clique no botão "+ ADICIONAR" para inserir o tipo de serviço na ordem de serviço.<p>
+                <p>Para mostrar os tipos de serviço adicionados na ordem de serviço clique no botão "SERVIÇOS".</p>
+                <p>Clicando no botão "Arquivos" você pode ver os arquivos já cadastrados para esta ordem de serviço, podendo também encontrar o link para cadastrar um novo arquivo.</p>
+                <p>Clique no botão "Salvar" para registrar as informações alteradas da Ordem de Serviço, ou "Cancelar" para descartar esta ordem de serviço.</p>
             </div>
             <div class="modal-footer">
                 <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Entendi</a>
@@ -94,7 +100,7 @@ unset($_SESSION['idOS']);
                             }
                             ?>
                             <div class="input-field col s3">
-                                <input name="valorTotal" id="valorTotal" type="text" class="validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['valorTotal'] . "'"; ?> length="10" maxlength="10">
+                                <input name="valorTotal" id="valorTotal" type="text" class="valor validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['valorTotal'] . "'"; ?> length="10" maxlength="10">
                                 <label for="valorTotal" class="active">Valor Total (R$)</label>
                             </div>
                             <div class="input-field col s3">
@@ -165,7 +171,7 @@ unset($_SESSION['idOS']);
                                         <label for="descricaoNota" class="active">Descrição</label>
                                     </div>
                                     <div class="input-field col s2">
-                                        <input name="valorNota" id="valorNota" type="text" class="validate right-align" length="10" maxlength="10">
+                                        <input name="valorNota" id="valorNota" type="text" class="valor validate right-align" length="10" maxlength="10">
                                         <label for="valorNota" class="active">Valor (R$)</label>
                                     </div>
                                 </div>
@@ -434,7 +440,7 @@ unset($_SESSION['idOS']);
                                         <label for="quantidade" class="active">Quantidade</label>
                                     </div>
                                     <div class="input-field col s2">
-                                        <input name="valor" id="valor" type="text" class="validate right-align">
+                                        <input name="valor" id="valor" type="text" class="valor validate right-align">
                                         <label for="valor" class="active">Valor (R$)</label>
                                     </div>
                                 </div>
@@ -650,6 +656,8 @@ unset($_SESSION['idOS']);
     <script src="js/ordemDeServico/selecionarTipoServico.js"></script>
     <script src="js/ordemDeServico/materialVias.js"></script>
     <script src="js/ordemDeServico/adicionar.js"></script>
+    <script src="js/autoNumeric-min.js"></script>
+    <script src="js/valor.js"></script>
     <script>
         var $input = $('.datepicker').pickadate();
         var picker = $input.pickadate('picker');
