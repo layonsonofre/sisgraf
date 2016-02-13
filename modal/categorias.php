@@ -1,5 +1,5 @@
 <div id="modalCategoria" class="modal center-text">
-    <form class="col s12" role="form" id="formCategoria">
+    <form class="form col s12" role="form" id="formCategoria">
         <div class="modal-content">
             <h4>Atualizar Categoria</h4>
             <div class="row">
@@ -9,7 +9,7 @@
                     <label for="nomeCategoria">Nome</label>
                 </div>
                 <div class="input-field col s8">
-                    <input name="descricaoCategoria" id="descricaoCategoria" type="text" class="valor validate" maxlength="60" length="60" required>
+                    <input name="descricaoCategoria" id="descricaoCategoria" type="text" class="validate" maxlength="60" length="60" required>
                     <label for="descricaoCategoria">Descrição</label>
                 </div>
             </div>
@@ -26,5 +26,3 @@
     </form>
 </div>
 <script src="js/ajax/categorias.js"></script>
-<script src="js/autoNumeric-min.js"></script>
-<script src="js/valor.js"></script>

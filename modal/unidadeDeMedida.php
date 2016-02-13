@@ -1,5 +1,5 @@
 <div id="modalUnidadeDeMedida" class="modal">
-    <form class="col s12" role="form" id="formUnidadeDeMedida">
+    <form class="form col s12" role="form" id="formUnidadeDeMedida">
         <div class="modal-content">
             <h4>Atualizar Unidade de Medida</h4>
             <div class="row">

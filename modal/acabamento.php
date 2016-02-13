@@ -1,5 +1,5 @@
 <div id="modalAcabamento" class="modal center-text">
-    <form class="col s12" role="form" id="formAcabamento">
+    <form class="form col s12" role="form" id="formAcabamento">
         <div class="modal-content">
             <h4>Atualizar Acabamento</h4>
             <div class="row">

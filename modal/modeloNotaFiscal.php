@@ -1,5 +1,5 @@
 <div id="modalModeloNotaFiscal" class="modal center-text">
-    <form class="col s12" role="form" id="formModeloNotaFiscal">
+    <form class="form col s12" role="form" id="formModeloNotaFiscal">
         <div class="modal-content">
             <h4>Atualizar Modelo de Nota Fiscal</h4>
             <div class="row">

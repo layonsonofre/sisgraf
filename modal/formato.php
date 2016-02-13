@@ -1,5 +1,5 @@
 <div id="modalFormato" class="modal center-text">
-    <form class="col s12" role="form" id="formFormato">
+    <form class="form col s12" role="form" id="formFormato">
         <div class="modal-content">
             <h4>Atualizar Formato</h4>
             <div class="row">

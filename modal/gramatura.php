@@ -1,5 +1,5 @@
 <div id="modalGramatura" class="modal">
-    <form class="col s12" role="form" id="formGramatura">
+    <form class="form col s12" role="form" id="formGramatura">
         <div class="modal-content">
             <h4>Atualizar Gramatura</h4>
             <div class="row">

@@ -1,5 +1,5 @@
 <div id="modalCor" class="modal">
-    <form class="col s6" role="form" id="formCor">
+    <form class="form col s6" role="form" id="formCor">
         <div class="modal-content">
             <h4>Atualizar Cor</h4>
             <div class="row">

@@ -1,5 +1,5 @@
 <div id="modalFormaImpressao" class="modal center-text">
-    <form class="col s12" role="form" id="formFormaImpressao">
+    <form class="form col s12" role="form" id="formFormaImpressao">
         <div class="modal-content">
             <h4>Atualizar Forma de Impressão</h4>
             <div class="row">

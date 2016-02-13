@@ -1,4 +1,8 @@
 $(function() {
+    $(".modal").on("hidden", function() {
+        console.log("oi");
+        //$(this > "form")[0].reset();
+    });
     var request;
     $("#formCategoria").submit(function(event){
         if (request) {
@@ -16,6 +20,7 @@ $(function() {
         request.done(function (response, textStatus, jqXHR){
             console.log(response);
             $('#selectCategoria').empty().append(response);
+            $('#categoria').empty().append(response);
             $('select').material_select();
             $("#verCategorias")[0].click();
             $('#modalCategoria .cancelar').click();

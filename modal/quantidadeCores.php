@@ -1,5 +1,5 @@
 <div id="modalQuantidadeCores" class="modal">
-    <form class="col s6" role="form" method="POST" action="control/tipoDeServico.php" id="formQuantidadeCores">
+    <form class="form col s6" role="form" method="POST" action="control/tipoDeServico.php" id="formQuantidadeCores">
         <div class="modal-content">
             <h4>Atualizar Quantidade de Cores</h4>
             <div class="row">
