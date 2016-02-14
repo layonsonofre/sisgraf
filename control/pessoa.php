@@ -89,6 +89,7 @@ if($acao == '') {
 	} else {
 		$cpf = NULL;
 		$rg = NULL;
+		$nome = isset($_POST['contato']) ? $_POST['contato'] : '';
 	}
 	$sql = "INSERT INTO `Pessoa` " .
 	"(`idPessoa`,`nome`,`status`,`isPessoaFisica`,`cpf`,`rg`,`cnpj`,".
@@ -140,7 +141,10 @@ if($acao == '') {
 		if(!validaCPF($cpf)) {
 			header('Location: ../incluirPessoa.php?at=no&tipo='.$tipo);
 		}
+	} else {
+		$nome = isset($_POST['contato']) ? $_POST['contato'] : '';
 	}
+
 	$sql = "UPDATE `Pessoa` SET `nome`='". $nome."',`status`='".$status."',`isPessoaFisica`='".$isPessoaFisica."',`cpf`='".$cpf.
 	"',`rg`='".$rg."',`cnpj`='".$cnpj."',`inscricaoEstadual`='".$inscricaoEstadual."',`inscricaoMunicipal`='".$inscricaoMunicipal.
 	"',`razaoSocial`='".$razaoSocial."',`nomeFantasia`='".$nomeFantasia."',`nomeRua`='".$nomeRua."',`numero`='".$numero.

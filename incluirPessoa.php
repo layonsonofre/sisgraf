@@ -83,18 +83,24 @@ if(isset($_GET['logout'])) {
                     <form class="col s12" role="form" method="POST" action="control/pessoa.php" id="formPessoa">
                         <?php
                         if($tipo != 'funcionario') {
+                            $flag = 0;
                         ?>
                             <div class="row">
                                 <div class="col s12">
                                     <p>
-                                        <input name="tipoPessoa" type="radio" id="pFisica" value="1" <?php if($idPessoa) if($resultado['isPessoaFisica'] == '1') echo "checked"; ?>>
+                                        <input name="tipoPessoa" type="radio" id="pFisica" value="1" <?php if($idPessoa) { if($resultado['isPessoaFisica'] == '1') { echo "checked"; $flag = 1; } } else { echo "checked"; } ?>>
                                         <label for="pFisica">Pessoa Física&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                        <input name="tipoPessoa" type="radio" id="pJuridica" value="0" <?php if($idPessoa) if($resultado['isPessoaFisica'] == '0') echo "checked"; ?>>
+                                        <input name="tipoPessoa" type="radio" id="pJuridica" value="0" <?php if($idPessoa) { if($resultado['isPessoaFisica'] == '0') { echo "checked"; $flag = 2; } } ?>>
                                         <label for="pJuridica">Pessoa Juridica</label>
                                     </p>
                                 </div>
                             </div>
                         <?php
+                            if($flag == 1) {
+                                echo "<script>$('#pFisica').click();</script>";
+                            } else if ($flag == 2) {
+                                echo "<script>$('#pJuridica').click();</script>";
+                            }
                         }
                         ?>
                         <div class="row" id="pessoaFisica">

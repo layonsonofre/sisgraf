@@ -1,7 +1,7 @@
 $(function(){
     $('input[name=isPessoaFisica]').val('1');
     $('#pessoaFisica').show();
-    $('#pFisica').attr("checked", "checked");
+    //$('#pFisica').attr("checked", "checked");
     $('#pessoaJuridica').hide();
     $('input[name="tipoPessoa"]').click(function () {
         if ($(this).attr('id')==='pFisica') {

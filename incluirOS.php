@@ -77,9 +77,9 @@ unset($_SESSION['idOS']);
                         <div class="row">
                             <div class="col s12">
                                 <p>
-                                    <input name="isOrcamento" type="radio" id="isOS" value="0" checked>
+                                    <input name="isOrcamento" type="radio" id="isOS" value="0" <?php if($idOS) { if($resultado['isOrcamento'] == '0') { echo "checked"; } } else { echo "checked"; } ?>>
                                     <label for="isOS">Ordem de Serviço&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                    <input name="isOrcamento" type="radio" id="isOrc" value="1">
+                                    <input name="isOrcamento" type="radio" id="isOrc" value="1" <?php if($idOS) { if($resultado['isOrcamento'] == '1') { echo "checked"; } } ?>>
                                     <label for="isOrc">Orçamento</label>
                                 </p>
                             </div>

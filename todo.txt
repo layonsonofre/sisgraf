@@ -1,3 +1,4 @@
+- Atualizar nome para contato
 + Pesquisar 'Pessoa' com status='%ativo'
 - Centralizar card do login.php
 + Listagem/Pesquisas (Falta consertar a paginação)
