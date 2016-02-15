@@ -81,6 +81,7 @@ if(isset($_GET['logout'])) {
                 ?>
                 <div class="row">
                     <form class="col s12" role="form" method="POST" action="control/pessoa.php" id="formPessoa">
+                        <p class="light" style="color: red;">* Campo obrigatório</p>
                         <?php
                         if($tipo != 'funcionario') {
                             $flag = 0;
@@ -106,19 +107,19 @@ if(isset($_GET['logout'])) {
                         <div class="row" id="pessoaFisica">
                             <div class="input-field col s4">
                                 <input name="nome" id="nome" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['nome']."'"; ?> length="64" maxlength="64">
-                                <label for="nome" class="active">Nome</label>
+                                <label for="nome" class="active">Nome <p class="help-block">*</p></label>
                             </div>
                             <div class="input-field col s3">
                                 <input name="cpf" id="cpf" type="text" class="validate" data-mask="999.999.999-99" <?php if($idPessoa) echo "value='".$resultado['cpf']."'"; ?>>
-                                <label for="cpf" class="active">CPF</label>
+                                <label for="cpf" class="active">CPF <p class="help-block">*</p></label>
                             </div>
                             <div class="input-field col s3">
                                 <input name="rg" id="rg" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['rg']."'"; ?> length="12" maxlength="12">
-                                <label for="rg" class="active">RG ou RNE</label>
+                                <label for="rg" class="active">RG ou RNE <p class="help-block">*</p></label>
                             </div>
                             <div class="input-field col s2">
                                 <input name="orgaoExpedidor" id="orgaoExpedidor" type="text" class="validate" data-mask="www/ww" <?php if($idPessoa) echo "value='".$resultado['orgaoExpedidor']."'"; ?>>
-                                <label for="orgaoExpedidor" class="active">Órgão Exp./UF</label>
+                                <label for="orgaoExpedidor" class="active">Órgão Exp./UF <p class="help-block">*</p></label>
                             </div>
                         </div>
                         <?php
@@ -128,29 +129,29 @@ if(isset($_GET['logout'])) {
                                 <div class="row">
                                     <div class="input-field col s5">
                                         <input name="nomeFantasia" id="nomeFantasia" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['nomeFantasia']."'"; ?> length="64" maxlength="64">
-                                        <label for="nomeFantasia" class="active">Nome Fantasia</label>
+                                        <label for="nomeFantasia" class="active">Nome Fantasia <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s4">
                                         <input name="razaoSocial" id="razaoSocial" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['razaoSocial']."'"; ?> length="64" maxlength="64">
-                                        <label for="razaoSocial" class="active">Razão Social</label>
+                                        <label for="razaoSocial" class="active">Razão Social <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s3">
                                         <input name="contato" id="contato" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['nome']."'"; ?> length="64" maxlength="64">
-                                        <label for="contato" class="active">Contato</label>
+                                        <label for="contato" class="active">Contato <p class="help-block">*</p></label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-field col s4">
                                         <input name="cnpj" id="cnpj" type="text" class="validate" data-mask="99.999.999/9999-99" <?php if($idPessoa) echo "value='".$resultado['cnpj']."'"; ?>>
-                                        <label for="cnpj" class="active">CNPJ</label>
+                                        <label for="cnpj" class="active">CNPJ <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s4">
                                         <input name="inscricaoEstadual" id="inscricaoEstadual" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['inscricaoEstadual']."'"; ?> length="24" maxlength="24">
-                                        <label for="inscricaoEstadual" class="active">Inscrição Estadual</label>
+                                        <label for="inscricaoEstadual" class="active">Inscrição Estadual <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s4">
                                         <input name="inscricaoMunicipal" id="inscricaoMunicipal" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['inscricaoMunicipal']."'"; ?> length="24" maxlength="24">
-                                        <label for="inscricaoMunicipal" class="active">Inscrição Municipal</label>
+                                        <label for="inscricaoMunicipal" class="active">Inscrição Municipal <p class="help-block">*</p></label>
                                     </div>
                                 </div>
                             </div>
@@ -222,17 +223,17 @@ if(isset($_GET['logout'])) {
                             <div class="row">
                                 <div class="input-field col s4">
                                     <input name="usuario" id="usuario" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['usuario']."'"; ?> length="32" maxlength="32">
-                                    <label for="usuario" class="active">Nome de Usuário</label>
+                                    <label for="usuario" class="active">Nome de Usuário <p class="help-block">*</p></label>
                                     <p class="help-block" id="help-usuario"></p>
                                 </div>
                                 <div class="input-field col s4">
                                     <input name="senha" id="senha" type="password" class="validate" <?php if($idPessoa) echo "disabled"; ?>>
-                                    <label for="senha" class="active">Senha</label>
+                                    <label for="senha" class="active">Senha <p class="help-block">*</p></label>
                                     <p class="help-block" id="help-senha"></p>
                                 </div>
                                 <div class="input-field col s4">
                                     <input id="confirmacaosenha" type="password" class="validate" <?php if($idPessoa) echo "disabled"; ?>>
-                                    <label for="confirmacaosenha" class="active">Confirme sua senha</label>
+                                    <label for="confirmacaosenha" class="active">Confirme sua senha <p class="help-block">*</p></label>
                                     <p class="help-block" id="help-confirmacaosenha"></p>
                                 </div>
                             </div>
@@ -244,29 +245,29 @@ if(isset($_GET['logout'])) {
                             <div class="row">
                                 <div class="input-field col s2">
                                     <input name="cep" id="cep" type="text" class="validate" data-mask="99999-999" <?php if($idPessoa) echo "value='".$resultado['cep']."'"; ?>>
-                                    <label for="cep" class="active">CEP</label>
+                                    <label for="cep" class="active">CEP <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s5">
                                     <input name="nomeRua" id="nomeRua" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['nomeRua']."'"; ?> length="50" maxlength="50">
-                                    <label for="nomeRua" class="active">Logradouro</label>
+                                    <label for="nomeRua" class="active">Logradouro <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s1">
                                     <input name="numero" id="numero" type="text" class="validate right-align" data-mask="9?99999999" <?php if($idPessoa) echo "value='".$resultado['numero']."'"; ?>>
-                                    <label for="numero" class="active">Número</label>
+                                    <label for="numero" class="active">Número <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s4">
                                     <input name="complemento" id="complemento" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['complemento']."'"; ?> length="32" maxlength="32">
-                                    <label for="complemento" class="active">Complemento</label>
+                                    <label for="complemento" class="active">Complemento <p class="help-block">*</p></label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col s5">
                                     <input name="cidade" id="cidade" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['cidade']."'"; ?> length="32" maxlength="32">
-                                    <label for="cidade" class="active">Cidade</label>
+                                    <label for="cidade" class="active">Cidade <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s4">
                                     <input name="bairro" id="bairro" type="text" class="validate" <?php if($idPessoa) echo "value='".$resultado['bairro']."'"; ?> length="24" maxlength="24">
-                                    <label for="bairro" class="active">Bairro</label>
+                                    <label for="bairro" class="active">Bairro <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s3">
                                     <select id="estado" name="estado" class="browser-default">
@@ -299,7 +300,7 @@ if(isset($_GET['logout'])) {
                                         <option value="SE" <?php if($idPessoa) if($resultado['estado'] == 'SE') echo "selected"; ?> >Sergipe</option>
                                         <option value="TO" <?php if($idPessoa) if($resultado['estado'] == 'TO') echo "selected"; ?> >Tocantins</option>
                                     </select>
-                                    <label>Estado</label>
+                                    <label>Estado <p class="help-block">*</p></label>
                                 </div>
                             </div>
                         </div>
@@ -311,7 +312,7 @@ if(isset($_GET['logout'])) {
                         <div id="categorias">
                             <div class="row">
                                 <div class="col s11">
-                                    <label>Materiais Fornecidos</label>
+                                    <label>Materiais Fornecidos <p class="help-block">*</p></label>
                                     <select id="categoria" name="categoria[]" multiple class="browser-default">
                                         <option value="" disabled>Selecione as categorias de materiais fornecidos</option>
                                     <?php

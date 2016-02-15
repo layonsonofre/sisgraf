@@ -69,18 +69,19 @@ protegePagina(); // Chama a função que protege a página
                 ?>
                 <div class="row">
                     <form class="col s12" role="form" method="POST" action="control/tipoDeServico.php">
+                        <p class="light" style="color: red;">* Campo obrigatório</p>
                         <div class="row">
                             <div class="input-field col s3">
                                 <input name="nome" id="nome" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['nome']."'"; if($_GET['tipo'] == 'carimbo') echo "value='Carimbo' readonly"; if($_GET['tipo'] == 'nota') echo "value='Nota Fiscal' readonly"; ?> length="24" maxlength="24">
-                                <label for="nome" class="active">Nome</label>
+                                <label for="nome" class="active">Nome <p class="help-block">*</p></label>
                             </div>
                             <div class="input-field col s6">
                                 <input name="descricao" id="descricao" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['descricao']."'"; if($_GET['tipo'] == 'carimbo') echo "value='Material auxiliar de uso diverso' readonly"; if($_GET['tipo'] == 'nota') echo "value='Tipo de impresso usado como documento fiscal' readonly"; ?> length="64" maxlength="64">
-                                <label for="descricao" class="active">Descrição</label>
+                                <label for="descricao" class="active">Descrição <p class="help-block">*</p></label>
                             </div>
                             <div class="input-field col s2">
                                 <input name="valorUnitario" id="valorUnitario" type="text" class="valor validate right-align" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['valor']."'"; ?> length="10" maxlength="10">
-                                <label for="valorUnitario" class="active">Valor (R$)</label>
+                                <label for="valorUnitario" class="active">Valor (R$) <p class="help-block">*</p></label>
                             </div>
                             <div class="input-field col s1">
                                 <input name="status" id="status" type="checkbox" value="ativo" <?php if($idTS)  { if($resultado['status'] == 'ativo') echo "checked"; } else echo "checked"; ?>>
@@ -101,19 +102,19 @@ protegePagina(); // Chama a função que protege a página
                                         <option value="1" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == '1') echo "selected"; } ?> >Automático</option>
                                         <option value="0" <?php if(isset($_GET['idTS'])) { if($resultado['isAutomatico'] == '0') echo "selected"; } ?> >Madeira</option>
                                     </select>
-                                    <label for="isAutomatico" class="active">Tipo</label>
+                                    <label for="isAutomatico" class="active">Tipo <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s4">
                                     <input name="nomeCarimbo" id="nomeCarimbo" type="text" class="validate" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['nomeCarimbo']."'"; ?> length="10" maxlength="10">
-                                    <label for="nomeCarimbo" class="active">Nome</label>
+                                    <label for="nomeCarimbo" class="active">Nome <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s3">
                                     <input name="baseCarimbo" id="baseCarimbo" type="text" class="validate right-align" data-mask="9?99"<?php if(isset($_GET['idTS'])) echo "value='".$resultado['base']."'"; ?>>
-                                    <label for="baseCarimbo" class="active">Base (mm)</label>
+                                    <label for="baseCarimbo" class="active">Base (mm) <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s3">
                                     <input name="alturaCarimbo" id="alturaCarimbo" type="text" class="validate right-align" data-mask="9?99" <?php if(isset($_GET['idTS'])) echo "value='".$resultado['altura']."'"; ?>>
-                                    <label for="alturaCarimbo" class="active">Altura (mm)</label>
+                                    <label for="alturaCarimbo" class="active">Altura (mm) <p class="help-block">*</p></label>
                                 </div>
                             </div>
                         <?php
@@ -156,16 +157,16 @@ protegePagina(); // Chama a função que protege a página
                                         }
                                         ?>
                                     </select>
-                                    <label>Papel</label>
+                                    <label>Papel <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s4">
                                     <input name="valorPapel" id="valorPapel" type="text" class="valor validate right-align" value="<?php echo $valorPapel; ?>" length="10" maxlength="10">
-                                    <label for="valorPapel" class="active">Valor (R$)</label>
+                                    <label for="valorPapel" class="active">Valor (R$) <p class="help-block">*</p></label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col s11">
-                                    <label>Formato</label>
+                                    <label>Formato <p class="help-block">*</p></label>
                                     <select id="selectFormato" name="selectFormato[]" multiple class="browser-default">
                                         <?php
                                         echo "<option value='' disabled>Selecione os formatos que este serviço pode ser feito</option>";
@@ -191,7 +192,7 @@ protegePagina(); // Chama a função que protege a página
                             </div>
                             <div class="row">
                                 <div class="col s11">
-                                    <label>Acabamento</label>
+                                    <label>Acabamento <p class="help-block">*</p></label>
                                     <select id="selectAcabamento" name="selectAcabamento[]" multiple class="browser-default">
                                     <?php
                                         echo "<option value='' disabled>Selecione os acabamentos disponíveis para o serviço</option>";

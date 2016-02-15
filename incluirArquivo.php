@@ -68,17 +68,18 @@ protegePagina(); // Chama a função que protege a página
                 ?>
                 <div class="row">
                     <form class="col s12" role="form" method="POST" enctype="multipart/form-data" action="control/arquivo.php">
+                        <p class="light" style="color: red;">* Campo obrigatório</p>
                         <div class="row">
                             <div class="input-field col s6">
-                                <input name="nome" id="nome" type="text" class="validate" <?php if($idArquivo) echo "value='".$resultado['nome']."'"; ?> length="64" maxlength="64">
-                                <label for="nome" class="active">Nome</label>
+                                <input name="nome" id="nome" type="text" class="validate" <?php if($idArquivo) echo "value='".$resultado['nome']."'"; ?> length="64" maxlength="64" required>
+                                <label for="nome" class="active">Nome <p class="help-block">*</p></label>
                             </div>
                             <div class="input-field col s3">
-                                <input name="data" id="data" type="date" class="validate datepicker" <?php if ($idArquivo) echo "value='{$resultado['data']}'"; ?>>
-                                <label for="data" class="active">Data</label>
+                                <input name="data" id="data" type="date" class="validate datepicker" <?php if ($idArquivo) echo "value='{$resultado['data']}'"; ?> required>
+                                <label for="data" class="active">Data <p class="help-block">*</p></label>
                             </div>
     						<div class="input-field col s2">
-                                <select id="selectOrdemDeServico" name="selectOrdemDeServico">
+                                <select id="selectOrdemDeServico" name="selectOrdemDeServico" required>
                                     <option value="" disabled <?php if(!$idArquivo && !$idOS) echo "selected"; ?>>Selecione</option>
                                     <?php
                                     $sql = "SELECT * FROM OrdemDeServico";
@@ -94,11 +95,89 @@ protegePagina(); // Chama a função que protege a página
                                     }
                                     ?>
                                 </select>
-                                <label>Ordem de Serviço</label>
+                                <label>Ordem de Serviço <p class="help-block">*</p></label>
                             </div>
                             <div class="col s1">
                                 <a id="detalhesOS" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">zoom_in</i></a>
                             </div>
+                        </div>
+                        <div id="arquivoModelo">
+                            <div class="row">
+                                <div class="col s12">
+                                    <h4>Modelo</h4>
+                                </div>
+                            </div>
+                            <?php
+                            if($idArquivo) {
+                                $sql = "SELECT * FROM ArquivoModelo WHERE idArquivo = {$idArquivo}";
+                                $query = mysql_query($sql);
+                                while($temp = mysql_fetch_assoc($query)) {
+                                    echo "<div class='row'>";
+                                        echo "<div class='input-field col s8'>";
+                                            echo "<input name='urlModeloAntigo[]' id='urlModeloAntigo' type='text' class='validate' length='256' maxlength='256' value='{$temp['url']}'>";
+                                            echo "<label>Local</label>";
+                                        echo "</div>";
+                                        echo "<div class='input-field col s3'>";
+                                            echo "<select name='statusAntigo[]' id='status'>";
+                                                if($temp['status'] == 'desenvolvimento') echo "<option value='desenvolvimento' selected>Em Desenvolvimento</option>";
+                                                else echo "<option value='desenvolvimento'>Em Desenvolvimento</option>";
+                                                if($temp['status'] == 'aguardando') echo "<option value='aguardando' selected>Aguardando Cliente</option>";
+                                                else echo "<option value='aguardando'>Aguardando Cliente</option>";
+                                                if($temp['status'] == 'aprovado') echo "<option value='aprovado' selected>Aprovado</option>";
+                                                else echo "<option value='aprovado'>Aprovado</option>";
+                                            echo "</select>";
+                                            echo "<label>Status</label>";
+                                        echo "</div>";
+                                        echo "<div class='col s1'>";
+                                            echo "<a idArquivoModeloAntigo='{$temp['idArquivoModelo']}' idArquivo='{$idArquivo}' id='remModelo' class='waves-effect waves-light red accent-4 btn-floating'><i class='material-icons left'>delete</i></a>";
+                                        echo "</div>";
+                                    echo "</div>";
+                                    echo "<input type='hidden' name='idArquivoModeloAntigo' value='{$temp['idArquivoModelo']}'>";
+                                }
+                            }
+                            ?>
+                            <div class="row">
+                                <!-- <div class="file-field input-field col s8">
+                                    <div class="btn">
+                                        <span>Arquivo</span>
+                                        <input type="file" class="modelo" name="urlModeloNovo[]" id="urlModeloNovo">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validade" type="text" placeholder="Selecione o modelo">
+                                    </div> -->
+                                    <!-- <input multiple name="urlModelo[]" id="url" type="file" class="validate" <?php if(isset($_GET['idArquivoModelo'])) echo "value='".$resultado['urlModelo']."'"; ?>>
+                                    <label for="urlModelo" class="active">Insira o local em que o arquivo está armazenado</label> -->
+                                <!-- </div> -->
+                                <div class="input-field col s8">
+                                    <input name='urlModeloNovo[]' id='urlModeloNovo' type='text' class='validate' length='256' maxlength='256' required>
+                                    <label for="urlModeloNovo">Local <p class="help-block">*</p></label>
+                                </div>
+                                <div class="input-field col s3">
+                                    <select name="statusNovo[]" id="status" required>
+                                        <option value="desenvolvimento" selected>Desenvolvimento</option>
+                                        <option value="aguardando">Aguardando Cliente</option>
+                                        <option value="aprovado">Aprovado</option>
+                                    </select>
+                                    <label>Status <p class="help-block">*</p></label>
+                                </div>
+                                <div class="col s1">
+                                    <a id="addModelo" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
+                                </div>
+                            </div>
+                            <!-- <div id="thumbnais" class="row">
+                                <div class="col s6">
+                                    <div class="card small">
+                                        <div class="card-image">
+                                            <img id="thumbModeloNovo" src="" alt="Imagem modelo" />
+                                            <span class="card-title" id="thumbModeloNovoTitulo"></span>
+                                        </div>
+                                        <div class="card-action">
+                                            <a href="#">Excluir</a>
+                                            <a href="#">Atualizar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
                         </div>
                         <div id="arquivoMatriz">
                             <div class="row">
@@ -151,84 +230,6 @@ protegePagina(); // Chama a função que protege a página
                                     <a id="addMatriz" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
                                 </div>
                             </div>
-                        </div>
-                        <div id="arquivoModelo">
-                            <div class="row">
-                                <div class="col s12">
-                                    <h4>Modelo</h4>
-                                </div>
-                            </div>
-                            <?php
-                            if($idArquivo) {
-                                $sql = "SELECT * FROM ArquivoModelo WHERE idArquivo = {$idArquivo}";
-                                $query = mysql_query($sql);
-                                while($temp = mysql_fetch_assoc($query)) {
-                                    echo "<div class='row'>";
-                                        echo "<div class='input-field col s8'>";
-                                            echo "<input name='urlModeloAntigo[]' id='urlModeloAntigo' type='text' class='validate' length='256' maxlength='256' value='{$temp['url']}'>";
-                                            echo "<label>Local</label>";
-                                        echo "</div>";
-                                        echo "<div class='input-field col s3'>";
-                                            echo "<select name='statusAntigo[]' id='status'>";
-                                                if($temp['status'] == 'desenvolvimento') echo "<option value='desenvolvimento' selected>Em Desenvolvimento</option>";
-                                                else echo "<option value='desenvolvimento'>Em Desenvolvimento</option>";
-                                                if($temp['status'] == 'aguardando') echo "<option value='aguardando' selected>Aguardando Cliente</option>";
-                                                else echo "<option value='aguardando'>Aguardando Cliente</option>";
-                                                if($temp['status'] == 'aprovado') echo "<option value='aprovado' selected>Aprovado</option>";
-                                                else echo "<option value='aprovado'>Aprovado</option>";
-                                            echo "</select>";
-                                            echo "<label>Status</label>";
-                                        echo "</div>";
-                                        echo "<div class='col s1'>";
-                                            echo "<a idArquivoModeloAntigo='{$temp['idArquivoModelo']}' idArquivo='{$idArquivo}' id='remModelo' class='waves-effect waves-light red accent-4 btn-floating'><i class='material-icons left'>delete</i></a>";
-                                        echo "</div>";
-                                    echo "</div>";
-                                    echo "<input type='hidden' name='idArquivoModeloAntigo' value='{$temp['idArquivoModelo']}'>";
-                                }
-                            }
-                            ?>
-                            <div class="row">
-                                <!-- <div class="file-field input-field col s8">
-                                    <div class="btn">
-                                        <span>Arquivo</span>
-                                        <input type="file" class="modelo" name="urlModeloNovo[]" id="urlModeloNovo">
-                                    </div>
-                                    <div class="file-path-wrapper">
-                                        <input class="file-path validade" type="text" placeholder="Selecione o modelo">
-                                    </div> -->
-                                    <!-- <input multiple name="urlModelo[]" id="url" type="file" class="validate" <?php if(isset($_GET['idArquivoModelo'])) echo "value='".$resultado['urlModelo']."'"; ?>>
-                                    <label for="urlModelo" class="active">Insira o local em que o arquivo está armazenado</label> -->
-                                <!-- </div> -->
-                                <div class="input-field col s8">
-                                    <input name='urlModeloNovo[]' id='urlModeloNovo' type='text' class='validate' length='256' maxlength='256'>
-                                    <label for="urlModeloNovo">Local</label>
-                                </div>
-                                <div class="input-field col s3">
-                                    <select name="statusNovo[]" id="status">
-                                        <option value="desenvolvimento" selected>Desenvolvimento</option>
-                                        <option value="aguardando">Aguardando Cliente</option>
-                                        <option value="aprovado">Aprovado</option>
-                                    </select>
-                                    <label>Status</label>
-                                </div>
-                                <div class="col s1">
-                                    <a id="addModelo" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
-                                </div>
-                            </div>
-                            <!-- <div id="thumbnais" class="row">
-                                <div class="col s6">
-                                    <div class="card small">
-                                        <div class="card-image">
-                                            <img id="thumbModeloNovo" src="" alt="Imagem modelo" />
-                                            <span class="card-title" id="thumbModeloNovoTitulo"></span>
-                                        </div>
-                                        <div class="card-action">
-                                            <a href="#">Excluir</a>
-                                            <a href="#">Atualizar</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                        
                         <?php

@@ -462,7 +462,7 @@ if($acao == '') {
 						$query2 = mysql_query($sql2);
 						echo "<p>Fornecedores: <br>";
 						while($pessoa = mysql_fetch_assoc($query2)) {
-							if ($pessoa['isPessoaFisica'] == 'FALSE') {
+							if ($pessoa['isPessoaFisica'] == '0') {
 	                            echo "<b>{$pessoa['nomeFantasia']}</b> <!-- ({$pessoa['nomeRua']}, {$pessoa['numero']} - {$pessoa['cidade']})-->";
 	                        } else {
 	                            echo "<b>{$pessoa['nome']}</b><!-- ({$pessoa['nomeRua']}, {$pessoa['numero']} - {$pessoa['cidade']})-->";

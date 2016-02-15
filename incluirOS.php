@@ -74,6 +74,7 @@ unset($_SESSION['idOS']);
                 </div>
                 <div class="row">
                     <form class="col s12" role="form" id="formOS" method="POST" action="control/ordemdeservico.php">
+                        <p class="light" style="color: red;">* Campo obrigatório</p>
                         <div class="row">
                             <div class="col s12">
                                 <p>
@@ -86,22 +87,22 @@ unset($_SESSION['idOS']);
                         </div>
                         <div class="row">
                             <div class="input-field col s3">
-                                <input name="dataEntrada" id="dataEntrada" type="date" class="validate datepicker" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['dataEntrada'] . "'"; ?>>
-                                <label for="dataEntrada" class="active">Data de Entrada</label>
+                                <input name="dataEntrada" id="dataEntrada" type="date" class="validate datepicker" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['dataEntrada'] . "'"; ?> required>
+                                <label for="dataEntrada" class="active">Data de Entrada <p class="help-block">*</p></label>
                             </div>
                             <?php
                             if ($idOS != '') {
                             ?>
                             <div class="input-field col s3">
                                 <input name="dataSaida" id="dataSaida" type="date" class="validate datepicker" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['dataSaida'] . "'"; ?>>
-                                <label for="dataSaida" class="active">Data de Saída</label>
+                                <label for="dataSaida" class="active">Data de Saída <p class="help-block">*</p></label>
                             </div>
                             <?php
                             }
                             ?>
                             <div class="input-field col s3">
                                 <input name="valorTotal" id="valorTotal" type="text" class="valor validate right-align" <?php if (isset($_GET['idOS'])) echo "value='" . $resultado['valorTotal'] . "'"; ?> length="10" maxlength="10">
-                                <label for="valorTotal" class="active">Valor Total (R$)</label>
+                                <label for="valorTotal" class="active">Valor Total (R$) <p class="help-block">*</p></label>
                             </div>
                             <div class="input-field col s3">
                                 <select id="status" name="status">
@@ -114,12 +115,12 @@ unset($_SESSION['idOS']);
                                     <option value="entregue" <?php if($idOS) if($resultado['status'] == 'entregue') echo 'selected';?>>Entregue</option>
                                     <option value="cancelada" <?php if($idOS) if($resultado['status'] == 'cancelada') echo 'selected';?>>Cancelada</option>
                                 </select>
-                                <label>Status</label>
+                                <label>Status <p class="help-block">*</p></label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col s11">
-                                <label>Clientes</label>
+                                <label>Clientes <p class="help-block">*</p></label>
                                 <select id="selectCliente" name="selectCliente[]" multiple class="browser-default">
                                     <option value="" disabled selected>Selecione os clientes</option>
                                     <?php
@@ -134,7 +135,7 @@ unset($_SESSION['idOS']);
                                                 echo "selected";
                                             }
                                         }
-                                        if ($pessoa['isPessoaFisica'] == 'FALSE') {
+                                        if ($pessoa['isPessoaFisica'] == '0') {
                                             echo ">{$pessoa['nomeFantasia']} ({$pessoa['nomeRua']}, {$pessoa['numero']} - {$pessoa['cidade']})</option>";
                                         } else {
                                             echo ">{$pessoa['nome']} ({$pessoa['nomeRua']}, {$pessoa['numero']} - {$pessoa['cidade']})</option>";
@@ -172,13 +173,13 @@ unset($_SESSION['idOS']);
                                     </div>
                                     <div class="input-field col s2">
                                         <input name="valorNota" id="valorNota" type="text" class="valor validate right-align" length="10" maxlength="10">
-                                        <label for="valorNota" class="active">Valor (R$)</label>
+                                        <label for="valorNota" class="active">Valor (R$) <p class="help-block">*</p></label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-field col s3">
                                         <input name="quantidade" id="quantidade" type="text" class="validate right-align">
-                                        <label for="quantidade" class="active">Quantidade</label>
+                                        <label for="quantidade" class="active">Quantidade <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s5">
                                         <select id="selectModeloNotaFiscal" name="selectModeloNotaFiscal">
@@ -191,37 +192,37 @@ unset($_SESSION['idOS']);
                                             }
                                             ?>
                                         </select>
-                                        <label>Modelo de Nota</label>
+                                        <label>Modelo de Nota <p class="help-block">*</p></label>
                                     </div>
                                     <div class="col s1">
                                         <a href="#modalModeloNotaFiscal" id="addModeloNota" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
                                     </div>
                                     <div class="input-field col s3">
                                         <input name="aidf" id="aidf" type="text" class="validate right-align" data-mask="9?999">
-                                        <label for="aidf" class="active">AIDF</label>
+                                        <label for="aidf" class="active">AIDF <p class="help-block">*</p></label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-field col s3">
                                         <input name="numeracaoInicial" id="numeracaoInicial" type="text" class="validate right-align" data-mask="9?999">
-                                        <label for="numeracaoInicial" class="active">Num. Inicial</label>
+                                        <label for="numeracaoInicial" class="active">Num. Inicial <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s3">
                                         <input name="numeracaoFinal" id="numeracaoFinal" type="text" class="validate right-align" data-mask="9?999">
-                                        <label for="numeracaoFinal" class="active">Num. Final</label>
+                                        <label for="numeracaoFinal" class="active">Num. Final <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s3">
                                         <input name="numeroTalao" id="numeroTalao" type="text" class="validate right-align" data-mask="9?999">
-                                        <label for="numeroTalao" class="active">Num. Talão</label>
+                                        <label for="numeroTalao" class="active">Num. Talão <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s3">
                                         <input name="folhasBloco" id="folhasBloco" type="text" class="validate right-align" data-mask="9?999">
-                                        <label for="folhasBloco" class="active">Folhas por Bloco</label>
+                                        <label for="folhasBloco" class="active">Folhas por Bloco <p class="help-block">*</p></label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col s5">
-                                        <label>Formato</label>
+                                        <label>Formato <p class="help-block">*</p></label>
                                         <select id="selectFormato" name="selectFormato[]" multiple class="browser-default">
                                             <?php
                                             echo "<option value='' disabled>Selecione os formatos que este serviço pode ser feito</option>";
@@ -247,7 +248,7 @@ unset($_SESSION['idOS']);
                                             }
                                             ?>
                                         </select>
-                                        <label>Número de Vias</label>
+                                        <label>Número de Vias <p class="help-block">*</p></label>
                                     </div>
                                     <div class="col s1">
                                         <a href="#modalVias" id="addVias" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
@@ -266,19 +267,19 @@ unset($_SESSION['idOS']);
                                                 }
                                                 ?>
                                             </select>
-                                            <label>Papel</label>
+                                            <label>Papel <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="gramatura1" name="selectGramatura">
                                                 <option value="" disabled selected>Selecione</option>
                                             </select>
-                                            <label>Gramatura</label>
+                                            <label>Gramatura <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="cor1" name="selectCor">
                                                 <option value="" disabled selected>Selecione</option>
                                             </select>
-                                            <label>Cor</label>
+                                            <label>Cor <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="acabamento1" name="selectAcabamentoVia">
@@ -291,7 +292,7 @@ unset($_SESSION['idOS']);
                                                 }
                                                 ?>
                                             </select>
-                                            <label>Acabamento</label>
+                                            <label>Acabamento <p class="help-block">*</p></label>
                                         </div>
                                     </div>
                                     <div class="row" id="material_vias2">
@@ -306,19 +307,19 @@ unset($_SESSION['idOS']);
                                                 }
                                                 ?>
                                             </select>
-                                            <label>Papel</label>
+                                            <label>Papel <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="gramatura2" name="selectGramatura">
                                                 <option value="" disabled selected>Selecione</option>
                                             </select>
-                                            <label>Gramatura</label>
+                                            <label>Gramatura <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="cor2" name="selectCor">
                                                 <option value="" disabled selected>Selecione</option>
                                             </select>
-                                            <label>Cor</label>
+                                            <label>Cor <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="acabamento2" name="selectAcabamentoVia">
@@ -331,7 +332,7 @@ unset($_SESSION['idOS']);
                                                 }
                                                 ?>
                                             </select>
-                                            <label>Acabamento</label>
+                                            <label>Acabamento <p class="help-block">*</p></label>
                                         </div>
                                     </div>
                                     <div class="row" id="material_vias3">
@@ -346,19 +347,19 @@ unset($_SESSION['idOS']);
                                                 }
                                                 ?>
                                             </select>
-                                            <label>Papel</label>
+                                            <label>Papel <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="gramatura3" name="selectGramatura">
                                                 <option value="" disabled selected>Selecione</option>
                                             </select>
-                                            <label>Gramatura</label>
+                                            <label>Gramatura <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="cor3" name="selectCor">
                                                 <option value="" disabled selected>Selecione</option>
                                             </select>
-                                            <label>Cor</label>
+                                            <label>Cor <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="acabamento3" name="selectAcabamentoVia">
@@ -371,7 +372,7 @@ unset($_SESSION['idOS']);
                                                 }
                                                 ?>
                                             </select>
-                                            <label>Acabamento</label>
+                                            <label>Acabamento <p class="help-block">*</p></label>
                                         </div>
                                     </div>
                                     <div class="row" id="material_vias4">
@@ -386,19 +387,19 @@ unset($_SESSION['idOS']);
                                                 }
                                                 ?>
                                             </select>
-                                            <label>Papel</label>
+                                            <label>Papel <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="gramatura4" name="selectGramatura">
                                                 <option value="" disabled selected>Selecione</option>
                                             </select>
-                                            <label>Gramatura</label>
+                                            <label>Gramatura <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="cor4" name="selectCor">
                                                 <option value="" disabled selected>Selecione</option>
                                             </select>
-                                            <label>Cor</label>
+                                            <label>Cor <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s3">
                                             <select id="acabamento4" name="selectAcabamentoVia">
@@ -411,7 +412,7 @@ unset($_SESSION['idOS']);
                                                 }
                                                 ?>
                                             </select>
-                                            <label>Acabamento</label>
+                                            <label>Acabamento <p class="help-block">*</p></label>
                                         </div>
                                     </div>
                                 </div>
@@ -430,18 +431,18 @@ unset($_SESSION['idOS']);
                                             }
                                             ?>
                                         </select>
-                                        <label>Tipo De Serviço</label>
+                                        <label>Tipo De Serviço <p class="help-block">*</p></label>
                                     </div>
                                     <div class="col s1">
                                         <a href="incluirTipoDeServico.php?tipo=outro" target="_blank" id="addTipoDeServico" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
                                     </div>
                                     <div class="input-field col s3">
                                         <input name="quantidade" id="quantidade" type="text" class="validate right-align" >
-                                        <label for="quantidade" class="active">Quantidade</label>
+                                        <label for="quantidade" class="active">Quantidade <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s2">
                                         <input name="valor" id="valor" type="text" class="valor validate right-align">
-                                        <label for="valor" class="active">Valor (R$)</label>
+                                        <label for="valor" class="active">Valor (R$) <p class="help-block">*</p></label>
                                     </div>
                                 </div>
                             </div>
@@ -459,7 +460,7 @@ unset($_SESSION['idOS']);
                                                 }
                                                 ?>
                                             </select>
-                                            <label>Forma de Impressão</label>
+                                            <label>Forma de Impressão <p class="help-block">*</p></label>
                                         </div>
                                         <div class="col s1">
                                             <a href="#modalFormaImpressao" id="addFormaImpressao" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
@@ -476,7 +477,7 @@ unset($_SESSION['idOS']);
                                                 }
                                                 ?>
                                             </select>
-                                            <label>Quantidade de Cores</label>
+                                            <label>Quantidade de Cores <p class="help-block">*</p></label>
                                         </div>
                                         <div class="col s1">
                                             <a href="#modalQuantidadeCores" id="addQuantidadeCores" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
@@ -495,7 +496,7 @@ unset($_SESSION['idOS']);
                                             }
                                             ?>
                                         </select>
-                                        <label>Cor Frente #1</label>
+                                        <label>Cor Frente #1 <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s2">
                                         <select id="cf2" name="cf2">
@@ -508,7 +509,7 @@ unset($_SESSION['idOS']);
                                             }
                                             ?>
                                         </select>
-                                        <label>Cor Frente #2</label>
+                                        <label>Cor Frente #2 <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s2">
                                         <select id="cf3" name="coresFrente[]">
@@ -521,7 +522,7 @@ unset($_SESSION['idOS']);
                                             }
                                             ?>
                                         </select>
-                                        <label>Cor Frente #3</label>
+                                        <label>Cor Frente #3 <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s2">
                                         <select id="cv1" name="cv1">
@@ -534,7 +535,7 @@ unset($_SESSION['idOS']);
                                             }
                                             ?>
                                         </select>
-                                        <label>Cor Verso #1</label>
+                                        <label>Cor Verso #1 <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s2">
                                         <select id="cv2" name="cv2">
@@ -547,7 +548,7 @@ unset($_SESSION['idOS']);
                                             }
                                             ?>
                                         </select>
-                                        <label>Cor Verso #2</label>
+                                        <label>Cor Verso #2 <p class="help-block">*</p></label>
                                     </div>
                                     <div class="input-field col s2">
                                         <select id="cv3" name="cv3">
@@ -560,7 +561,7 @@ unset($_SESSION['idOS']);
                                             }
                                             ?>
                                         </select>
-                                        <label>Cor Verso #3</label>
+                                        <label>Cor Verso #3 <p class="help-block">*</p></label>
                                     </div>
                                 </div>
                                 <div id="formato_acabamento">
@@ -569,19 +570,19 @@ unset($_SESSION['idOS']);
                                             <select id="selectPapel" name="selectPapel">
                                                 <option value='' disabled>Selecione primeiro o tipo de serviço</option>
                                             </select>
-                                            <label>Papel</label>
+                                            <label>Papel <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s4">
                                             <select id="selectFormato1" name="selectFormato1">
                                                 <option value='' disabled>Selecione primeiro o tipo de serviço</option>
                                             </select>
-                                            <label>Formato</label>
+                                            <label>Formato <p class="help-block">*</p></label>
                                         </div>
                                         <div class="input-field col s4">
                                             <select id="selectAcabamento" name="selectAcabamento[]" multiple>
                                                 <option value='' disabled>Selecione primeiro o tipo de serviço</option>
                                             </select>
-                                            <label>Acabamento</label>
+                                            <label>Acabamento <p class="help-block">*</p></label>
                                         </div>
                                     </div>
                                 </div>
@@ -603,7 +604,7 @@ unset($_SESSION['idOS']);
                                                 //         echo "selected";
                                                 //     }
                                                 // }
-                                                if ($pessoa['isPessoaFisica'] == 'FALSE') {
+                                                if ($pessoa['isPessoaFisica'] == '0') {
                                                     echo ">{$pessoa['nomeFantasia']} ({$pessoa['nomeRua']}, {$pessoa['numero']} - {$pessoa['cidade']})</option>";
                                                 } else {
                                                     echo ">{$pessoa['nome']} ({$pessoa['nomeRua']}, {$pessoa['numero']} - {$pessoa['cidade']})</option>";
@@ -611,7 +612,7 @@ unset($_SESSION['idOS']);
                                             }
                                             ?>
                                         </select>
-                                        <label>Fornecedor</label>
+                                        <label>Fornecedor <p class="help-block">*</p></label>
                                     </div>
                                     <div class="col s1">
                                         <a href="incluirPessoa.php?tipo=fornecedor" target="_blank" id="addFornecedor" class="waves-effect waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>

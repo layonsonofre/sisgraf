@@ -77,24 +77,25 @@ protegePagina(); // Chama a função que protege a página
                 </div>
                 <div class="row">
                     <form class="col s12" role="form" method="POST" action="control/material.php">
+                        <p class="light" style="color: red;">* Campo obrigatório</p>
                         <div class="row">
                             <div class="input-field col s8">
                                 <input name="descricao" id="descricao" type="text" class="validate" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['descricao']."'"; if($_GET['tipo'] == 'papel') echo "value='Papel' readonly" ?> length="20" maxlength="20">
-                                <label for="descricao" class="active">Descrição</label>
+                                <label for="descricao" class="active">Descrição <p class="help-block">*</p></label>
                             </div>
                             <div class="input-field col s4">
                                 <input name="valorUnitario" id="valorUnitario" type="text" class="valor validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['valorUnitario']."'"; ?> length="10" maxlength="10">
-                                <label for="valorUnitario" class="active">Valor Unitário (R$)</label>
+                                <label for="valorUnitario" class="active">Valor Unitário (R$) <p class="help-block">*</p></label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s4">
                                 <input name="quantidade" id="quantidade" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['quantidade']."'"; ?>>
-                                <label for="quantidade" class="active">Quantidade</label>
+                                <label for="quantidade" class="active">Quantidade <p class="help-block">*</p></label>
                             </div>
                             <div class="input-field col s4">
                                 <input name="quantidadeMinima" id="quantidadeMinima" type="text" class="validate right-align" <?php if(isset($_GET['idMaterial'])) echo "value='".$resultado['quantidadeMinima']."'"; ?>>
-                                <label for="quantidadeMinima" class="active">Quantidade Mínima</label>
+                                <label for="quantidadeMinima" class="active">Quantidade Mínima <p class="help-block">*</p></label>
                             </div>
                             <div class="input-field col s3">
                                 <select id="selectUnidade" name="selectUnidade">
@@ -109,7 +110,7 @@ protegePagina(); // Chama a função que protege a página
                                     }
                                     ?>
                                 </select>
-                                <label>Unidade de Medida</label>
+                                <label>Unidade de Medida <p class="help-block">*</p></label>
                             </div>
                             <div class="col s1">
                                 <a href="#modalUnidadeDeMedida" id="addUnidade" class="waves-effect waves-light blue accent-4 btn-floating modal-trigger"><i class="material-icons left">add</i></a>
@@ -121,15 +122,15 @@ protegePagina(); // Chama a função que protege a página
                             <div class="row">
                                 <div class="input-field col s5">
                                     <input name="tipoPapel" id="tipoPapel" type="text" class="validate" <?php if(isset($_GET['idMaterial']))echo "value='".$resultado['tipo']."'"; ?> length="15" maxlength="15">
-                                    <label for="tipoPapel" class="active">Descricao do Papel</label>
+                                    <label for="tipoPapel" class="active">Descricao do Papel <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s2">
                                     <input name="base" id="base" type="text" class="validate right-align" data-mask="99?99"<?php if(isset($_GET['idMaterial']))echo "value='".$resultado['base']."'"; ?>>
-                                    <label for="base" class="active">Base (mm)</label>
+                                    <label for="base" class="active">Base (mm) <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s2">
                                     <input name="altura" id="altura" type="text" class="validate right-align" data-mask="99?99" <?php if(isset($_GET['idMaterial']))echo "value='".$resultado['altura']."'"; ?>>
-                                    <label for="altura" class="active">Altura (mm)</label>
+                                    <label for="altura" class="active">Altura (mm) <p class="help-block">*</p></label>
                                 </div>
                                 <div class="input-field col s2">
                                 <select id="selectGramatura" name="selectGramatura">
@@ -144,7 +145,7 @@ protegePagina(); // Chama a função que protege a página
                                     }
                                     ?>
                                 </select>
-                                <label>Gramatura</label>
+                                <label>Gramatura <p class="help-block">*</p></label>
                             </div>
                                 <div class="col s1">
                                     <a id="addGramatura" href="#modalGramatura" class="waves-effect modal-trigger waves-light blue accent-4 btn-floating"><i class="material-icons left">add</i></a>
@@ -155,7 +156,7 @@ protegePagina(); // Chama a função que protege a página
                         ?>
                         <div class="row">
                             <div class="col s11">
-                                <label>Cores</label>
+                                <label>Cores <p class="help-block">*</p></label>
                                 <select id="selectCor" name="selectCor[]" multiple class="browser-default">
                                     <option value="" disabled>Selecione as cores do material</option>
                                     <?php
@@ -181,7 +182,7 @@ protegePagina(); // Chama a função que protege a página
                         </div>
                         <div class="row">
                             <div class="col s11">
-                                <label>Categorias</label>
+                                <label>Categorias <p class="help-block">*</p></label>
                                 <select id="selectCategoria" name="selectCategoria[]" multiple class="browser-default">
                                     <option value="" disabled>Selecione as categorias que o material pertence</option>
                                 <?php

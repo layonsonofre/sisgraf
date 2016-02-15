@@ -8445,10 +8445,12 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
     margin-bottom: 5em; } }
 
 .help-block {
-    color: grey;
-    font-size: 0.8rem;
-    left: 0;
+    color: red;
+    font-size: 0.7rem;
+    left: 6px;
+    float: right;
+    display: inline;
     position: relative;
-    top: -15px;
+    top: -7px;
     transform: none !important;
 }
